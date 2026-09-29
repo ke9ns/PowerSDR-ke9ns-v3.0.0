@@ -8,9 +8,9 @@
 
 </div>
 
-# PowerSDR_KE9NS_v2.8.0
+# PowerSDR_KE9NS_v3.0.0
 
-Based on the last version of FlexRadio PowerSDR v2.7.2
+Based PowerSDR ke9ns v2.8.0.338
 
 Ke9ns V2.8 is a highly modified version of that PowerSDR software
 
