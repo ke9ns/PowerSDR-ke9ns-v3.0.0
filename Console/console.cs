@@ -5512,6 +5512,8 @@ namespace PowerSDR
             }
 
             DB.PurgeNotches();                      // remove old notches from DB
+            a.Add(NrModeState.Serialize(experimental_rx1_nr_mode));
+            a.Add(NrModeState.Serialize(experimental_rx2_nr_mode, true));
 
             DB.SaveVars("State", ref a);            // save the "State" values to the DB
 
@@ -7384,6 +7386,9 @@ namespace PowerSDR
 
 
 
+            // Restore after all legacy checkbox events; their boolean ON maps to NR1.
+            ApplyExperimentalRX1NRMode(NrModeState.Restore(a, chkNR.Checked));
+            ApplyExperimentalRX2NRMode(NrModeState.Restore(a, chkRX2NR.Checked, true));
         } // getstate
 
         private string VerToString(uint ver)
@@ -30895,20 +30900,18 @@ namespace PowerSDR
             get { return current_display_engine; }
             set
             {
-                /*switch(value)
-				{
-					case DisplayEngine.GDI_PLUS:
-						current_display_engine = value;
-						Display.DirectXRelease();
-						break;
-					case DisplayEngine.DIRECT_X:
-						Display.DirectXInit();
-						current_display_engine = value;
-						Display.PrepareDisplayVars(Display.CurrentDisplayMode);
-						Display.DrawBackground();
-						break;
-				}*/
-                Display.CurrentDisplayEngine = value;
+                if (value == DisplayEngine.DIRECT_X)
+                {
+                    current_display_engine = Direct2DDisplay.TryInitialize(picDisplay)
+                        ? DisplayEngine.DIRECT_X : DisplayEngine.GDI_PLUS;
+                }
+                else
+                {
+                    Direct2DDisplay.Shutdown();
+                    current_display_engine = DisplayEngine.GDI_PLUS;
+                }
+                Display.CurrentDisplayEngine = current_display_engine;
+                picDisplay.Invalidate();
             }
         }
 
@@ -40556,22 +40559,49 @@ namespace PowerSDR
 
         #region Display Routines
 
+        private int displayPaintActive;
+        private volatile int displayStartupFps;
+        private long displayNextPaintTick;
+        private long displayStatsStarted;
+        private int displayStatsFrames;
+        private double displayStatsPaintMs;
+        private double displayStatsSnapshotAgeMs;
+        private long displayTopSnapshotTick, displayBottomSnapshotTick;
+        private volatile string displayFrameStats = "No completed frames yet.";
+
+        internal string DisplayDiagnostics
+        {
+            get
+            {
+                string renderer = Direct2DDisplay.IsActive
+                    ? "Direct2D hardware surface; GDI overlays remain."
+                    : "GDI+ renderer.";
+                string error = Direct2DDisplay.LastError;
+                return renderer + "\n" + displayFrameStats +
+                    "\nRequested FPS: " + display_fps +
+                    "; startup/effective target: " + displayStartupFps +
+                    "\nFFT bins: " + Display.BUFFER_SIZE +
+                    "; RX1 AVG: " + Display.AverageOn +
+                    "; AVG blocks: " + Display.DisplayAvgBlocks +
+                    "; Polyphase: " + (setupForm != null && setupForm.Polyphase) +
+                    "; sample rate: " + sample_rate1 + " Hz" +
+                    (error.Length == 0 ? "" : "\nDirectX fallback: " + error);
+            }
+        }
+
         public void UpdateDisplay()
         {
-
-
+            // WM_PAINT has priority over WM_TIMER. Do not keep invalidating
+            // while a costly frame is painting: leave time for clock/input.
+            if (Interlocked.CompareExchange(ref displayPaintActive, 0, 0) != 0) return;
             switch (current_display_engine)
             {
                 case DisplayEngine.GDI_PLUS:
-
                     picDisplay.Invalidate();
-
-
                     break;
-                    /*case DisplayEngine.DIRECT_X:
-						Display.RenderDirectX();
-						break;
-						*/
+                case DisplayEngine.DIRECT_X:
+                    picDisplay.Invalidate();
+                    break;
             }
         }
 
@@ -40829,6 +40859,41 @@ namespace PowerSDR
 
         private void picDisplay_Paint(object sender, PaintEventArgs e) //System.Windows.Forms.PaintEventArgs
         {
+            long started = Stopwatch.GetTimestamp();
+            long snapshot = Interlocked.Read(ref displayTopSnapshotTick);
+            if (mox && chkVFOBTX.Checked && chkRX2.Checked)
+                snapshot = Interlocked.Read(ref displayBottomSnapshotTick);
+            Interlocked.Exchange(ref displayPaintActive, 1);
+            try { PaintDisplayFrame(sender, e); }
+            finally
+            {
+                long finished = Stopwatch.GetTimestamp();
+                if (displayStatsStarted == 0) displayStatsStarted = started;
+                displayStatsFrames++;
+                displayStatsPaintMs += (finished - started) * 1000.0 / Stopwatch.Frequency;
+                if (snapshot > 0)
+                    displayStatsSnapshotAgeMs += Math.Max(0, started - snapshot) * 1000.0 / Stopwatch.Frequency;
+                double statsSeconds = (finished - displayStatsStarted) / (double)Stopwatch.Frequency;
+                if (statsSeconds >= 1.0)
+                {
+                    displayFrameStats = String.Format("{0}: {1:F1} actual FPS; {2:F1} ms average paint.\nFFT snapshot age at paint: {3:F1} ms (not audio latency).",
+                        mox ? "TX" : "RX", displayStatsFrames / statsSeconds,
+                        displayStatsPaintMs / displayStatsFrames,
+                        displayStatsSnapshotAgeMs / displayStatsFrames);
+                    displayStatsStarted = finished;
+                    displayStatsFrames = 0;
+                    displayStatsPaintMs = 0;
+                    displayStatsSnapshotAgeMs = 0;
+                }
+                // Under overload, sacrifice display FPS instead of UI responsiveness.
+                long idleTicks = Math.Max(Stopwatch.Frequency / 500, (finished - started) / 4);
+                Interlocked.Exchange(ref displayNextPaintTick, finished + idleTicks);
+                Interlocked.Exchange(ref displayPaintActive, 0);
+            }
+        }
+
+        private void PaintDisplayFrame(object sender, PaintEventArgs e)
+        {
             PD = e;
 
             if (mox && (RX1DSPMode == DSPMode.AM || RX1DSPMode == DSPMode.SAM)) //.265        
@@ -40911,11 +40976,19 @@ namespace PowerSDR
                     Display.RenderGDIPlus(ref PD);  // System.Windows.Forms.PaintEventArgs
                     break;
                 case DisplayEngine.DIRECT_X:
-                    /*Thread t = new Thread(new ThreadStart(Display.RenderDirectX));
-						t.Name = "DirectX Background Update";
-						t.IsBackground = true;
-						t.Priority = ThreadPriority.Normal;
-						t.Start();*/
+                    bool rendered = Direct2DDisplay.Render(picDisplay, delegate(Graphics graphics)
+                    {
+                        PaintEventArgs accelerated = new PaintEventArgs(graphics,
+                            new Rectangle(0, 0, picDisplay.ClientSize.Width, picDisplay.ClientSize.Height));
+                        try { Display.RenderGDIPlus(ref accelerated); }
+                        finally { accelerated.Dispose(); }
+                    });
+                    if (!rendered)
+                    {
+                        current_display_engine = DisplayEngine.GDI_PLUS;
+                        Display.CurrentDisplayEngine = DisplayEngine.GDI_PLUS;
+                        Display.RenderGDIPlus(ref PD);
+                    }
                     break;
             }
 
@@ -49920,9 +49993,22 @@ namespace PowerSDR
 #if (WRITE_FFT_TEST)
             BinaryWriter writer = new BinaryWriter(File.Open("test.fft", FileMode.OpenOrCreate, FileAccess.Write));
 #endif
+            Stopwatch displayClock = Stopwatch.StartNew();
+            DisplayStartupGate startupGate = new DisplayStartupGate(DspBackend.CompletedAudioBlocks);
+            long nextDisplayFrame = 0;
             //			display_running = true;
             while ((chkPower.Checked) && (Display.CurrentDisplayMode != DisplayMode.OFF))
             {
+                // Wait BEFORE taking the spectrum snapshot. Skipping an
+                // invalidation after sampling added a whole frame period.
+                while (chkPower.Checked && Display.CurrentDisplayMode != DisplayMode.OFF)
+                {
+                    long waitTicks = Interlocked.Read(ref displayNextPaintTick) - Stopwatch.GetTimestamp();
+                    if (Interlocked.CompareExchange(ref displayPaintActive, 0, 0) == 0 && waitTicks <= 0)
+                        break;
+                    Thread.Sleep(1);
+                }
+                if (!chkPower.Checked || Display.CurrentDisplayMode == DisplayMode.OFF) break;
                 uint top_thread = 0;
                 uint bottom_thread = 2;
 
@@ -49995,6 +50081,7 @@ namespace PowerSDR
                                 break;
                         }
 
+                        Interlocked.Exchange(ref displayTopSnapshotTick, Stopwatch.GetTimestamp());
                         Display.DataReady = true; // ke9ns: dont allow screen to show next line of pan data until UPDATEOFF is clear
                                                   // but not used by getscope routine
 
@@ -50035,6 +50122,7 @@ namespace PowerSDR
                                 //Audio.phase_mutex.ReleaseMutex();
                                 break;
                         }
+                        Interlocked.Exchange(ref displayBottomSnapshotTick, Stopwatch.GetTimestamp());
                         Display.DataReadyBottom = true;
                     }
 
@@ -50323,8 +50411,20 @@ namespace PowerSDR
 
                 if (chkPower.Checked)
                 {
-
-                    Thread.Sleep(display_delay);
+                    // Keep the requested FPS as a frame period. The legacy loop
+                    // slept for the full delay after doing its work, making the
+                    // real period "render work + delay" and increasingly laggy
+                    // at higher settings. Catch up without building a backlog.
+                    displayStartupFps = startupGate.GetFps(display_fps,
+                        displayClock.ElapsedMilliseconds, DspBackend.CompletedAudioBlocks);
+                    nextDisplayFrame += Math.Max(1, 1000 / displayStartupFps);
+                    int remaining = (int)(nextDisplayFrame - displayClock.ElapsedMilliseconds);
+                    if (remaining > 0) Thread.Sleep(remaining);
+                    else
+                    {
+                        nextDisplayFrame = displayClock.ElapsedMilliseconds;
+                        Thread.Sleep(0);
+                    }
                 }
 
 
@@ -57538,6 +57638,7 @@ namespace PowerSDR
         // ke9ns: actually runs Console_Closing1 just before this below
         public void Console_Closing(object sender, FormClosingEventArgs e)
         {
+            Direct2DDisplay.Shutdown();
 
             if (chkPower.Checked) //.254
             {
@@ -70537,15 +70638,53 @@ namespace PowerSDR
 
         #region DSP Button Events
 
+        // Experimental WDSP RX1 selector. Matches Thetis left-click cycling:
+        // OFF -> NR1 (ANR) -> NR2 (EMNR) -> NR3 (RNNoise) -> NR4 (SpecBleach).
+        private int experimental_rx1_nr_mode = 0;
+        private bool experimental_rx1_nr_updating = false;
+
+        private void ApplyExperimentalRX1NRMode(int nrMode)
+        {
+            if (nrMode < 0) nrMode = 0;
+            if (nrMode > 4) nrMode = 4;
+
+            experimental_rx1_nr_mode = nrMode;
+            bool enabled = nrMode != 0;
+
+            experimental_rx1_nr_updating = true;
+            try
+            {
+                chkNR.Checked = enabled;
+                chkNR.Text = enabled ? "NR" + nrMode.ToString() : "NR";
+                chkNR.BackColor = enabled ? button_selected_color : SystemColors.Control;
+                toolTip1.SetToolTip(chkNR,
+                    "Click: OFF / NR1 / NR2 / NR3 / NR4. Right-click: DSP settings.");
+
+                // Keep legacy NR1 as the safe DttSP fallback. The selected modern
+                // algorithm is applied to the active WDSP RX1 output below.
+                bool legacyNr1 = nrMode == 1;
+                dsp.GetDSPRX(0, 0).NoiseReduction = legacyNr1;
+                dsp.GetDSPRX(0, 1).NoiseReduction = legacyNr1;
+                DspBackend.SetRx1NoiseReductionMode(nrMode);
+                cat_nr_status = Convert.ToInt32(enabled);
+            }
+            finally
+            {
+                experimental_rx1_nr_updating = false;
+            }
+        }
+
+        private void chkNR_Click(object sender, System.EventArgs e)
+        {
+            ApplyExperimentalRX1NRMode((experimental_rx1_nr_mode + 1) % 5);
+        }
+
         private void chkNR_CheckedChanged(object sender, System.EventArgs e)
         {
-            if (chkNR.Checked) chkNR.BackColor = button_selected_color;
-            else chkNR.BackColor = SystemColors.Control;
-            dsp.GetDSPRX(0, 0).NoiseReduction = chkNR.Checked;
-            dsp.GetDSPRX(0, 1).NoiseReduction = chkNR.Checked;
-            cat_nr_status = Convert.ToInt32(chkNR.Checked);
-
-
+            if (experimental_rx1_nr_updating) return;
+            // Programmatic/CAT changes retain their old on/off semantics and map
+            // ON to NR1. Mouse clicks use chkNR_Click and cycle all five states.
+            ApplyExperimentalRX1NRMode(chkNR.Checked ? 1 : 0);
         }
 
         private void chkANF_CheckedChanged(object sender, System.EventArgs e)
@@ -73904,14 +74043,38 @@ namespace PowerSDR
 				btnHidden.Focus();*/
         }
 
-        private void chkRX2NR_CheckedChanged(object sender, System.EventArgs e)
+        private int experimental_rx2_nr_mode;
+        private bool experimental_rx2_nr_updating;
+
+        private void ApplyExperimentalRX2NRMode(int mode)
+        {
+            mode = Math.Max(0, Math.Min(4, mode));
+            experimental_rx2_nr_mode = mode;
+            experimental_rx2_nr_updating = true;
+            try
+            {
+                chkRX2NR.Checked = mode != 0;
+                chkRX2NR.Text = mode == 0 ? "NR" : "NR" + mode.ToString();
+                chkRX2NR.BackColor = mode != 0 ? button_selected_color : SystemColors.Control;
+                toolTip1.SetToolTip(chkRX2NR,
+                    "RX2: OFF / NR1 / NR2 / NR3 / NR4. Right-click: shared DSP settings.");
+                dsp.GetDSPRX(1, 0).NoiseReduction = mode == 1;
+                dsp.GetDSPRX(1, 1).NoiseReduction = mode == 1;
+                DspBackend.SetRx2NoiseReductionMode(mode);
+            }
+            finally { experimental_rx2_nr_updating = false; }
+        }
+
+        private void chkRX2NR_Click(object sender, System.EventArgs e)
         {
             if (!FWCEEPROM.RX2OK) return;
-            if (chkRX2NR.Checked) chkRX2NR.BackColor = button_selected_color;
-            else chkRX2NR.BackColor = SystemColors.Control;
-            dsp.GetDSPRX(1, 0).NoiseReduction = chkRX2NR.Checked;
-            dsp.GetDSPRX(1, 1).NoiseReduction = chkRX2NR.Checked;
-            //cat_nr_status = Convert.ToInt32(chkRX2NR.Checked);
+            ApplyExperimentalRX2NRMode((experimental_rx2_nr_mode + 1) % 5);
+        }
+
+        private void chkRX2NR_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (experimental_rx2_nr_updating || !FWCEEPROM.RX2OK) return;
+            ApplyExperimentalRX2NRMode(chkRX2NR.Checked ? 1 : 0);
         }
 
         private void chkRX2ANF_CheckedChanged(object sender, System.EventArgs e)

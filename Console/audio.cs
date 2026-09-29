@@ -1360,11 +1360,11 @@ namespace PowerSDR
 
 
 
-                DttSP.ExchangeSamples(in_l, in_r, out_l, out_r, frameCount);
+                DspBackend.ProcessStereo(in_l, in_r, out_l, out_r, frameCount, !localmox);
             }
             else
             {
-                DttSP.ExchangeSamples(in_l, in_r, out_l, out_r, frameCount);
+                DspBackend.ProcessStereo(in_l, in_r, out_l, out_r, frameCount, !localmox);
             }
 #if (MINMAX)
 			Debug.WriteLine(MaxSample(out_l, out_r, frameCount));
@@ -2255,11 +2255,11 @@ namespace PowerSDR
                         CWSynth.Advance(out_l, out_r, frameCount, time);
                     }
 
-                    DttSP.ExchangeSamples(in_l, in_r, out_l, out_r, frameCount);
+                    DspBackend.ProcessStereo(in_l, in_r, out_l, out_r, frameCount, !localmox);
                 }
                 else
                 {
-                    DttSP.ExchangeSamples(in_l, in_r, out_l, out_r, frameCount);
+                    DspBackend.ProcessStereo(in_l, in_r, out_l, out_r, frameCount, !localmox);
                 }
 
                 if (tx_1500_image_cal)
@@ -3135,11 +3135,11 @@ namespace PowerSDR
                 double time = CWSensorItem.GetCurrentTime();
                 CWSynth.Advance(out_l_ptr2, out_r_ptr2, frameCount, time);
 
-                DttSP.ExchangeSamples2(ex_input, ex_output, frameCount);
+                DspBackend.ProcessMultiChannel(ex_input, ex_output, frameCount, !localmox);
             }
             else
             {
-                DttSP.ExchangeSamples2(ex_input, ex_output, frameCount);
+                DspBackend.ProcessMultiChannel(ex_input, ex_output, frameCount, !localmox);
             }
 
 #if (MINMAX)
@@ -4617,7 +4617,7 @@ namespace PowerSDR
 
             if (localmox && (tx_dsp_mode == DSPMode.CWL || tx_dsp_mode == DSPMode.CWU))
             {
-                DttSP.ExchangeSamples2(ex_input, ex_output, frameCount);
+                DspBackend.ProcessMultiChannel(ex_input, ex_output, frameCount, !localmox);
 
                 double time = CWSensorItem.GetCurrentTime();
                 CWSynth.Advance(tx_out_l, tx_out_r, frameCount, time); // ke9ns FlexCW.dll code injects audio to transmit
@@ -4638,7 +4638,7 @@ namespace PowerSDR
                 double time = CWSensorItem.GetCurrentTime();
                 CWSynth.Advance(tx_out_l, tx_out_r, frameCount, time);
 
-                DttSP.ExchangeSamples2(ex_input, ex_output, frameCount);
+                DspBackend.ProcessMultiChannel(ex_input, ex_output, frameCount, !localmox);
             }
             else
             {
@@ -4648,7 +4648,7 @@ namespace PowerSDR
                 // ke9ns ex_input is a pointer to an array of input pointers array_ptr_input[0-7];
                 // ke9ns ex_output is a pointer to an array of output pointers array_ptr_output[0-7];
 
-                DttSP.ExchangeSamples2(ex_input, ex_output, frameCount);            // ke9ns for standard audio do this routine found in  winmain.c as Audio_Callback2
+                DspBackend.ProcessMultiChannel(ex_input, ex_output, frameCount, !localmox);    // ke9ns for standard audio do this routine found in winmain.c as Audio_Callback2
 
             }
 

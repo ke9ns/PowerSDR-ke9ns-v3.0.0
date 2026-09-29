@@ -194,6 +194,22 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\lib\SharpDX\SharpDX.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\lib\SharpDX\SharpDX.Direct2D1.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\lib\SharpDX\SharpDX.DXGI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\lib\SharpDX\SharpDX.Mathematics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ADODB">
       <Name>adodb</Name>
       <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Microsoft.NET\Primary Interop Assemblies\adodb.dll</HintPath>
@@ -613,6 +629,10 @@
     <Compile Include="display.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Direct2DDisplay.cs" />
+    <Compile Include="DSP\NrModeState.cs" />
+    <Compile Include="DisplayStartupGate.cs" />
+    <Compile Include="Setup.RenderDiagnostics.cs" />
     <Compile Include="DiversityForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -655,6 +675,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="dttsp.cs" />
+    <Compile Include="DSP\DspBackend.cs" />
+    <Compile Include="DSP\WdspReceiver.cs" />
+    <Compile Include="DSP\WdspImpulseBlankers.cs" />
+    <Compile Include="DSP\WdspNbSetupPanel.cs" />
+    <Compile Include="DSP\WdspNative.cs" />
+    <Compile Include="DSP\WdspNrSetupPanel.cs" />
     <Compile Include="eqform.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1563,6 +1589,16 @@
     </PreBuildEvent>
     <PostBuildEvent>copy "$(ProjectDir)CAT\CATstructs.xml" "$(ProjectDir)..\bin\Release";</PostBuildEvent>
   </PropertyGroup>
+  <Target Name="BuildWdspRuntime" BeforeTargets="BeforeBuild">
+    <MSBuild Projects="..\WDSP\wdsp.vcxproj" Targets="Build"
+      Properties="Configuration=$(Configuration);Platform=Win32;SolutionDir=$(ProjectDir)..\" />
+    <Copy SourceFiles="..\artifacts\WDSP\$(Configuration)\Win32\wdsp.dll"
+      DestinationFolder="$(ProjectDir)..\bin\$(Configuration)" />
+    <Copy SourceFiles="..\lib\NR_Algorithms_x86\rnnoise.dll;..\lib\NR_Algorithms_x86\specbleach.dll"
+      DestinationFolder="$(ProjectDir)..\bin\$(Configuration)" />
+    <Copy SourceFiles="..\lib\fftw_x86\libfftw3-3.dll;..\lib\fftw_x86\libfftw3f-3.dll"
+      DestinationFolder="$(ProjectDir)..\bin\$(Configuration)" />
+  </Target>
   <Import Project="..\packages\AutoItX.Dotnet.3.3.14.5\build\AutoItX.Dotnet.targets" Condition="Exists('..\packages\AutoItX.Dotnet.3.3.14.5\build\AutoItX.Dotnet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

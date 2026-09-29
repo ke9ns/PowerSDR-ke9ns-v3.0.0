@@ -19266,7 +19266,7 @@ namespace PowerSDR
 
             if (!bottom) max_y = local_max_y; // if top
 
-            g.DrawLines(data_line_pen, points); // ke9ns draw spectrum
+            if (!Direct2DDisplay.QueuePanadapterTrace(points, W, data_line_color, display_line_width)) g.DrawLines(data_line_pen, points); // GDI+ fallback
 
             // draw long cursor
             if (current_click_tune_mode != ClickTuneMode.Off)
@@ -19277,13 +19277,13 @@ namespace PowerSDR
                 else p = new Pen(Color.Red);
                 if (bottom)
                 {
-                    g.DrawLine(p, display_cursor_x, H, display_cursor_x, H + H);
-                    g.DrawLine(p, 0, display_cursor_y, W, display_cursor_y);
+                    if (!Direct2DDisplay.QueueLine(display_cursor_x, H, display_cursor_x, H + H, p.Color, p.Width)) g.DrawLine(p, display_cursor_x, H, display_cursor_x, H + H); // GDI+ fallback
+                    if (!Direct2DDisplay.QueueLine(0, display_cursor_y, W, display_cursor_y, p.Color, p.Width)) g.DrawLine(p, 0, display_cursor_y, W, display_cursor_y); // GDI+ fallback
                 }
                 else
                 {
-                    g.DrawLine(p, display_cursor_x, 0, display_cursor_x, H);
-                    g.DrawLine(p, 0, display_cursor_y, W, display_cursor_y);
+                    if (!Direct2DDisplay.QueueLine(display_cursor_x, 0, display_cursor_x, H, p.Color, p.Width)) g.DrawLine(p, display_cursor_x, 0, display_cursor_x, H); // GDI+ fallback
+                    if (!Direct2DDisplay.QueueLine(0, display_cursor_y, W, display_cursor_y, p.Color, p.Width)) g.DrawLine(p, 0, display_cursor_y, W, display_cursor_y); // GDI+ fallback
                 }
             }
 
@@ -21130,10 +21130,14 @@ namespace PowerSDR
                 }
 
 
+                bool nativePanFill = Direct2DDisplay.QueuePanadapterFill(points, W,
+                    bottom ? H : 0, bottom ? H + H : H, DisplayPanFillColor,
+                    panfillgradient, panfillalpha);
+
                 if (panfillgradient == false) // ke9ns add:  This is the original mode 
                 {
                     data_line_pen.Color = DisplayPanFillColor; // was  Color.FromArgb(100, 255, 255, 255); // ke9ns draw white at 100
-                    g.FillPolygon(data_line_pen.Brush, points); // fill with standard color (no gradient)
+                    if (!nativePanFill) g.FillPolygon(data_line_pen.Brush, points); // GDI+ fallback
                 }
                 else // ke9ns add: special color gradient mode under spectrum line
                 {
@@ -21141,12 +21145,11 @@ namespace PowerSDR
 
                     if (bottom)
                     {
-                        g.FillPolygon(pan_BrushB, points); // fill with gradient color
+                        if (!nativePanFill) g.FillPolygon(pan_BrushB, points); // GDI+ fallback
                     }
                     else
                     {
-
-                        g.FillPolygon(pan_Brush, points); // fill with gradient color
+                        if (!nativePanFill) g.FillPolygon(pan_Brush, points); // GDI+ fallback
 
                         //  Debug.WriteLine("294 DRAW");
                     }
@@ -21158,7 +21161,8 @@ namespace PowerSDR
 
                 data_line_pen.Color = data_line_color; // set pen color
 
-                g.DrawLines(data_line_pen, points);                             // trace spectrum line to screen (draw lines between datapoints)
+                if (!Direct2DDisplay.QueuePanadapterTrace(points, W, data_line_color, display_line_width))
+                    g.DrawLines(data_line_pen, points); // GDI+ fallback
 
 
             } // pan_fill = true
@@ -21175,32 +21179,32 @@ namespace PowerSDR
 
 
 
-                        if (console.setupForm.number3DZ.Value > 38) g.DrawLines(data_3dline_pen39, points39); // .245
-                        if (console.setupForm.number3DZ.Value > 37) g.DrawLines(data_3dline_pen38, points38);
-                        if (console.setupForm.number3DZ.Value > 36) g.DrawLines(data_3dline_pen37, points37);
-                        if (console.setupForm.number3DZ.Value > 35) g.DrawLines(data_3dline_pen36, points36);
-                        if (console.setupForm.number3DZ.Value > 34) g.DrawLines(data_3dline_pen35, points35);
-                        if (console.setupForm.number3DZ.Value > 33) g.DrawLines(data_3dline_pen34, points34);
-                        if (console.setupForm.number3DZ.Value > 32) g.DrawLines(data_3dline_pen33, points33);
-                        if (console.setupForm.number3DZ.Value > 30) g.DrawLines(data_3dline_pen32, points32);
-                        if (console.setupForm.number3DZ.Value > 29) g.DrawLines(data_3dline_pen31, points31); // .245
+                        if (console.setupForm.number3DZ.Value > 38) if (!Direct2DDisplay.QueuePanadapterTrace(points39, W, data_3dline_pen39.Color, data_3dline_pen39.Width)) g.DrawLines(data_3dline_pen39, points39); // .245
+                        if (console.setupForm.number3DZ.Value > 37) if (!Direct2DDisplay.QueuePanadapterTrace(points38, W, data_3dline_pen38.Color, data_3dline_pen38.Width)) g.DrawLines(data_3dline_pen38, points38);
+                        if (console.setupForm.number3DZ.Value > 36) if (!Direct2DDisplay.QueuePanadapterTrace(points37, W, data_3dline_pen37.Color, data_3dline_pen37.Width)) g.DrawLines(data_3dline_pen37, points37);
+                        if (console.setupForm.number3DZ.Value > 35) if (!Direct2DDisplay.QueuePanadapterTrace(points36, W, data_3dline_pen36.Color, data_3dline_pen36.Width)) g.DrawLines(data_3dline_pen36, points36);
+                        if (console.setupForm.number3DZ.Value > 34) if (!Direct2DDisplay.QueuePanadapterTrace(points35, W, data_3dline_pen35.Color, data_3dline_pen35.Width)) g.DrawLines(data_3dline_pen35, points35);
+                        if (console.setupForm.number3DZ.Value > 33) if (!Direct2DDisplay.QueuePanadapterTrace(points34, W, data_3dline_pen34.Color, data_3dline_pen34.Width)) g.DrawLines(data_3dline_pen34, points34);
+                        if (console.setupForm.number3DZ.Value > 32) if (!Direct2DDisplay.QueuePanadapterTrace(points33, W, data_3dline_pen33.Color, data_3dline_pen33.Width)) g.DrawLines(data_3dline_pen33, points33);
+                        if (console.setupForm.number3DZ.Value > 30) if (!Direct2DDisplay.QueuePanadapterTrace(points32, W, data_3dline_pen32.Color, data_3dline_pen32.Width)) g.DrawLines(data_3dline_pen32, points32);
+                        if (console.setupForm.number3DZ.Value > 29) if (!Direct2DDisplay.QueuePanadapterTrace(points31, W, data_3dline_pen31.Color, data_3dline_pen31.Width)) g.DrawLines(data_3dline_pen31, points31); // .245
 
 
-                        if (console.setupForm.number3DZ.Value > 28) g.DrawLines(data_3dline_pen30, points30); // .242
-                        if (console.setupForm.number3DZ.Value > 27) g.DrawLines(data_3dline_pen29, points29);
-                        if (console.setupForm.number3DZ.Value > 26) g.DrawLines(data_3dline_pen28, points28);
-                        if (console.setupForm.number3DZ.Value > 25) g.DrawLines(data_3dline_pen27, points27);
-                        if (console.setupForm.number3DZ.Value > 24) g.DrawLines(data_3dline_pen26, points26);
-                        if (console.setupForm.number3DZ.Value > 23) g.DrawLines(data_3dline_pen25, points25);
-                        if (console.setupForm.number3DZ.Value > 22) g.DrawLines(data_3dline_pen24, points24);
-                        if (console.setupForm.number3DZ.Value > 21) g.DrawLines(data_3dline_pen23, points23);
-                        if (console.setupForm.number3DZ.Value > 20) g.DrawLines(data_3dline_pen22, points22); //.242
+                        if (console.setupForm.number3DZ.Value > 28) if (!Direct2DDisplay.QueuePanadapterTrace(points30, W, data_3dline_pen30.Color, data_3dline_pen30.Width)) g.DrawLines(data_3dline_pen30, points30); // .242
+                        if (console.setupForm.number3DZ.Value > 27) if (!Direct2DDisplay.QueuePanadapterTrace(points29, W, data_3dline_pen29.Color, data_3dline_pen29.Width)) g.DrawLines(data_3dline_pen29, points29);
+                        if (console.setupForm.number3DZ.Value > 26) if (!Direct2DDisplay.QueuePanadapterTrace(points28, W, data_3dline_pen28.Color, data_3dline_pen28.Width)) g.DrawLines(data_3dline_pen28, points28);
+                        if (console.setupForm.number3DZ.Value > 25) if (!Direct2DDisplay.QueuePanadapterTrace(points27, W, data_3dline_pen27.Color, data_3dline_pen27.Width)) g.DrawLines(data_3dline_pen27, points27);
+                        if (console.setupForm.number3DZ.Value > 24) if (!Direct2DDisplay.QueuePanadapterTrace(points26, W, data_3dline_pen26.Color, data_3dline_pen26.Width)) g.DrawLines(data_3dline_pen26, points26);
+                        if (console.setupForm.number3DZ.Value > 23) if (!Direct2DDisplay.QueuePanadapterTrace(points25, W, data_3dline_pen25.Color, data_3dline_pen25.Width)) g.DrawLines(data_3dline_pen25, points25);
+                        if (console.setupForm.number3DZ.Value > 22) if (!Direct2DDisplay.QueuePanadapterTrace(points24, W, data_3dline_pen24.Color, data_3dline_pen24.Width)) g.DrawLines(data_3dline_pen24, points24);
+                        if (console.setupForm.number3DZ.Value > 21) if (!Direct2DDisplay.QueuePanadapterTrace(points23, W, data_3dline_pen23.Color, data_3dline_pen23.Width)) g.DrawLines(data_3dline_pen23, points23);
+                        if (console.setupForm.number3DZ.Value > 20) if (!Direct2DDisplay.QueuePanadapterTrace(points22, W, data_3dline_pen22.Color, data_3dline_pen22.Width)) g.DrawLines(data_3dline_pen22, points22); //.242
 
-                        g.DrawLines(data_3dline_pen21, points21);
-                        g.DrawLines(data_3dline_pen20, points20);
-                        g.DrawLines(data_3dline_pen19, points19);
-                        g.DrawLines(data_3dline_pen18, points18);
-                        g.DrawLines(data_3dline_pen17, points17);
+                        if (!Direct2DDisplay.QueuePanadapterTrace(points21, W, data_3dline_pen21.Color, data_3dline_pen21.Width)) g.DrawLines(data_3dline_pen21, points21);
+                        if (!Direct2DDisplay.QueuePanadapterTrace(points20, W, data_3dline_pen20.Color, data_3dline_pen20.Width)) g.DrawLines(data_3dline_pen20, points20);
+                        if (!Direct2DDisplay.QueuePanadapterTrace(points19, W, data_3dline_pen19.Color, data_3dline_pen19.Width)) g.DrawLines(data_3dline_pen19, points19);
+                        if (!Direct2DDisplay.QueuePanadapterTrace(points18, W, data_3dline_pen18.Color, data_3dline_pen18.Width)) g.DrawLines(data_3dline_pen18, points18);
+                        if (!Direct2DDisplay.QueuePanadapterTrace(points17, W, data_3dline_pen17.Color, data_3dline_pen17.Width)) g.DrawLines(data_3dline_pen17, points17);
 
                     } //  if (CurrentDisplayMode == DisplayMode.PANADAPTER) //
                     else
@@ -21208,21 +21212,21 @@ namespace PowerSDR
                         if (console.setupForm.number3DZ.Value > 16) console.setupForm.number3DZ.Value = 16;
                     }
 
-                    g.DrawLines(data_3dline_pen16, points16); // ke9ns: do it like this for speed purposes only
-                    g.DrawLines(data_3dline_pen15, points15);
-                    g.DrawLines(data_3dline_pen14, points14);
-                    g.DrawLines(data_3dline_pen13, points13);
-                    g.DrawLines(data_3dline_pen12, points12);
-                    g.DrawLines(data_3dline_pen11, points11);
-                    g.DrawLines(data_3dline_pen10, points10);
-                    g.DrawLines(data_3dline_pen9, points9);
-                    g.DrawLines(data_3dline_pen8, points8);
-                    g.DrawLines(data_3dline_pen7, points7);
-                    g.DrawLines(data_3dline_pen6, points6);
-                    g.DrawLines(data_3dline_pen5, points5);
-                    g.DrawLines(data_3dline_pen4, points4);
-                    g.DrawLines(data_3dline_pen3, points3);
-                    g.DrawLines(data_3dline_pen2, points2);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points16, W, data_3dline_pen16.Color, data_3dline_pen16.Width)) g.DrawLines(data_3dline_pen16, points16); // ke9ns: do it like this for speed purposes only
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points15, W, data_3dline_pen15.Color, data_3dline_pen15.Width)) g.DrawLines(data_3dline_pen15, points15);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points14, W, data_3dline_pen14.Color, data_3dline_pen14.Width)) g.DrawLines(data_3dline_pen14, points14);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points13, W, data_3dline_pen13.Color, data_3dline_pen13.Width)) g.DrawLines(data_3dline_pen13, points13);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points12, W, data_3dline_pen12.Color, data_3dline_pen12.Width)) g.DrawLines(data_3dline_pen12, points12);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points11, W, data_3dline_pen11.Color, data_3dline_pen11.Width)) g.DrawLines(data_3dline_pen11, points11);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points10, W, data_3dline_pen10.Color, data_3dline_pen10.Width)) g.DrawLines(data_3dline_pen10, points10);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points9, W, data_3dline_pen9.Color, data_3dline_pen9.Width)) g.DrawLines(data_3dline_pen9, points9);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points8, W, data_3dline_pen8.Color, data_3dline_pen8.Width)) g.DrawLines(data_3dline_pen8, points8);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points7, W, data_3dline_pen7.Color, data_3dline_pen7.Width)) g.DrawLines(data_3dline_pen7, points7);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points6, W, data_3dline_pen6.Color, data_3dline_pen6.Width)) g.DrawLines(data_3dline_pen6, points6);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points5, W, data_3dline_pen5.Color, data_3dline_pen5.Width)) g.DrawLines(data_3dline_pen5, points5);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points4, W, data_3dline_pen4.Color, data_3dline_pen4.Width)) g.DrawLines(data_3dline_pen4, points4);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points3, W, data_3dline_pen3.Color, data_3dline_pen3.Width)) g.DrawLines(data_3dline_pen3, points3);
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points2, W, data_3dline_pen2.Color, data_3dline_pen2.Width)) g.DrawLines(data_3dline_pen2, points2);
 
 
                     if (pan_fill)                               // trace spectrum line and fill under it
@@ -21239,10 +21243,14 @@ namespace PowerSDR
                             points0[W + 1].Y += H;
                         }
 
+                        bool nativePanFill3D = Direct2DDisplay.QueuePanadapterFill(points0, W,
+                            bottom ? H : 0, bottom ? H + H : H, DisplayPanFillColor,
+                            panfillgradient, panfillalpha);
+
                         if (panfillgradient == false) // ke9ns add:  This is the original mode 
                         {
                             data_line_pen.Color = DisplayPanFillColor; // was  Color.FromArgb(100, 255, 255, 255); // ke9ns draw white at 100
-                            g.FillPolygon(data_line_pen.Brush, points0); // fill with standard color (no gradient)
+                            if (!nativePanFill3D) g.FillPolygon(data_line_pen.Brush, points0); // GDI+ fallback
                         }
                         else // ke9ns add: special color gradient mode under spectrum line
                         {
@@ -21250,12 +21258,12 @@ namespace PowerSDR
 
                             if (bottom)
                             {
-                                g.FillPolygon(pan_BrushB, points0); // fill with gradient color
+                                if (!nativePanFill3D) g.FillPolygon(pan_BrushB, points0); // GDI+ fallback
                             }
                             else
                             {
                                 // temporarilly moved
-                                g.FillPolygon(pan_Brush, points0); // fill with gradient color
+                                if (!nativePanFill3D) g.FillPolygon(pan_Brush, points0); // GDI+ fallback
 
 
                             }
@@ -21275,13 +21283,15 @@ namespace PowerSDR
 
                     data_line_pen = new Pen(new SolidBrush(data_line_color), display_line_width);
                     // ke9ns: if 3Dpan, then (below) is the last line draw in normal position
-                    g.DrawLines(data_line_pen, points);                             // trace spectrum line to screen (draw lines between datapoints)
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points, W, data_line_color, display_line_width))
+                        g.DrawLines(data_line_pen, points); // GDI+ fallback
 
 
                 } // PON == true
                 else
                 {
-                    g.DrawLines(data_line_pen, points);                             // trace spectrum line to screen (draw lines between datapoints)
+                    if (!Direct2DDisplay.QueuePanadapterTrace(points, W, data_line_color, display_line_width))
+                        g.DrawLines(data_line_pen, points); // GDI+ fallback
 
                     // if (mox == false ) PON1++;
                 }
@@ -22723,8 +22733,11 @@ namespace PowerSDR
             //==================================================
 
 
+            bool waterfallBitmapChanged = false;
+
             if ((duration > waterfall_update_period) && console.chkPower.Checked)
             {
+                waterfallBitmapChanged = true;
                 if (rx == 1) timer_waterfall.Start();
                 else if (rx == 2) timer_waterfall2.Start();
 
@@ -23857,11 +23870,11 @@ namespace PowerSDR
                     // {
                     if (continuum == 0)
                     {
-                        g.DrawImageUnscaled(waterfall_bmp, (-(W * WaterMove1)) - WM1F, H + 16); // ke9ns  this draws only the center WIDTH of the 3 Wide bitmap
+                        if (!Direct2DDisplay.QueueWaterfallBitmap(waterfall_bmp, (W * WaterMove1) + WM1F, W, H + 16, 1, waterfallBitmapChanged)) g.DrawImageUnscaled(waterfall_bmp, (-(W * WaterMove1)) - WM1F, H + 16); // GDI+ fallback
                     }
                     else
                     {
-                        g.DrawImageUnscaled(waterfall_bmp, 0, 16);  // ke9ns draw image shift down 16 and over to the right 100 to allow for time stamp and db values	
+                        if (!Direct2DDisplay.QueueWaterfallBitmap(waterfall_bmp, 0, W, 16, 1, waterfallBitmapChanged)) g.DrawImageUnscaled(waterfall_bmp, 0, 16); // GDI+ fallback
 
                     }
                     //  }
@@ -23876,7 +23889,7 @@ namespace PowerSDR
                     //  }
                     //  else
                     // {
-                    g.DrawImageUnscaled(waterfall_bmp2, (-(W * WaterMove1)) - WM2F, H + 16);
+                    if (!Direct2DDisplay.QueueWaterfallBitmap(waterfall_bmp2, (W * WaterMove1) + WM2F, W, H + 16, 2, waterfallBitmapChanged)) g.DrawImageUnscaled(waterfall_bmp2, (-(W * WaterMove1)) - WM2F, H + 16); // GDI+ fallback
                     // }
 
 
@@ -23896,11 +23909,11 @@ namespace PowerSDR
 
                     if (continuum == 0)
                     {
-                        g.DrawImageUnscaled(waterfall_bmp, (-(W * WaterMove1)) - WM1F, 16);  // draw the image on the background	
+                        if (!Direct2DDisplay.QueueWaterfallBitmap(waterfall_bmp, (W * WaterMove1) + WM1F, W, 16, 1, waterfallBitmapChanged)) g.DrawImageUnscaled(waterfall_bmp, (-(W * WaterMove1)) - WM1F, 16); // GDI+ fallback
                     }
                     else
                     {
-                        g.DrawImageUnscaled(waterfall_bmp, 0, 16);  // ke9ns draw image shift down 16 and over to the right 100 to allow for time stamp and db values	
+                        if (!Direct2DDisplay.QueueWaterfallBitmap(waterfall_bmp, 0, W, 16, 1, waterfallBitmapChanged)) g.DrawImageUnscaled(waterfall_bmp, 0, 16); // GDI+ fallback
                     }
 
                     //  }
@@ -23913,7 +23926,7 @@ namespace PowerSDR
                     //  }
                     //  else
                     //  {
-                    g.DrawImageUnscaled(waterfall_bmp2, (-(W * WaterMove)) - WM2F, 16); // draw the image on the backgroun	
+                    if (!Direct2DDisplay.QueueWaterfallBitmap(waterfall_bmp2, (W * WaterMove) + WM2F, W, 16, 2, waterfallBitmapChanged)) g.DrawImageUnscaled(waterfall_bmp2, (-(W * WaterMove)) - WM2F, 16); // GDI+ fallback
                                                                                         // }
                 }
 
@@ -23952,12 +23965,12 @@ namespace PowerSDR
                 {
                     if (bottom)
                     {
-                        g.DrawLine(p, display_cursor_x, 0, display_cursor_x, console.picDisplay.Height);  // ke9ns .193
+                        if (!Direct2DDisplay.QueueLine(display_cursor_x, 0, display_cursor_x, console.picDisplay.Height, p.Color, p.Width)) g.DrawLine(p, display_cursor_x, 0, display_cursor_x, console.picDisplay.Height); // GDI+ fallback
 
                         if (display_cursor_y > H)
                         {
                             // g.DrawLine(p, display_cursor_x, 0, display_cursor_x, H + H);
-                            g.DrawLine(p, 0, display_cursor_y, W, display_cursor_y);
+                            if (!Direct2DDisplay.QueueLine(0, display_cursor_y, W, display_cursor_y, p.Color, p.Width)) g.DrawLine(p, 0, display_cursor_y, W, display_cursor_y); // GDI+ fallback
 
                             if (console.setupForm.chkCursorFreq.Checked)
                                 g.DrawString(console.txtDisplayCursorFreq.Text, font, grid_text_brush, display_cursor_x + 3, display_cursor_y - 6 - (float)console.setupForm.udCursorSize.Value );  //.331 
@@ -23971,8 +23984,8 @@ namespace PowerSDR
                     {
                         if (display_cursor_y <= H) //
                         {
-                            g.DrawLine(p, display_cursor_x, 0, display_cursor_x, H);
-                            g.DrawLine(p, 0, display_cursor_y, W, display_cursor_y);
+                            if (!Direct2DDisplay.QueueLine(display_cursor_x, 0, display_cursor_x, H, p.Color, p.Width)) g.DrawLine(p, display_cursor_x, 0, display_cursor_x, H); // GDI+ fallback
+                            if (!Direct2DDisplay.QueueLine(0, display_cursor_y, W, display_cursor_y, p.Color, p.Width)) g.DrawLine(p, 0, display_cursor_y, W, display_cursor_y); // GDI+ fallback
 
                             if (console.setupForm.chkCursorFreq.Checked)
                                 g.DrawString(console.txtDisplayCursorFreq.Text, font, grid_text_brush, display_cursor_x + 3 , display_cursor_y - 6 - (float)console.setupForm.udCursorSize.Value );  //.331

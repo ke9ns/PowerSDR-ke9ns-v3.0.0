@@ -1127,6 +1127,8 @@ namespace PowerSDR
         private void chkRXEQEnabled_CheckedChanged(object sender, System.EventArgs e)
         {
             console.dsp.GetDSPRX(0, 0).RXEQOn = chkRXEQEnabled.Checked;
+            console.dsp.GetDSPRX(0, 1).RXEQOn = chkRXEQEnabled.Checked;
+            console.dsp.GetDSPRX(1, 0).RXEQOn = chkRXEQEnabled.Checked;
             picRXEQ.Invalidate();
             console.RXEQ = chkRXEQEnabled.Checked;
         }

@@ -73,6 +73,7 @@ namespace PowerSDR
             // set for half duplex
             DttSP.SetThreadProcessingMode(0, 2);
             DttSP.SetThreadProcessingMode(1, 1);
+            DspBackend.Register(this);
         }
 
         public DSPRX GetDSPRX(int thread, int subrx)
@@ -369,6 +370,7 @@ namespace PowerSDR
             set
             {
                 dsp_mode = value;
+                if (thread == 0 && subrx == 0) DspBackend.SetRx1Mode(value);
                 if (update)
                 {
                     if (value != dsp_mode_dsp || force)
@@ -386,6 +388,7 @@ namespace PowerSDR
             //Debug.WriteLine("SetRXFilter[" + thread + "][" + subrx + " ](" + low + ", " + high + ") ");
             rx_filter_low = low;
             rx_filter_high = high;
+            if (thread == 0 && subrx == 0) DspBackend.SetRx1Filter(low, high);
             if (update)
             {
                 if (low != rx_filter_low_dsp || high != rx_filter_high_dsp || force)
@@ -406,6 +409,7 @@ namespace PowerSDR
             set
             {
                 rx_filter_low = value;
+                if (thread == 0 && subrx == 0) DspBackend.SetRx1Filter(value, rx_filter_high);
                 if (update)
                 {
                     if (value != rx_filter_low_dsp || force)
@@ -426,6 +430,7 @@ namespace PowerSDR
             set
             {
                 rx_filter_high = value;
+                if (thread == 0 && subrx == 0) DspBackend.SetRx1Filter(rx_filter_low, value);
                 if (update)
                 {
                     if (value != rx_filter_high_dsp || force)
@@ -494,6 +499,8 @@ namespace PowerSDR
             set
             {
                 auto_notch_filter = value;
+                if (thread == 0 && subrx == 0) DspBackend.SetRx1Anf(value);
+                if (thread == 2 && subrx == 0) DspBackend.SetRx2Anf(value);
                 if (update)
                 {
                     if (value != auto_notch_filter_dsp || force)
@@ -514,6 +521,10 @@ namespace PowerSDR
         private double anf_gain = 10e-4;
         private double anf_leak_dsp = 1e-7;
         private double anf_leak = 1e-7;
+        internal int ANFTaps { get { return anf_taps; } }
+        internal int ANFDelay { get { return anf_delay; } }
+        internal double ANFGain { get { return anf_gain; } }
+        internal double ANFLeak { get { return anf_leak; } }
         public void SetANFVals(int taps, int delay, double gain, double leak)
         {
             anf_taps = taps;
@@ -543,6 +554,7 @@ namespace PowerSDR
             set
             {
                 rx_agc_mode = value;
+                if (thread == 0 && subrx == 0) DspBackend.SetRx1Agc(value);
                 switch (rx_agc_mode)
                 {
                     case AGCMode.LONG:
@@ -591,10 +603,25 @@ namespace PowerSDR
 
         //=====================================================================================
         private int rx_eq_num_bands = 3;
+        private readonly object rx_eq_lock = new object();
+        private volatile int rx_eq_version;
+        internal int RXEQVersion { get { return rx_eq_version; } }
+        internal int CopyRXEQ(int[] values, out int bands, out bool enabled)
+        {
+            lock (rx_eq_lock)
+            {
+                bands = rx_eq_num_bands;
+                enabled = rx_eq_on;
+                Array.Clear(values, 0, values.Length);
+                int[] source = bands == 3 ? rx_eq3 : rx_eq10;
+                Array.Copy(source, values, Math.Min(source.Length, values.Length));
+                return rx_eq_version;
+            }
+        }
         public int RXEQNumBands
         {
-            get { return rx_eq_num_bands; }
-            set { rx_eq_num_bands = value; }
+            get { lock (rx_eq_lock) return rx_eq_num_bands; }
+            set { lock (rx_eq_lock) { rx_eq_num_bands = value; rx_eq_version++; } }
         }
 
         //=====================================================================================
@@ -605,8 +632,12 @@ namespace PowerSDR
             get { return rx_eq3; }
             set
             {
-                for (int i = 0; i < rx_eq3.Length && i < value.Length; i++)
-                    rx_eq3[i] = value[i];
+                lock (rx_eq_lock)
+                {
+                    for (int i = 0; i < rx_eq3.Length && i < value.Length; i++)
+                        rx_eq3[i] = value[i];
+                    rx_eq_version++;
+                }
                 if (update)
                 {
 
@@ -626,8 +657,12 @@ namespace PowerSDR
             get { return rx_eq10; }
             set
             {
-                for (int i = 0; i < rx_eq10.Length && i < value.Length; i++)
-                    rx_eq10[i] = value[i];
+                lock (rx_eq_lock)
+                {
+                    for (int i = 0; i < rx_eq10.Length && i < value.Length; i++)
+                        rx_eq10[i] = value[i];
+                    rx_eq_version++;
+                }
                 if (update)
                 {
                     DttSP.SetGrphRXEQ10(thread, subrx, rx_eq10);
@@ -643,10 +678,10 @@ namespace PowerSDR
         private bool rx_eq_on = false;
         public bool RXEQOn
         {
-            get { return rx_eq_on; }
+            get { lock (rx_eq_lock) return rx_eq_on; }
             set
             {
-                rx_eq_on = value;
+                lock (rx_eq_lock) { rx_eq_on = value; rx_eq_version++; }
                 if (update)
                 {
                     if (value != rx_eq_on_dsp || force)
@@ -1301,15 +1336,28 @@ namespace PowerSDR
         private const int MAX_NOTCHES_IN_PASSBAND = 18;
         private bool[] notch_on = new bool[MAX_NOTCHES_IN_PASSBAND];
         private bool[] notch_on_dsp = new bool[MAX_NOTCHES_IN_PASSBAND];
+        private readonly object notch_lock = new object();
+        private volatile int notch_version;
+        internal int NotchVersion { get { return notch_version; } }
+        internal int CopyNotches(bool[] active, double[] frequencies, double[] widths)
+        {
+            lock (notch_lock)
+            {
+                Array.Copy(notch_on, active, MAX_NOTCHES_IN_PASSBAND);
+                Array.Copy(notch_freq, frequencies, MAX_NOTCHES_IN_PASSBAND);
+                Array.Copy(notch_bw, widths, MAX_NOTCHES_IN_PASSBAND);
+                return notch_version;
+            }
+        }
         public bool GetNotchOn(int index)
         {
-            return notch_on[index];
+            lock (notch_lock) return notch_on[index];
         }
 
         //=====================================================================================
         public void SetNotchOn(uint index, bool b)
         {
-            notch_on[index] = b;
+            lock (notch_lock) { notch_on[index] = b; notch_version++; }
             if (update)
             {
                 if (b != notch_on_dsp[index] || force)
@@ -1325,13 +1373,13 @@ namespace PowerSDR
         private double[] notch_freq_dsp = new double[MAX_NOTCHES_IN_PASSBAND];
         public double GetNotchFreq(uint index)
         {
-            return notch_freq[index];
+            lock (notch_lock) return notch_freq[index];
         }
 
         //=====================================================================================
         public void SetNotchFreq(uint index, double freq)
         {
-            notch_freq[index] = freq;
+            lock (notch_lock) { notch_freq[index] = freq; notch_version++; }
             if (update)
             {
                 if (freq != notch_freq_dsp[index] || force)
@@ -1347,7 +1395,7 @@ namespace PowerSDR
         private double[] notch_bw_dsp = new double[MAX_NOTCHES_IN_PASSBAND];
         public double GetNotchBW(uint index)
         {
-            return notch_bw[index];
+            lock (notch_lock) return notch_bw[index];
         }
 
         //=====================================================================================
@@ -1358,7 +1406,7 @@ namespace PowerSDR
         /// <param name="bw">Bandwidth in Hz</param>
         public void SetNotchBW(uint index, double bw)
         {
-            notch_bw[index] = bw;
+            lock (notch_lock) { notch_bw[index] = bw; notch_version++; }
             if (update)
             {
                 if (bw != notch_bw_dsp[index] || force)
@@ -1843,6 +1891,18 @@ namespace PowerSDR
                 {
                     if (value != tx_eq_on_dsp || force)
                     {
+                        // Rebuild the selected native TX curve before enabling it.
+                        // Profiles can restore the checkbox after the sliders, and
+                        // a newly-created DttSP workspace otherwise has a flat/stale
+                        // filter even though TX EQ appears enabled in the UI.
+                        if (value)
+                        {
+                            if (tx_eq_num_bands == 3) DttSP.SetGrphTXEQ(thread, tx_eq3);
+                            else if (tx_eq_num_bands == 28) DttSP.SetGrphTXEQ28(thread, tx_eq28);
+                            else if (tx_eq_num_bands == 9) DttSP.SetGrphTXPEQ(thread, peq);
+                            else if (tx_eq_num_bands == 37) DttSP.SetGrphTXEQ37(thread, tx_eq28, peq);
+                            else DttSP.SetGrphTXEQ10(thread, tx_eq10);
+                        }
                         DttSP.SetGrphTXEQcmd(thread, value);  // ke9ns this routine is in update.c code
                         tx_eq_on_dsp = value;
                     }
