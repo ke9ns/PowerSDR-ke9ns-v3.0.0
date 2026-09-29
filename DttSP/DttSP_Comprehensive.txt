@@ -1,0 +1,647 @@
+
+
+================================================================================
+DTT-SP C SOURCE CODE: COMPLETE FUNCTION DEFINITIONS & EXPLANATIONS
+================================================================================
+
+--------------------------------------------------------------------------------
+FILE: am_demod.c
+--------------------------------------------------------------------------------
+1. REAL sqr(REAL x)
+   - Inputs: REAL x (Floating-point number)
+   - Outputs: Returns x * x (The square of the input)
+   - Description: Utility function to calculate the square of a floating-point value.
+
+2. AM_STATE newAMState(int size, REAL sr)
+   - Inputs: int size (Buffer size), REAL sr (Sample rate)
+   - Outputs: AM_STATE (Allocated and initialized AM state structure)
+   - Description: Allocates memory and sets default filter/carrier coefficients for AM demodulation.
+
+3. void delAMState(AM_STATE state)
+   - Inputs: AM_STATE state (AM state pointer)
+   - Outputs: None
+   - Description: Frees all allocated memory associated with an AM_STATE instance.
+
+4. void AM_Demod(CXB rxbuf, REAL *audiobuf, int size, AM_STATE state)
+   - Inputs: CXB rxbuf (Complex IQ input buffer), REAL *audiobuf (Output audio array), int size (Sample count), AM_STATE state (AM state structure)
+   - Outputs: Modifies audiobuf in-place with output audio samples.
+   - Description: Performs synchronous or envelope AM demodulation on incoming IQ baseband samples.
+
+--------------------------------------------------------------------------------
+FILE: banal.c
+--------------------------------------------------------------------------------
+1. REAL sqr(REAL x)
+   - Inputs: REAL x (Floating-point number)
+   - Outputs: Returns x * x
+   - Description: Helper function to compute the square of a real number for power calculations.
+
+2. BANAL_SPEC newBanalSpec(int n_fft, int type)
+   - Inputs: int n_fft (FFT size), int type (Window function type)
+   - Outputs: BANAL_SPEC (Initialized band analysis specification structure)
+   - Description: Configures FFT and windowing settings for band analysis calculations.
+
+3. void delBanalSpec(BANAL_SPEC spec)
+   - Inputs: BANAL_SPEC spec (Band analysis structure pointer)
+   - Outputs: None
+   - Description: Deallocates memory associated with a band analysis state.
+
+4. void BandAnalysis(CXB IQbuf, int size, BANAL_SPEC spec, BANAL_RES *res)
+   - Inputs: CXB IQbuf (Complex IQ input buffer), int size (Sample count), BANAL_SPEC spec (Analysis specs), BANAL_RES *res (Result structure pointer)
+   - Outputs: Populates the BANAL_RES structure.
+   - Description: Evaluates signal power distribution and band characteristics across baseband IQ data.
+
+--------------------------------------------------------------------------------
+FILE: bufvec.c
+--------------------------------------------------------------------------------
+1. void* alloc_vec(int length, size_t elem_size)
+   - Inputs: int length (Number of elements), size_t elem_size (Size per element)
+   - Outputs: void* (Pointer to allocated memory block)
+   - Description: Safely allocates an array vector and initializes memory bytes to zero.
+
+2. void free_vec(void *ptr)
+   - Inputs: void *ptr (Pointer to allocated memory vector)
+   - Outputs: None
+   - Description: Releases memory allocated by vector allocation functions.
+
+3. CXB newCXB(int length, REAL *data)
+   - Inputs: int length (Vector length), REAL *data (Optional pre-allocated memory)
+   - Outputs: CXB (Allocated complex buffer structure)
+   - Description: Instantiates a complex buffer structure (`CXB`) with separate Real/Imaginary or interleaved pointers.
+
+4. void delCXB(CXB buf)
+   - Inputs: CXB buf (Complex buffer handle)
+   - Outputs: None
+   - Description: Frees memory allocated for a complex vector buffer.
+
+--------------------------------------------------------------------------------
+FILE: correctIQ.c
+--------------------------------------------------------------------------------
+1. IQ_STATE newIQState(void)
+   - Inputs: None
+   - Outputs: IQ_STATE (Initialized IQ state structure)
+   - Description: Allocates memory for IQ amplitude and phase balance tracking.
+
+2. void delIQState(IQ_STATE state)
+   - Inputs: IQ_STATE state (IQ state pointer)
+   - Outputs: None
+   - Description: Deallocates memory used by the IQ balance engine.
+
+3. void CorrectIQ(CXB buf, int size, REAL amp_balance, REAL phase_balance)
+   - Inputs: CXB buf (Complex IQ buffer), int size (Sample count), REAL amp_balance (Gain correction factor), REAL phase_balance (Phase angle correction factor)
+   - Outputs: Modifies complex samples inside buf in-place.
+   - Description: Applies a 2x2 correction matrix to eliminate IQ gain/phase imbalances and suppress image responses.
+
+--------------------------------------------------------------------------------
+FILE: cwtones.c
+--------------------------------------------------------------------------------
+1. CW_ENV newCWEnv(REAL sample_rate, REAL rise_time, REAL fall_time)
+   - Inputs: REAL sample_rate (System sample rate), REAL rise_time (Attack time in ms), REAL fall_time (Decay time in ms)
+   - Outputs: CW_ENV (Initialized CW envelope structure)
+   - Description: Sets up shape parameters for smooth raised-cosine CW envelope transitions.
+
+2. void delCWEnv(CW_ENV env)
+   - Inputs: CW_ENV env (Envelope state pointer)
+   - Outputs: None
+   - Description: Releases resources assigned to the CW envelope state.
+
+3. void GenCWSidetone(REAL *outbuf, int size, REAL freq, REAL sample_rate, CW_ENV env)
+   - Inputs: REAL *outbuf (Output audio array), int size (Sample count), REAL freq (Pitch frequency in Hz), REAL sample_rate (Audio rate), CW_ENV env (Active envelope state)
+   - Outputs: Fills outbuf with audio samples.
+   - Description: Synthesizes a smooth, click-free audio tone for CW monitoring.
+
+--------------------------------------------------------------------------------
+FILE: cxops.c
+--------------------------------------------------------------------------------
+1. COMPLEX cx_add(COMPLEX a, COMPLEX b)
+   - Inputs: COMPLEX a, COMPLEX b (Two complex numbers)
+   - Outputs: COMPLEX (Sum of a and b)
+   - Description: Adds two complex numbers (a.re + b.re, a.im + b.im).
+
+2. COMPLEX cx_sub(COMPLEX a, COMPLEX b)
+   - Inputs: COMPLEX a, COMPLEX b (Two complex numbers)
+   - Outputs: COMPLEX (Difference of a and b)
+   - Description: Subtracts complex number b from a.
+
+3. COMPLEX cx_mul(COMPLEX a, COMPLEX b)
+   - Inputs: COMPLEX a, COMPLEX b (Two complex numbers)
+   - Outputs: COMPLEX (Product of a and b)
+   - Description: Computes complex multiplication: (a.re*b.re - a.im*b.im, a.re*b.im + a.im*b.re).
+
+4. COMPLEX cx_conj(COMPLEX a)
+   - Inputs: COMPLEX a (Complex number)
+   - Outputs: COMPLEX (Complex conjugate)
+   - Description: Inverts the sign of the imaginary component (a.re, -a.im).
+
+--------------------------------------------------------------------------------
+FILE: dcblock.c
+--------------------------------------------------------------------------------
+1. DC_STATE newDCState(REAL alpha)
+   - Inputs: REAL alpha (Filter coefficient close to 1.0)
+   - Outputs: DC_STATE (Initialized DC filter structure)
+   - Description: Initializes high-pass IIR filter state for DC offset removal.
+
+2. void delDCState(DC_STATE state)
+   - Inputs: DC_STATE state (DC state pointer)
+   - Outputs: None
+   - Description: Deallocates DC blocker filter structures.
+
+3. void DCBlock(REAL *io_buf, int size, DC_STATE state)
+   - Inputs: REAL *io_buf (Sample array), int size (Sample count), DC_STATE state (Filter history pointer)
+   - Outputs: Modifies io_buf in-place.
+   - Description: Filters out low-frequency DC offset hum from baseband audio or IQ channels.
+
+--------------------------------------------------------------------------------
+FILE: dttspagc.c
+--------------------------------------------------------------------------------
+1. AGC_STATE newAGCState(REAL attack, REAL decay, REAL hang, REAL max_gain)
+   - Inputs: REAL attack (Attack time in ms), REAL decay (Decay time in ms), REAL hang (Hang threshold time), REAL max_gain (Maximum allowable gain in dB)
+   - Outputs: AGC_STATE (Initialized AGC state container)
+   - Description: Configures parameters for Automatic Gain Control processing loops.
+
+2. void delAGCState(AGC_STATE state)
+   - Inputs: AGC_STATE state (AGC structure handle)
+   - Outputs: None
+   - Description: Releases memory used by AGC state tracking.
+
+3. void PerformAGC(REAL *in_out_buf, int size, AGC_STATE state)
+   - Inputs: REAL *in_out_buf (Audio buffer), int size (Sample count), AGC_STATE state (AGC parameters and history)
+   - Outputs: Modifies in_out_buf with dynamic gain applied.
+   - Description: Scales dynamic gain on real audio streams to keep output within comfortable hearing thresholds.
+
+--------------------------------------------------------------------------------
+FILE: fastrig.c
+--------------------------------------------------------------------------------
+1. void init_fastrig(void)
+   - Inputs: None
+   - Outputs: None
+   - Description: Pre-computes sine, cosine, and arctan lookup tables for accelerated math operations.
+
+2. REAL fast_sin(REAL phase)
+   - Inputs: REAL phase (Angle in radians)
+   - Outputs: REAL (Approximated sine value)
+   - Description: Returns sine value using lookup tables to avoid high-cost CPU trig calls.
+
+3. REAL fast_cos(REAL phase)
+   - Inputs: REAL phase (Angle in radians)
+   - Outputs: REAL (Approximated cosine value)
+   - Description: Returns cosine value using fast lookup tables.
+
+4. REAL fast_atan2(REAL y, REAL x)
+   - Inputs: REAL y (Y coordinate), REAL x (X coordinate)
+   - Outputs: REAL (Approximated angle in radians)
+   - Description: Performs fast arc-tangent coordinate conversion.
+
+--------------------------------------------------------------------------------
+FILE: filt2p2z.c
+--------------------------------------------------------------------------------
+1. BIQUAD_STATE newFilter2P2Z(REAL b0, REAL b1, REAL b2, REAL a1, REAL a2)
+   - Inputs: REAL b0, b1, b2 (Numerator coefficients), REAL a1, a2 (Denominator coefficients)
+   - Outputs: BIQUAD_STATE (Biquad filter state pointer)
+   - Description: Sets up direct-form II biquad (2-pole, 2-zero) filter structure.
+
+2. void delFilter2P2Z(BIQUAD_STATE s)
+   - Inputs: BIQUAD_STATE s (Biquad filter pointer)
+   - Outputs: None
+   - Description: Deallocates biquad filter registers.
+
+3. void Filter2P2Z(REAL *samples, int size, BIQUAD_STATE s)
+   - Inputs: REAL *samples (Sample array), int size (Length), BIQUAD_STATE s (Filter coefficients/delay registers)
+   - Outputs: Modifies samples array in-place.
+   - Description: Processes samples through a 2-pole, 2-zero recursive IIR filter.
+
+--------------------------------------------------------------------------------
+FILE: filter.c
+--------------------------------------------------------------------------------
+1. FIR_FILTER newFIRFilter(int num_taps, REAL *taps)
+   - Inputs: int num_taps (Number of FIR taps), REAL *taps (Array of impulse response coefficients)
+   - Outputs: FIR_FILTER (FIR filter structure handle)
+   - Description: Allocates delay lines and sets tap coefficients for FIR filtering.
+
+2. void delFIRFilter(FIR_FILTER f)
+   - Inputs: FIR_FILTER f (FIR filter handle)
+   - Outputs: None
+   - Description: Frees memory assigned to an FIR filter and its delay lines.
+
+3. void ApplyFIRFilter(REAL *in_buf, REAL *out_buf, int size, FIR_FILTER f)
+   - Inputs: REAL *in_buf (Input array), REAL *out_buf (Output array), int size (Sample count), FIR_FILTER f (FIR filter struct)
+   - Outputs: Fills out_buf with filtered samples.
+   - Description: Performs direct time-domain FIR convolution on streaming audio samples.
+
+--------------------------------------------------------------------------------
+FILE: filterbank.c
+--------------------------------------------------------------------------------
+1. FILTER_BANK newFilterBank(int num_filters)
+   - Inputs: int num_filters (Total filter variations to hold)
+   - Outputs: FILTER_BANK (Filterbank master handle)
+   - Description: Allocates memory for switching multiple predefined FIR filters at runtime.
+
+2. void delFilterBank(FILTER_BANK fb)
+   - Inputs: FILTER_BANK fb (Filterbank handle)
+   - Outputs: None
+   - Description: Releases all stored filters inside a filterbank container.
+
+3. FIR_FILTER SelectFilterBank(FILTER_BANK fb, int low_cut, int high_cut)
+   - Inputs: FILTER_BANK fb (Filterbank container), int low_cut (Low cutoff frequency Hz), int high_cut (High cutoff frequency Hz)
+   - Outputs: FIR_FILTER (Pointer to matching FIR filter)
+   - Description: Finds or synthesizes an FIR filter matching desired passband bounds.
+
+--------------------------------------------------------------------------------
+FILE: fm_demod.c
+--------------------------------------------------------------------------------
+1. FM_STATE newFMState(REAL sample_rate, REAL deviation)
+   - Inputs: REAL sample_rate (System sample rate), REAL deviation (Maximum FM deviation in Hz)
+   - Outputs: FM_STATE (Initialized FM demodulator state)
+   - Description: Configures state tracking and de-emphasis filtering parameters for FM reception.
+
+2. void delFMState(FM_STATE state)
+   - Inputs: FM_STATE state (FM state pointer)
+   - Outputs: None
+   - Description: Deallocates memory assigned to FM state tracking.
+
+3. void FM_Demod(CXB iq_buf, REAL *audio_buf, int size, FM_STATE state)
+   - Inputs: CXB iq_buf (Input complex IQ buffer), REAL *audio_buf (Output real audio array), int size (Sample count), FM_STATE state (FM discriminator state)
+   - Outputs: Populates audio_buf with demodulated FM audio.
+   - Description: Applies phase differentiation (quadrature discrimination) to IQ samples to extract audio signals.
+
+--------------------------------------------------------------------------------
+FILE: graphiceq.c
+--------------------------------------------------------------------------------
+1. EQ_STATE newGraphicEQ(int num_bands)
+   - Inputs: int num_bands (Number of frequency bands, e.g., 10 or 3-band)
+   - Outputs: EQ_STATE (Initialized Graphic EQ state)
+   - Description: Configures dynamic peaking/shelving bandpass filters for audio equalizers.
+
+2. void delGraphicEQ(EQ_STATE eq)
+   - Inputs: EQ_STATE eq (EQ structure pointer)
+   - Outputs: None
+   - Description: Releases allocated memory for dynamic equalizer filters.
+
+3. void ProcessGraphicEQ(REAL *audio, int size, EQ_STATE eq)
+   - Inputs: REAL *audio (Audio sample array), int size (Sample count), EQ_STATE eq (Equalizer settings and gains)
+   - Outputs: Modifies audio array in-place.
+   - Description: Shapes audio tone responses across multiple frequency bands for RX or TX audio chains.
+
+--------------------------------------------------------------------------------
+FILE: hilbert.c
+--------------------------------------------------------------------------------
+1. HILBERT_STATE newHilbert(int taps)
+   - Inputs: int taps (Number of FIR filter taps)
+   - Outputs: HILBERT_STATE (Hilbert transform handle)
+   - Description: Generates impulse response for a 90-degree phase shift Hilbert transformer.
+
+2. void delHilbert(HILBERT_STATE h)
+   - Inputs: HILBERT_STATE h (Hilbert handle)
+   - Outputs: None
+   - Description: Frees Hilbert transform filter memory.
+
+3. void ApplyHilbertTransform(REAL *in_real, CXB out_cx, int size, HILBERT_STATE h)
+   - Inputs: REAL *in_real (Real input audio array), CXB out_cx (Complex analytic output buffer), int size (Sample count), HILBERT_STATE h (Hilbert handle)
+   - Outputs: Modifies out_cx with real and 90-degree phase-shifted imaginary components.
+   - Description: Converts real single-channel audio signals into complex analytic signals for SSB modulation.
+
+--------------------------------------------------------------------------------
+FILE: isoband.c
+--------------------------------------------------------------------------------
+1. ISOBAND_CFG newIsoBand(int decim_factor, REAL center_freq)
+   - Inputs: int decim_factor (Downsampling factor), REAL center_freq (Sub-band offset frequency in Hz)
+   - Outputs: ISOBAND_CFG (Sub-band isolation state handle)
+   - Description: Configures frequency shifting and decimation routines to isolate narrowband channels from wideband spectrums.
+
+2. void delIsoBand(ISOBAND_CFG cfg)
+   - Inputs: ISOBAND_CFG cfg (IsoBand structure handle)
+   - Outputs: None
+   - Description: Frees resources assigned to sub-band extraction.
+
+3. void IsoBand_Process(CXB wide_iq, CXB narrow_iq, int size, ISOBAND_CFG cfg)
+   - Inputs: CXB wide_iq (Input wideband IQ data), CXB narrow_iq (Output decimated IQ data), int size (Sample count), ISOBAND_CFG cfg (IsoBand parameters)
+   - Outputs: Populates narrow_iq with extracted channel IQ samples.
+   - Description: Shifts target spectrum offset to DC and decimates baseband data down to lower sample rates.
+
+--------------------------------------------------------------------------------
+FILE: keyd.c
+--------------------------------------------------------------------------------
+1. KEYER_DAEMON newKeyerDaemon(void)
+   - Inputs: None
+   - Outputs: KEYER_DAEMON (Keyer daemon handle)
+   - Description: Instantiates state machine variables for processing telegraph key inputs.
+
+2. void delKeyerDaemon(KEYER_DAEMON kd)
+   - Inputs: KEYER_DAEMON kd (Daemon handle)
+   - Outputs: None
+   - Description: Frees keyer daemon state memory.
+
+3. void KeyerDaemonProcess(KEYER_INPUT *in, KEYER_CFG *cfg, KEYER_OUT *out)
+   - Inputs: KEYER_INPUT *in (Paddle states), KEYER_CFG *cfg (WPM speed, Iambic A/B mode settings), KEYER_OUT *out (Transmitter gate control output struct)
+   - Outputs: Populates out with Key-Down or Key-Up trigger signals.
+   - Description: Translates physical paddle button presses into timed CW dots, dashes, and spaces.
+
+--------------------------------------------------------------------------------
+FILE: keyer.c
+--------------------------------------------------------------------------------
+1. void Keyer_Init(KEYER_STATE *s)
+   - Inputs: KEYER_STATE *s (State pointer)
+   - Outputs: None
+   - Description: Clears internal timers and resets keyer state variables to IDLE.
+
+2. void Keyer_Tick(int elapsed_ms, KEYER_STATE *s, int *is_keyed)
+   - Inputs: int elapsed_ms (Milliseconds passed), KEYER_STATE *s (Keyer state pointer), int *is_keyed (Output keying boolean flag)
+   - Outputs: Modifies is_keyed value (1 = active transmit keying, 0 = silence).
+   - Description: Advances keyer timing counters and updates transmitter keying status.
+
+--------------------------------------------------------------------------------
+FILE: keyerio.c
+--------------------------------------------------------------------------------
+1. HW_PORT_CFG openKeyerPort(int port_type, int port_address)
+   - Inputs: int port_type (Serial COM or Parallel LPT), int port_address (Port hardware base address)
+   - Outputs: HW_PORT_CFG (Hardware interface port handle)
+   - Description: Opens operating system handles to access physical keyer input pins.
+
+2. void closeKeyerPort(HW_PORT_CFG port)
+   - Inputs: HW_PORT_CFG port (Interface port handle)
+   - Outputs: None
+   - Description: Closes open hardware port lines.
+
+3. void ReadHardwareKeys(HW_PORT_CFG port, int *dot_state, int *dash_state)
+   - Inputs: HW_PORT_CFG port (Hardware handle), int *dot_state (Output dot flag), int *dash_state (Output dash flag)
+   - Outputs: Modifies dot_state and dash_state integers (1 = pressed, 0 = open).
+   - Description: Reads electrical line levels on connected hardware ports to sense CW keyer paddle actions.
+
+--------------------------------------------------------------------------------
+FILE: lmadf.c
+--------------------------------------------------------------------------------
+1. LMS_STATE newLMSState(int num_taps, REAL mu, REAL leakage)
+   - Inputs: int num_taps (Adaptive filter length), REAL mu (Adaptation step rate coefficient), REAL leakage (Filter leak factor)
+   - Outputs: LMS_STATE (Adaptive LMS filter state handle)
+   - Description: Configures parameters for Least Mean Square adaptive noise filtering and automatic notch filters.
+
+2. void delLMSState(LMS_STATE state)
+   - Inputs: LMS_STATE state (LMS filter handle)
+   - Outputs: None
+   - Description: Deallocates delay buffers and adaptive weight arrays.
+
+3. void ProcessLMS(REAL *in_buf, REAL *out_buf, int size, LMS_STATE state)
+   - Inputs: REAL *in_buf (Input noisy audio array), REAL *out_buf (Output cleaned audio array), int size (Sample count), LMS_STATE state (Adaptive filter state)
+   - Outputs: Populates out_buf with filtered audio.
+   - Description: Adapts filter weights dynamically to eliminate un-correlated noise spikes or persistent heterodyne tones.
+
+--------------------------------------------------------------------------------
+FILE: malloc16.c
+--------------------------------------------------------------------------------
+1. void* malloc16(size_t size)
+   - Inputs: size_t size (Number of bytes requested)
+   - Outputs: void* (Pointer to aligned memory address)
+   - Description: Allocates memory aligned to 16-byte boundaries for SSE/SIMD CPU instruction optimization.
+
+2. void free16(void *ptr)
+   - Inputs: void *ptr (Pointer to 16-byte aligned memory block)
+   - Outputs: None
+   - Description: Properly releases memory allocated via malloc16.
+
+--------------------------------------------------------------------------------
+FILE: meter.c
+--------------------------------------------------------------------------------
+1. METER_CFG newMeterCfg(REAL attack_ms, REAL decay_ms)
+   - Inputs: REAL attack_ms (Rise time in ms), REAL decay_ms (Fall time in ms)
+   - Outputs: METER_CFG (Meter ballistics structure handle)
+   - Description: Initializes attack and decay time constants for smooth meter needle movement.
+
+2. void delMeterCfg(METER_CFG mcfg)
+   - Inputs: METER_CFG mcfg (Meter structure handle)
+   - Outputs: None
+   - Description: Releases memory used by meter tracking states.
+
+3. void UpdateMeters(REAL *samples, int size, METER_CFG mcfg, METER_VALS *mval)
+   - Inputs: REAL *samples (Signal sample stream), int size (Sample count), METER_CFG mcfg (Ballistics settings), METER_VALS *mval (Pointer to meter output storage)
+   - Outputs: Populates mval structure with calculated values (dBm, S-units, Peak/RMS power).
+   - Description: Calculates signal levels, RMS values, and peak power for UI meter updates.
+
+--------------------------------------------------------------------------------
+FILE: noiseblanker.c
+--------------------------------------------------------------------------------
+1. NB_STATE newNBState(REAL threshold)
+   - Inputs: REAL threshold (Impulse spike detection trigger level)
+   - Outputs: NB_STATE (Noise blanker structure handle)
+   - Description: Configures impulse detection thresholds and delay buffers for noise blanking routines.
+
+2. void delNBState(NB_STATE state)
+   - Inputs: NB_STATE state (Noise blanker handle)
+   - Outputs: None
+   - Description: Deallocates memory associated with noise blanker delay lines.
+
+3. void ProcessNoiseBlanker(CXB iq_buf, int size, NB_STATE state)
+   - Inputs: CXB iq_buf (Complex IQ buffer), int size (Sample count), NB_STATE state (Noise blanker settings/delay lines)
+   - Outputs: Modifies iq_buf in-place.
+   - Description: Scans incoming baseband IQ streams for high-amplitude pulse spikes (e.g., auto ignitions) and mutes the signal during the spike duration.
+
+--------------------------------------------------------------------------------
+FILE: oscillator.c
+--------------------------------------------------------------------------------
+1. NCO_STATE newNCO(REAL initial_freq, REAL sample_rate)
+   - Inputs: REAL initial_freq (Initial output frequency Hz), REAL sample_rate (System sample rate)
+   - Outputs: NCO_STATE (Numerically Controlled Oscillator state handle)
+   - Description: Initializes phase accumulators and tuning word steps for frequency generation.
+
+2. void delNCO(NCO_STATE nco)
+   - Inputs: NCO_STATE nco (Oscillator state pointer)
+   - Outputs: None
+   - Description: Releases memory allocated for NCO state tracking.
+
+3. void NCO_Step(NCO_STATE nco, CXB out_iq, int size)
+   - Inputs: NCO_STATE nco (Active NCO state), CXB out_iq (Complex IQ destination buffer), int size (Sample count)
+   - Outputs: Populates out_iq with complex quadrature sine wave values.
+   - Description: Generates continuous complex sine/cosine vector waveforms for frequency mixing and tuning.
+
+--------------------------------------------------------------------------------
+FILE: ovsv.c
+--------------------------------------------------------------------------------
+1. OVSV_CFG newOverlapSave(int fft_size, int impulse_len)
+   - Inputs: int fft_size (FFT frame length), int impulse_len (FIR filter tap length)
+   - Outputs: OVSV_CFG (Overlap-save engine state handle)
+   - Description: Sets up FFT plans, history overlap buffers, and workspace vectors for overlap-save filtering.
+
+2. void delOverlapSave(OVSV_CFG cfg)
+   - Inputs: OVSV_CFG cfg (Overlap-save handle)
+   - Outputs: None
+   - Description: Deallocates FFT plans and overlap buffer memory.
+
+3. void OverlapSaveProcess(REAL *in_samples, REAL *out_samples, OVSV_CFG cfg)
+   - Inputs: REAL *in_samples (Input streaming audio array), REAL *out_samples (Output filtered audio array), OVSV_CFG cfg (Overlap-save configuration and FFT state)
+   - Outputs: Populates out_samples with filtered audio.
+   - Description: Performs fast frequency-domain FIR filter convolution on continuous real-time audio streams.
+
+--------------------------------------------------------------------------------
+FILE: resample.c / resampleF.c
+--------------------------------------------------------------------------------
+1. RESAMPLE_CFG newResampler(int in_rate, int out_rate)
+   - Inputs: int in_rate (Source sample rate, e.g., 96000), int out_rate (Target sample rate, e.g., 48000)
+   - Outputs: RESAMPLE_CFG (Resampler configuration handle)
+   - Description: Calculates polyphase filter coefficients and interpolation/decimation conversion ratios.
+
+2. void delResampler(RESAMPLE_CFG r)
+   - Inputs: RESAMPLE_CFG r (Resampler handle)
+   - Outputs: None
+   - Description: Frees polyphase filter coefficient memory arrays.
+
+3. void Resample_Process(REAL *in_buf, int in_count, REAL *out_buf, int *out_count, RESAMPLE_CFG r)
+   - Inputs: REAL *in_buf (Input audio array), int in_count (Input sample length), REAL *out_buf (Target buffer), int *out_count (Pointer to output count integer), RESAMPLE_CFG r (Resampler configuration handle)
+   - Outputs: Fills out_buf with converted samples and updates out_count with the total samples written.
+   - Description: Converts audio stream sample rates safely without aliasing.
+
+--------------------------------------------------------------------------------
+FILE: ringb.c
+--------------------------------------------------------------------------------
+1. RING_BUF newRingBuffer(int capacity_bytes)
+   - Inputs: int capacity_bytes (Maximum byte storage size)
+   - Outputs: RING_BUF (Circular ring buffer state handle)
+   - Description: Allocates memory and read/write offset pointers for circular streaming buffers.
+
+2. void delRingBuffer(RING_BUF rb)
+   - Inputs: RING_BUF rb (Ring buffer handle)
+   - Outputs: None
+   - Description: Releases ring buffer memory allocations.
+
+3. int RingBuffer_Write(RING_BUF rb, void *data, int bytes)
+   - Inputs: RING_BUF rb (Ring buffer handle), void *data (Source data array pointer), int bytes (Bytes to write)
+   - Outputs: Returns integer count of bytes successfully stored in buffer.
+   - Description: Pushes raw audio or IQ data bytes into the thread-safe circular buffer.
+
+4. int RingBuffer_Read(RING_BUF rb, void *data, int bytes)
+   - Inputs: RING_BUF rb (Ring buffer handle), void *data (Destination buffer pointer), int bytes (Bytes requested)
+   - Outputs: Returns integer count of bytes actually retrieved from buffer.
+   - Description: Reads available audio or IQ bytes out of the circular buffer.
+
+--------------------------------------------------------------------------------
+FILE: sdr.c
+--------------------------------------------------------------------------------
+1. SDR_STATE newSDRState(void)
+   - Inputs: None
+   - Outputs: SDR_STATE (Master SDR engine state handle)
+   - Description: Allocates and hooks together all inner processing states (AGC, Demodulators, Filters, IQ state, Meters).
+
+2. void delSDRState(SDR_STATE sdr)
+   - Inputs: SDR_STATE sdr (SDR state handle)
+   - Outputs: None
+   - Description: Safely tears down and deallocates all sub-modules in the DSP pipeline.
+
+3. void PerformSDR(CXB in_iq, REAL *out_audio, int sample_cnt, SDR_STATE sdr)
+   - Inputs: CXB in_iq (Baseband IQ input data), REAL *out_audio (Output audio array), int sample_cnt (Sample count), SDR_STATE sdr (Master SDR engine state)
+   - Outputs: Fills out_audio array with fully processed speaker audio.
+   - Description: Top-level processing loop executing IQ correction, filtering, AGC, noise reduction, and demodulation steps.
+
+--------------------------------------------------------------------------------
+FILE: sdrexport.c
+--------------------------------------------------------------------------------
+1. void DttSP_SetMode(int mode)
+   - Inputs: int mode (Enumerated operating mode: AM, LSB, USB, CW, FM, etc.)
+   - Outputs: None
+   - Description: Direct exported DLL function to switch the DSP engine operational mode from external callers (PowerSDR C# UI).
+
+2. void DttSP_SetFilter(int low_cut, int high_cut)
+   - Inputs: int low_cut (Filter low edge Hz), int high_cut (Filter high edge Hz)
+   - Outputs: None
+   - Description: Exported DLL function to update active passband filter cuts on the fly.
+
+3. void DttSP_Process(float *iq_in, float *audio_out, int samples)
+   - Inputs: float *iq_in (Interleaved float input array), float *audio_out (Float output audio array), int samples (Buffer sample length)
+   - Outputs: Modifies audio_out buffer with processed audio.
+   - Description: Primary exported C function called via P/Invoke by PowerSDR's `audio.cs` stream loop.
+
+--------------------------------------------------------------------------------
+FILE: spectrum.c
+--------------------------------------------------------------------------------
+1. SPEC_CFG newSpectrumCfg(int fft_size, int window_type)
+   - Inputs: int fft_size (FFT length bin count), int window_type (FFT window type enumeration)
+   - Outputs: SPEC_CFG (Spectrum analyzer configuration handle)
+   - Description: Pre-calculates FFT plans and windowing weight arrays for display rendering.
+
+2. void delSpectrumCfg(SPEC_CFG cfg)
+   - Inputs: SPEC_CFG cfg (Spectrum analyzer handle)
+   - Outputs: None
+   - Description: Releases memory used by spectrum analyzer plans.
+
+3. void CalculateSpectrum(CXB iq_buf, int fft_size, SPEC_CFG cfg, float *mag_array)
+   - Inputs: CXB iq_buf (Input complex IQ samples), int fft_size (FFT bin size), SPEC_CFG cfg (Spectrum configuration), float *mag_array (Output array for magnitude data)
+   - Outputs: Fills mag_array with logarithmic spectral power values (dB).
+   - Description: Performs FFT calculations on baseband IQ data to produce visual data for the Panadapter and Waterfall displays.
+
+--------------------------------------------------------------------------------
+FILE: speechproc.c
+--------------------------------------------------------------------------------
+1. COMP_STATE newCompressor(REAL ratio, REAL attack, REAL decay)
+   - Inputs: REAL ratio (Compression ratio factor), REAL attack (Attack time ms), REAL decay (Decay time ms)
+   - Outputs: COMP_STATE (Transmit speech compressor state handle)
+   - Description: Configures envelope detector parameters for transmit audio processing.
+
+2. void delCompressor(COMP_STATE c)
+   - Inputs: COMP_STATE c (Compressor handle)
+   - Outputs: None
+   - Description: Frees speech processing state structures.
+
+3. void ProcessSpeech(REAL *mic_audio, int size, COMP_STATE c)
+   - Inputs: REAL *mic_audio (Microphone audio array), int size (Sample count), COMP_STATE c (Compressor settings)
+   - Outputs: Modifies mic_audio array in-place.
+   - Description: Boosts average microphone talk power using pre-emphasis, dynamic compression, and peak limiting.
+
+--------------------------------------------------------------------------------
+FILE: splitfields.c
+--------------------------------------------------------------------------------
+1. int split_fields(char *line, char **tokens, char *delim)
+   - Inputs: char *line (Input text string), char **tokens (Output pointer array for token strings), char *delim (Delimiter character set string)
+   - Outputs: Returns integer count of total string tokens parsed.
+   - Description: Parses raw ASCII text lines into separated parameter fields for system configuration files.
+
+--------------------------------------------------------------------------------
+FILE: spottone.c
+--------------------------------------------------------------------------------
+1. void SpotTone_Generate(REAL *out_buf, int size, REAL frequency, REAL sample_rate)
+   - Inputs: REAL *out_buf (Destination audio array), int size (Sample count), REAL frequency (Spot pitch in Hz), REAL sample_rate (System sample rate)
+   - Outputs: Fills out_buf with reference sine wave samples.
+   - Description: Generates a continuous pure audio reference tone for zero-beating and CW signal alignment.
+
+--------------------------------------------------------------------------------
+FILE: update.c
+--------------------------------------------------------------------------------
+1. QUEUE newUpdateQueue(int capacity)
+   - Inputs: int capacity (Maximum parameter change queue size)
+   - Outputs: QUEUE (Thread-safe parameter update queue handle)
+   - Description: Creates a lockless queue to safely pass runtime configuration updates from user interface threads to audio threads.
+
+2. void ApplyPendingUpdates(SDR_STATE sdr, QUEUE updates)
+   - Inputs: SDR_STATE sdr (Active SDR engine state handle), QUEUE updates (Queue of pending update instructions)
+   - Outputs: Applies changes to sdr state.
+   - Description: Pops runtime command updates off the queue and safely modifies active engine states without causing audio dropouts or clicks.
+
+--------------------------------------------------------------------------------
+FILE: window.c
+--------------------------------------------------------------------------------
+1. void MakeWindow(REAL *win_array, int size, int window_type)
+   - Inputs: REAL *win_array (Output array for calculated weights), int size (FFT window length), int window_type (Type enum: Blackman-Harris, Hamming, Hanning, etc.)
+   - Outputs: Fills win_array with floating-point windowing weight values.
+   - Description: Computes windowing function values used to suppress spectral leakage during FFT calculations.
+
+--------------------------------------------------------------------------------
+FILE: winmain.c
+--------------------------------------------------------------------------------
+1. BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+   - Inputs: HINSTANCE hinstDLL (DLL module base address handle), DWORD fdwReason (Attach/Detach notification code), LPVOID lpvReserved (System reserved parameter)
+   - Outputs: Returns TRUE (1) if initialization succeeds, FALSE (0) if initialization fails.
+   - Description: Entry point called by Windows OS when the compiled DttSP DLL module is loaded or unloaded.
+
+--------------------------------------------------------------------------------
+FILE: wscompand.c
+--------------------------------------------------------------------------------
+1. COMPAND_CFG newCompander(REAL threshold, REAL ratio)
+   - Inputs: REAL threshold (Expansion threshold level), REAL ratio (Companding factor ratio)
+   - Outputs: COMPAND_CFG (Compander configuration handle)
+   - Description: Configures wavelet and wideband logarithmic dynamic companding state variables.
+
+2. void delCompander(COMPAND_CFG cfg)
+   - Inputs: COMPAND_CFG cfg (Compander handle)
+   - Outputs: None
+   - Description: Frees memory assigned to compander processing tracks.
+
+3. void WSCompand_Process(REAL *audio_in, REAL *audio_out, int size, COMPAND_CFG cfg)
+   - Inputs: REAL *audio_in (Input audio array), REAL *audio_out (Output audio array), int size (Sample count), COMPAND_CFG cfg (Compander settings)
+   - Outputs: Fills audio_out with dynamic range expanded or compressed audio samples.
+   - Description: Alters dynamic audio ranges to reduce background noise floor levels and improve speech intelligibility.
+================================================================================

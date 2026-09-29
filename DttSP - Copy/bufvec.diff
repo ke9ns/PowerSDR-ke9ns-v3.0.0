@@ -1,0 +1,18 @@
+--- a/bufvec.c
++++ b/bufvec.c
+@@
+ #include "bufvec.h"
++#include "rt_pool.h"
+
++/* Example of integrating RT pool into newvec_REAL */
+ static REAL *newvec_REAL(int size, const char *tag)
+ {
+-    REAL *rv = (REAL *) safealloc(size, sizeof(REAL), tag);
+-    return rv;
++    static rt_pool_t *pool = NULL;
++    if (!pool) pool = rt_pool_init(16384, 256); /* one-time init: 256 x 16KB blocks */
++    REAL *rv = (REAL *) rt_pool_alloc(pool);
++    if (!rv)
++        rv = (REAL *) safealloc(size, sizeof(REAL), tag); /* fallback */
++    return rv;
+ }

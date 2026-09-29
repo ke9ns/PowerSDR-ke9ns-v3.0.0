@@ -1,0 +1,305 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="logoPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        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
+</value>
+  </data>
+  <data name="textBox1.Text" xml:space="preserve">
+    <value>Software License Agreement:
+
+SCOPE: 
+THIS DISTRIBUTION OF FLEXRADIO SYSTEMS PowerSDR™ INCORPORATES A "MIXED SOURCE" MODEL INCLUDING BOTH OPEN SOURCE AND CLOSED SOURCE COMPONENTS. THE CLOSED SOURCE COMPONENTS ARE PROPRIETARY TO FLEXRADIO SYSTEMS AND ITS LICESNSORS AND COVERED UNDER A SEPARATE AGREEMENT. THIS DOCUMENT COVERS YOUR RIGHTS, PRIVILEGES, AND RESPONSIBILITIES RELATING TO FLEXRADIO OPEN SOURCE SOFTWARE. A DETAILED LISTING OF THE OPEN SOURCE AND CLOSED SOURCE COMPONENTS USED IN CONJUNCTION WITH THIS DISTRIBUTION OF PowerSDR IS CONTAINED IN THE ELECTRONIC DOCUMENTATION INCLUDED WITH THIS DISTRIBUTION.
+
+GNU GENERAL PUBLIC LICENSE
+Version 2, June 1991
+Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+59 Temple Place, Suite 330,
+Boston, MA 02111-1307
+USA
+
+GNU GENERAL PUBLIC LICENSE
+TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+0. This License applies to any program or other work which contains a notice placed by the copyright holder saying it may be distributed under the terms of this General Public License. The "Program", below, refers to any such program or work, and a "work based on the Program" means either the Program or any derivative work under copyright law: that is to say, a work containing the Program or a portion of it, either verbatim or with modifications and/or translated into another language. (Hereinafter, translation is included without limitation in the term "modification".) Each licensee is addressed as "you".
+
+Activities other than copying, distribution and modification are not covered by this License; they are outside its scope. The act of running the Program is not restricted, and the output from the Program is covered only if its contents constitute a work based on the Program (independent of having been made by running the Program). Whether that is true depends on what the Program does.
+
+1. You may copy and distribute verbatim copies of the Program's source code as you receive it, in any medium, provided that you conspicuously and appropriately publish on each copy an appropriate copyright notice and disclaimer of warranty; keep intact all the notices that refer to this License and to the absence of any warranty; and give any other recipients of the Program a copy of this License along with the Program.
+
+You may charge a fee for the physical act of transferring a copy, and you may at your option offer warranty protection in exchange for a fee.
+
+2. You may modify your copy or copies of the Program or any portion of it, thus forming a work based on the Program, and copy and distribute such modifications or work under the terms of Section 1 above, provided that you also meet all of these conditions:
+
+a) You must cause the modified files to carry prominent notices stating that you changed the files and the date of any change.
+b) You must cause any work that you distribute or publish, that in whole or in part contains or is derived from the Program or any part thereof, to be licensed as a whole at no charge to all third parties under the terms of this License.
+c) If the modified program normally reads commands interactively when run, you must cause it, when started running for such interactive use in the most ordinary way, to print or display an announcement including an appropriate copyright notice and a notice that there is no warranty (or else, saying that you provide a warranty) and that users may redistribute the program under these conditions, and telling the user how to view a copy of this License. (Exception: if the Program itself is interactive but does not normally print such an announcement, your work based on the Program is not required to print an announcement.)
+
+These requirements apply to the modified work as a whole. If identifiable sections of that work are not derived from the Program, and can be reasonably considered independent and separate works in themselves, then this License, and its terms, do not apply to those sections when you distribute them as separate works. But when you distribute the same sections as part of a whole which is a work based on the Program, the distribution of the whole must be on the terms of this License, whose permissions for other licensees extend to the entire whole, and thus to each and every part regardless of who wrote it.
+
+Thus, it is not the intent of this section to claim rights or contest your rights to work written entirely by you; rather, the intent is to exercise the right to control the distribution of derivative or collective works based on the Program.
+
+In addition, mere aggregation of another work not based on the Program with the Program (or with a work based on the Program) on a volume of a storage or distribution medium does not bring the other work under the scope of this License.
+
+3. You may copy and distribute the Program (or a work based on it, under Section 2) in object code or executable form under the terms of
+Sections 1 and 2 above provided that you also do one of the following:
+a) Accompany it with the complete corresponding machine-readable source code, which must be distributed under the terms of Sections 1 and 2 above on a medium customarily used for software interchange; or,
+b) Accompany it with a written offer, valid for at least three years, to give any third party, for a charge no more than your cost of physically performing source distribution, a complete machine-readable copy of the corresponding source code, to be distributed under the terms of Sections 1 and 2 above on a medium customarily used for software interchange; or,
+c) Accompany it with the information you received as to the offer to distribute corresponding source code. (This alternative is allowed only for noncommercial distribution and only if you received the program in object code or executable form with such an offer, in accord with Subsection b above.)
+
+The source code for a work means the preferred form of the work for making modifications to it. For an executable work, complete source code means all the source code for all modules it contains, plus any associated interface definition files, plus the scripts used to control compilation and installation of the executable. However, as a special exception, the source code distributed need not include anything that is normally distributed (in either source or binary form) with the major components (compiler, kernel, and so on) of the operating system on which the executable runs, unless that component itself accompanies the executable.
+
+If distribution of executable or object code is made by offering access to copy from a designated place, then offering equivalent access to copy the source code from the same place counts as distribution of the source code, even though third parties are not compelled to copy the source along with the object code.
+
+4. You may not copy, modify, sublicense, or distribute the Program except as expressly provided under this License. Any attempt otherwise to copy, modify, sublicense or distribute the Program is void, and will automatically terminate your rights under this License. However, parties who have received copies, or rights, from you under this License will not have their licenses terminated so long as such parties remain in full compliance.
+
+5. You are not required to accept this License, since you have not signed it. However, nothing else grants you permission to modify or distribute the Program or its derivative works. These actions are prohibited by law if you do not accept this License. Therefore, by modifying or distributing the Program (or any work based on the Program), you indicate your acceptance of this License to do so, and all its terms and conditions for copying, distributing or modifying the Program or works based on it.
+
+6. Each time you redistribute the Program (or any work based on the Program), the recipient automatically receives a license from the original licensor to copy, distribute or modify the Program subject to these terms and conditions. You may not impose any further restrictions on the recipients' exercise of the rights granted herein. You are not responsible for enforcing compliance by third parties to this License.
+
+7. If, as a consequence of a court judgment or allegation of patent infringement or for any other reason (not limited to patent issues), conditions are imposed on you (whether by court order, agreement or otherwise) that contradict the conditions of this License, they do not excuse you from the conditions of this License. If you cannot distribute so as to satisfy simultaneously your obligations under this
+License and any other pertinent obligations, then as a consequence you may not distribute the Program at all. For example, if a patent license would not permit royalty-free redistribution of the Program by all those who receive copies directly or indirectly through you, then the only way you could satisfy both it and this License would be to refrain entirely from distribution of the Program.
+
+If any portion of this section is held invalid or unenforceable under any particular circumstance, the balance of the section is intended to apply and the section as a whole is intended to apply in other circumstances.
+
+It is not the purpose of this section to induce you to infringe any patents or other property right claims or to contest validity of any such claims; this section has the sole purpose of protecting the integrity of the free software distribution system, which is implemented by public license practices. Many people have made generous contributions to the wide range of software distributed through that system in reliance on consistent application of that system; it is up to the author/donor to decide if he or she is willing to distribute software through any other system and a licensee cannot impose that choice.
+
+This section is intended to make thoroughly clear what is believed to be a consequence of the rest of this License.
+
+8. If the distribution and/or use of the Program is restricted in certain countries either by patents or by copyrighted interfaces, the original copyright holder who places the Program under this License may add an explicit geographical distribution limitation excluding those countries, so that distribution is permitted only in or among countries not thus excluded. In such case, this License incorporates the limitation as if written in the body of this License.
+
+9. The Free Software Foundation may publish revised and/or new versions of the General Public License from time to time. Such new versions will be similar in spirit to the present version, but may differ in detail to address new problems or concerns.
+
+Each version is given a distinguishing version number. If the Program specifies a version number of this License which applies to it and "any later version", you have the option of following the terms and conditions either of that version or of any later version published by the Free Software Foundation. If the Program does not specify a version number of this License, you may choose any version ever published by the Free Software Foundation.
+
+10. If you wish to incorporate parts of the Program into other free programs whose distribution conditions are different, write to the author to ask for permission. For software which is copyrighted by the Free Software Foundation, write to the Free Software Foundation; we sometimes make exceptions for this. Our decision will be guided by the two goals of preserving the free status of all derivatives of our free software and of promoting the sharing and reuse of software generally.
+
+NO WARRANTY
+11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</value>
+  </data>
+  <data name="richTextBox1.Text" xml:space="preserve">
+    <value>PowerSDR KE9NS v2.8.0 Revision History:
+
+Complete list of v2.8 Revision history visit: https://ke9ns.com/flexpage.html#GPLREV
+
+For v2.8 Feature Videos: https://ke9ns.com/flexpage.html#videos
+
+DX Cluster List (if you wish to add/change DX Clusters in the Spotter windows): http://www.dxcluster.info/telnet/index.php
+
+TX Waterfall ID PDF file:
+"file://%userprofile%\AppData\Roaming\FlexRadio%20Systems\PowerSDR%20v2.8.0\PowerSDR%20TX%20Waterfall%20ID.pdf"
+
+To download a new fcc database: https://data.fcc.gov/download/pub/uls/complete/l_amat.zip
+Extract the EN.dat file out and move it to the database folder: %userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\
+Delete the old FCCDATA.dat file. Next time you Right Click on the LoTW button in the Spotter screen, a new FCCDATA.dat will be created from the EN.dat file.</value>
+  </data>
+</root>

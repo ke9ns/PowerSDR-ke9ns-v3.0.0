@@ -1,0 +1,459 @@
+
+DttSP
+
+================================================================================
+DttSP SOURCE FILE ROUTINES - INPUT & OUTPUT REFERENCE
+================================================================================
+
+--------------------------------------------------------------------------------
+FILE: am_demod.c
+--------------------------------------------------------------------------------
+Routine: AM_Demod
+  - Description: Performs AM envelope and synchronous demodulation on complex baseband IQ.
+  - Inputs:
+      * CXB rxbuf        : Pointer to complex IQ input sample buffer
+      * REAL *audiobuf   : Pointer to output real audio buffer
+      * int size         : Number of samples to process
+      * AM_STATE *state  : Pointer to AM demodulator state struct (filter states, DC offset)
+  - Outputs:
+      * REAL *audiobuf   : Populated with demodulated audio samples
+      * AM_STATE *state  : Updated carrier tracking and filter state memory
+
+--------------------------------------------------------------------------------
+FILE: banal.c
+--------------------------------------------------------------------------------
+Routine: BandAnalysis
+  - Description: Analyzes baseband spectrum characteristics and signal power distribution.
+  - Inputs:
+      * CXB IQbuf        : Input complex IQ buffer
+      * int size         : Sample count
+      * BANAL_SPEC *spec : Analysis parameters and frequency band limits
+  - Outputs:
+      * BANAL_RES *res   : Structure containing calculated band power metrics and peak levels
+
+--------------------------------------------------------------------------------
+FILE: bufvec.c
+--------------------------------------------------------------------------------
+Routine: alloc_vec / free_vec
+  - Description: Vector memory allocation and ring/linear buffer vector initialization.
+  - Inputs:
+      * int length       : Number of elements to allocate
+      * size_t elem_size : Size of each element in bytes
+  - Outputs:
+      * void *           : Pointer to allocated aligned memory vector (or NULL on failure)
+
+--------------------------------------------------------------------------------
+FILE: correctIQ.c
+--------------------------------------------------------------------------------
+Routine: CorrectIQ
+  - Description: Applies amplitude and phase balance matrix corrections to IQ samples.
+  - Inputs:
+      * CXB buf          : Complex IQ sample buffer
+      * int size         : Number of samples
+      * REAL amp_balance : Amplitude imbalance correction coefficient
+      * REAL phase_bal   : Phase imbalance correction coefficient
+  - Outputs:
+      * CXB buf          : Corrected complex IQ samples (modified in-place)
+
+--------------------------------------------------------------------------------
+FILE: cwtones.c
+--------------------------------------------------------------------------------
+Routine: GenCWSidetone
+  - Description: Generates shaped sine wave audio for CW sidetone with rise/fall envelope.
+  - Inputs:
+      * REAL *outbuf     : Destination audio buffer
+      * int size         : Sample count
+      * REAL freq        : Sidetone frequency in Hz
+      * REAL sample_rate : System sample rate
+      * CW_ENV *env      : Envelope state (attack/decay timing)
+  - Outputs:
+      * REAL *outbuf     : Populated audio buffer with shaped sidetone waveform
+
+--------------------------------------------------------------------------------
+FILE: cxops.c
+--------------------------------------------------------------------------------
+Routine: cx_mul / cx_add / cx_conj
+  - Description: Low-level complex math operations (multiplication, addition, conjugation).
+  - Inputs:
+      * COMPLEX a        : Complex input value A
+      * COMPLEX b        : Complex input value B
+  - Outputs:
+      * COMPLEX          : Resulting complex number product/sum/conjugate
+
+--------------------------------------------------------------------------------
+FILE: dcblock.c
+--------------------------------------------------------------------------------
+Routine: DCBlock
+  - Description: High-pass IIR filter to remove DC offset from IQ or audio channels.
+  - Inputs:
+      * REAL *io_buf     : Input buffer containing samples with potential DC offset
+      * int size         : Number of samples
+      * DC_STATE *state  : DC filter integrator state pointer
+  - Outputs:
+      * REAL *io_buf     : DC-removed audio/IQ samples (modified in-place)
+      * DC_STATE *state  : Updated integrator history values
+
+--------------------------------------------------------------------------------
+FILE: dttspagc.c
+--------------------------------------------------------------------------------
+Routine: PerformAGC
+  - Description: Automatic gain control processing across Fast/Med/Slow/Hang profiles.
+  - Inputs:
+      * REAL *in_out_buf : Input audio signal buffer
+      * int size         : Sample count
+      * AGC_STATE *agc   : AGC parameters (attack, decay, hang time, maximum gain)
+  - Outputs:
+      * REAL *in_out_buf : Gain-controlled output audio buffer
+      * AGC_STATE *agc   : Updated envelope detector levels and current gain states
+
+--------------------------------------------------------------------------------
+FILE: fastrig.c
+--------------------------------------------------------------------------------
+Routine: fast_sin / fast_cos / fast_atan2
+  - Description: High-speed lookup table and polynomial approximations for trig functions.
+  - Inputs:
+      * REAL phase / x, y: Phase angle in radians or rectangular coordinate values
+  - Outputs:
+      * REAL             : Approximated sine, cosine, or arc-tangent result
+
+--------------------------------------------------------------------------------
+FILE: filt2p2z.c
+--------------------------------------------------------------------------------
+Routine: Filter2P2Z
+  - Description: Direct-form II biquad (2-pole, 2-zero) IIR filtering.
+  - Inputs:
+      * REAL *samples    : Input/output sample buffer
+      * int size         : Sample count
+      * BIQUAD_COEFF *c  : Filter coefficients (a0, a1, a2, b1, b2)
+      * BIQUAD_STATE *s  : Previous sample delay registers (z1, z2)
+  - Outputs:
+      * REAL *samples    : Filtered output samples (in-place)
+      * BIQUAD_STATE *s  : Updated delay registers
+
+--------------------------------------------------------------------------------
+FILE: filter.c
+--------------------------------------------------------------------------------
+Routine: ApplyFIRFilter
+  - Description: Performs time-domain or frequency-domain FIR filter convolution.
+  - Inputs:
+      * REAL *in_buf     : Input sample stream
+      * REAL *out_buf    : Output sample stream
+      * int size         : Sample length
+      * FIR_FILTER *f    : Tap coefficients array and delay line buffer
+  - Outputs:
+      * REAL *out_buf    : Filtered audio/IQ signal
+
+--------------------------------------------------------------------------------
+FILE: filterbank.c
+--------------------------------------------------------------------------------
+Routine: SelectFilterBank
+  - Description: Switches active FIR filter coefficient sets according to passband cuts.
+  - Inputs:
+      * FILTER_BANK *fb  : Filterbank master container
+      * int low_cut      : Passband low frequency limit (Hz)
+      * int high_cut     : Passband high frequency limit (Hz)
+  - Outputs:
+      * FIR_FILTER *     : Pointer to selected/synthesized FIR filter structure
+
+--------------------------------------------------------------------------------
+FILE: fm_demod.c
+--------------------------------------------------------------------------------
+Routine: FM_Demod
+  - Description: Frequency modulation quadrature discriminator with squelch.
+  - Inputs:
+      * CXB iq_buf       : Input complex IQ buffer
+      * REAL *audio_buf  : Output audio buffer
+      * int size         : Sample count
+      * FM_STATE *fm     : Discriminator state, de-emphasis filter memory, squelch level
+  - Outputs:
+      * REAL *audio_buf  : Demodulated FM audio stream
+      * FM_STATE *fm     : Updated discriminator phase history
+
+--------------------------------------------------------------------------------
+FILE: graphiceq.c
+--------------------------------------------------------------------------------
+Routine: ProcessGraphicEQ
+  - Description: Multi-band frequency equalization for RX/TX audio streams.
+  - Inputs:
+      * REAL *audio      : Input audio stream buffer
+      * int size         : Sample count
+      * EQ_STATE *eq     : Gain sliders array per frequency band and filter states
+  - Outputs:
+      * REAL *audio      : Equalized audio stream (modified in-place)
+
+--------------------------------------------------------------------------------
+FILE: hilbert.c
+--------------------------------------------------------------------------------
+Routine: ApplyHilbertTransform
+  - Description: Generates quadrature analytic signal (90-degree phase shift).
+  - Inputs:
+      * REAL *in_real    : Input real audio buffer
+      * CXB out_cx       : Output complex buffer (I = original delayed, Q = shifted)
+      * int size         : Sample count
+      * HILBERT_STATE *h : Transform delay coefficients
+  - Outputs:
+      * CXB out_cx       : Complex analytic signal output
+
+--------------------------------------------------------------------------------
+FILE: isoband.c
+--------------------------------------------------------------------------------
+Routine: IsoBand_Process
+  - Description: Isolates individual sub-bands from wider baseband IQ stream.
+  - Inputs:
+      * CXB wide_iq      : Wideband IQ input
+      * CXB narrow_iq    : Sub-band IQ output target
+      * int size         : Sample count
+      * ISOBAND_CFG *cfg : Center offset frequency and downsampling factor
+  - Outputs:
+      * CXB narrow_iq    : Isolated sub-band complex IQ samples
+
+--------------------------------------------------------------------------------
+FILE: keyd.c
+--------------------------------------------------------------------------------
+Routine: KeyerDaemonProcess
+  - Description: Logic state machine for CW paddle processing (Iambic mode A/B).
+  - Inputs:
+      * KEYER_INPUT *in  : Hardware state bits (Dot pressed, Dash pressed)
+      * KEYER_CFG *cfg   : WPM speed, weighting, break-in timing, Iambic mode
+  - Outputs:
+      * KEYER_OUT *out   : Key state bit (Key-Down / Key-Up trigger for transmitter)
+
+--------------------------------------------------------------------------------
+FILE: keyer.c
+--------------------------------------------------------------------------------
+Routine: Keyer_Tick
+  - Description: Clock tick processing for CW dot/dash timer generation.
+  - Inputs:
+      * int elapsed_ms   : Milliseconds elapsed since last tick
+      * KEYER_STATE *s   : Current state (IDLE, DOT_ACTIVE, DASH_ACTIVE, PAUSE)
+  - Outputs:
+      * int *is_keyed    : Boolean flag indicating active transmitter gate state
+
+--------------------------------------------------------------------------------
+FILE: keyerio.c
+--------------------------------------------------------------------------------
+Routine: ReadHardwareKeys
+  - Description: Queries hardware port lines (COM, LPT, USB) for CW paddle inputs.
+  - Inputs:
+      * HW_PORT_CFG *port: Serial/parallel port hardware configuration handle
+  - Outputs:
+      * int *dot_state   : Returns 1 if dot paddle closed, 0 if open
+      * int *dash_state  : Returns 1 if dash paddle closed, 0 if open
+
+--------------------------------------------------------------------------------
+FILE: lmadf.c
+--------------------------------------------------------------------------------
+Routine: ProcessLMS
+  - Description: Adaptive LMS filter for active Noise Reduction (NR) and Auto-Notch (ANF).
+  - Inputs:
+      * REAL *in_buf     : Audio input stream
+      * REAL *out_buf    : Cleaned audio output stream
+      * int size         : Sample count
+      * LMS_STATE *lms   : Adaptation rate (mu), filter taps, delay buffer
+  - Outputs:
+      * REAL *out_buf    : Audio stream with adaptive noise/tone canceled
+      * LMS_STATE *lms   : Updated adaptive filter tap weights
+
+--------------------------------------------------------------------------------
+FILE: malloc16.c
+--------------------------------------------------------------------------------
+Routine: malloc16 / free16
+  - Description: Allocates memory aligned to 16-byte boundaries for SIMD/SSE acceleration.
+  - Inputs:
+      * size_t size      : Number of bytes requested
+  - Outputs:
+      * void *           : Pointer to 16-byte aligned memory address block
+
+--------------------------------------------------------------------------------
+FILE: meter.c
+--------------------------------------------------------------------------------
+Routine: UpdateMeters
+  - Description: Calculates RMS and Peak signal power for S-meter, ALC, and SWR.
+  - Inputs:
+      * REAL *samples    : Input signal buffer (Audio or IQ)
+      * int size         : Sample count
+      * METER_CFG *mcfg  : Ballistics settings (attack/decay timing constants)
+  - Outputs:
+      * METER_VALS *mval : Calculated power values (dBm, S-units, Peak/RMS watts)
+
+--------------------------------------------------------------------------------
+FILE: noiseblanker.c
+--------------------------------------------------------------------------------
+Routine: ProcessNoiseBlanker
+  - Description: Detects short impulse spikes in IQ baseband and blanks signal.
+  - Inputs:
+      * CXB iq_buf       : Input complex IQ buffer
+      * int size         : Sample count
+      * NB_STATE *nb     : Threshold multiplier, delay line buffer, blanking period
+  - Outputs:
+      * CXB iq_buf       : Complex IQ samples with noise spikes zeroed/interpolated
+
+--------------------------------------------------------------------------------
+FILE: oscillator.c
+--------------------------------------------------------------------------------
+Routine: NCO_Step
+  - Description: Generates sine and cosine values from a Numerically Controlled Oscillator.
+  - Inputs:
+      * NCO_STATE *nco   : Current phase accumulator and frequency tuning word
+      * int size         : Output buffer sample count
+  - Outputs:
+      * CXB out_iq       : Output complex buffer containing unit sine/cosine vector
+      * NCO_STATE *nco   : Advanced phase accumulator
+
+--------------------------------------------------------------------------------
+FILE: ovsv.c
+--------------------------------------------------------------------------------
+Routine: OverlapSaveProcess
+  - Description: High-speed FFT overlap-save convolution for long FIR filtering.
+  - Inputs:
+      * REAL *in_samples : Input streaming samples
+      * REAL *out_samples: Output filtered samples
+      * OVSV_CFG *cfg    : FFT plan, filter frequency response vector, overlap buffer
+  - Outputs:
+      * REAL *out_samples: Filtered output stream
+
+--------------------------------------------------------------------------------
+FILE: resample.c / resampleF.c
+--------------------------------------------------------------------------------
+Routine: Resample_Process
+  - Description: Polyphase rate conversion between hardware audio rate and DSP rate.
+  - Inputs:
+      * REAL *in_buf     : Input buffer at source sample rate
+      * int in_count     : Number of input samples
+      * REAL *out_buf    : Output target buffer
+      * RESAMPLE_CFG *r  : Resampling ratio, filter coefficients, phase accumulator
+  - Outputs:
+      * REAL *out_buf    : Resampled audio data
+      * int *out_count   : Number of output samples produced
+
+--------------------------------------------------------------------------------
+FILE: ringb.c
+--------------------------------------------------------------------------------
+Routine: RingBuffer_Write / RingBuffer_Read
+  - Description: Thread-safe lockless circular ring buffer operations.
+  - Inputs:
+      * RING_BUF *rb     : Ring buffer handle
+      * void *data       : Pointer to source (Write) or destination (Read) buffer
+      * int bytes        : Number of bytes to transfer
+  - Outputs:
+      * int              : Number of bytes successfully written or read
+
+--------------------------------------------------------------------------------
+FILE: sdr.c
+--------------------------------------------------------------------------------
+Routine: PerformSDR
+  - Description: Top-level processing loop combining IQ input, filtering, demod, and output.
+  - Inputs:
+      * CXB in_iq        : Hardware baseband IQ input stream
+      * REAL *out_audio  : Hardware audio output buffer
+      * int sample_cnt   : Buffer size
+      * SDR_STATE *sdr   : Complete radio state context (Mode, RX/TX, Gains, Filters)
+  - Outputs:
+      * REAL *out_audio  : Processed audio output ready for soundcard playback
+      * SDR_STATE *sdr   : Updated master pipeline state context
+
+--------------------------------------------------------------------------------
+FILE: sdrexport.c
+--------------------------------------------------------------------------------
+Routine: DttSP_SetMode / DttSP_SetFilter / DttSP_Process
+  - Description: DLL C API exports invoked by external applications (PowerSDR C# UI).
+  - Inputs:
+      * Mode, frequency, gain parameters passed from C# via P/Invoke
+  - Outputs:
+      * Updates internal DttSP engine state or fills audio/spectrum display arrays
+
+--------------------------------------------------------------------------------
+FILE: spectrum.c
+--------------------------------------------------------------------------------
+Routine: CalculateSpectrum
+  - Description: Computes FFT power spectrum for Panadapter and Waterfall UI rendering.
+  - Inputs:
+      * CXB iq_buf       : Baseband IQ input samples
+      * int fft_size     : FFT bin resolution size
+      * SPEC_CFG *cfg    : Windowing function selection, averaging factor
+  - Outputs:
+      * float *mag_array : Output array of magnitude values per FFT frequency bin (in dB)
+
+--------------------------------------------------------------------------------
+FILE: speechproc.c
+--------------------------------------------------------------------------------
+Routine: ProcessSpeech
+  - Description: Transmit processing chain: pre-emphasis, compression, and peak limiting.
+  - Inputs:
+      * REAL *mic_audio  : Input microphone audio stream
+      * int size         : Sample count
+      * COMP_STATE *c    : Compression ratio, attack/decay, limiter threshold settings
+  - Outputs:
+      * REAL *mic_audio  : Processed speech audio optimized for SSB transmission
+
+--------------------------------------------------------------------------------
+FILE: splitfields.c
+--------------------------------------------------------------------------------
+Routine: split_fields
+  - Description: String parsing utility for command parameters and calibration files.
+  - Inputs:
+      * char *line       : Input ASCII text string line
+      * char *delim      : Delimiter characters (e.g., spaces, commas)
+  - Outputs:
+      * char **tokens    : Array of parsed token strings
+      * int *num_tokens  : Count of extracted tokens
+
+--------------------------------------------------------------------------------
+FILE: spottone.c
+--------------------------------------------------------------------------------
+Routine: SpotTone_Generate
+  - Description: Generates precise calibration tone for CW frequency spotting.
+  - Inputs:
+      * REAL *out_buf    : Target audio buffer
+      * int size         : Sample count
+      * REAL frequency   : Spot tone pitch in Hz
+  - Outputs:
+      * REAL *out_buf    : Audio buffer filled with reference sine wave
+
+--------------------------------------------------------------------------------
+FILE: update.c
+--------------------------------------------------------------------------------
+Routine: ApplyPendingUpdates
+  - Description: Thread-safe parameter update router to apply changes mid-stream.
+  - Inputs:
+      * SDR_STATE *sdr   : Target SDR state structure
+      * QUEUE *updates   : Pending parameter changes queue from UI
+  - Outputs:
+      * SDR_STATE *sdr   : SDR configuration updated without audio glitching
+
+--------------------------------------------------------------------------------
+FILE: window.c
+--------------------------------------------------------------------------------
+Routine: MakeWindow
+  - Description: Pre-calculates FFT window weighting tables (Blackman, Hamming, etc.).
+  - Inputs:
+      * REAL *win_array  : Output array to store calculated window factors
+      * int size         : FFT size length
+      * int window_type  : Enumerated window type (e.g., BLACKMAN_HARRIS, NUTTALL)
+  - Outputs:
+      * REAL *win_array  : Populated array with window weighting coefficients
+
+--------------------------------------------------------------------------------
+FILE: winmain.c
+--------------------------------------------------------------------------------
+Routine: DllMain
+  - Description: Windows Operating System entry point for DttSP DLL initialization.
+  - Inputs:
+      * HINSTANCE hinst  : Handle to DLL instance
+      * DWORD reason     : DLL_PROCESS_ATTACH, DLL_THREAD_ATTACH, etc.
+      * LPVOID reserved  : System reserved pointer
+  - Outputs:
+      * BOOL             : Returns TRUE if initialization succeeded
+
+--------------------------------------------------------------------------------
+FILE: wscompand.c
+--------------------------------------------------------------------------------
+Routine: WSCompand_Process
+  - Description: Wavelet/Spectral dynamic range compander for RX audio enhancement.
+  - Inputs:
+      * REAL *audio_in   : Input audio buffer
+      * int size         : Sample count
+      * COMPAND_CFG *cfg : Dynamic expansion/compression curves
+  - Outputs:
+      * REAL *audio_out  : Dynamic range altered audio output stream
+================================================================================
