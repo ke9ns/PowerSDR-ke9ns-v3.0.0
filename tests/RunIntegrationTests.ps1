@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('All', 'Audio', 'Rx2', 'Graphics', 'State', 'Speech')]
+    [ValidateSet('All', 'Audio', 'Rx2', 'Graphics', 'State', 'Speech', 'Squelch')]
     [string]$Suite = 'All',
     [string]$RuntimePath = '',
     [string]$OutputPath = ''
@@ -33,6 +33,7 @@ if ($Suite -in @('All','State')) {
 }
 if ($Suite -in @('All','Audio')) { Run-Test 'AudioBridgeTests' $dspSources }
 if ($Suite -in @('All','Rx2')) { Run-Test 'PhysicalRx2Tests' ($dspSources + (Join-Path $repo 'tests\PhysicalRx2Tests.cs')) }
+if ($Suite -in @('All','Squelch')) { Run-Test 'SquelchTests' ($dspSources + (Join-Path $repo 'tests\SquelchTests.cs')) }
 if ($Suite -in @('All','Graphics')) {
     $references = @('System.Drawing.dll','System.Windows.Forms.dll')
     $references += @('SharpDX.dll','SharpDX.Direct2D1.dll','SharpDX.DXGI.dll','SharpDX.Mathematics.dll') | ForEach-Object { Join-Path $OutputPath $_ }

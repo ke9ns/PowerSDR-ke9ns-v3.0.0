@@ -63,6 +63,18 @@ msbuild PowerSDR.sln /t:Build /p:Configuration=Release /p:Platform=x86 "/p:Refer
 
 ## Validation
 
+### Squelch follow-up
+
+The original squelch controls only reached DttSP. The WDSP bridge now reads
+each receiver's enable flag and amplitude/FM thresholds on the audio thread.
+Amplitude thresholds retain existing radio calibration and convert DttSP's
+summed block power to WDSP's mean-amplitude scale using the receiver DSP
+buffer size. FM uses the native FM noise squelch; the two detectors are
+mutually exclusive and are reapplied when a channel is recreated.
+Run `./tests/RunIntegrationTests.ps1 -Suite Squelch` for independent RX1,
+RX-S and RX2 closure, reopening, FM noise/clean signal, bypass and mode/rate
+transition checks. No TX processing or display behavior is changed.
+
 Build: the C# project and full solution (including native DttSP) both succeeded
 in Release x86 with zero errors on VS 18.9.1; legacy compiler
 and analyzer warnings remain. Restore reports security advisories for the

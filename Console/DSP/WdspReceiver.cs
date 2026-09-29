@@ -32,6 +32,8 @@ namespace PowerSDR
         private int appliedAttack = -1, appliedDecay = -1, appliedHang = -1;
         private int appliedSlope = -1, appliedHangThreshold = -1;
         private bool appliedBinaural;
+        private bool appliedAmplitudeSquelch, appliedFmSquelch;
+        private double appliedSquelchThreshold = Double.NaN, appliedFmSquelchThreshold = Double.NaN;
 
         private bool disabled;
         private bool channelOpen;
@@ -205,6 +207,26 @@ namespace PowerSDR
         private void ApplyReceiverControls(DSPRX rx)
         {
             bool reset = !settingsApplied;
+            bool fmSquelch = rx.RXSquelchOn && rx.DSPMode == DSPMode.FM;
+            bool amplitudeSquelch = rx.RXSquelchOn && rx.DSPMode != DSPMode.FM;
+            // The UI already includes the radio's meter/preamp/path calibration.
+            // DttSP compares summed block power; WDSP compares mean amplitude.
+            double squelchThreshold = rx.RXSquelchThreshold -
+                10.0 * Math.Log10(Math.Max(1, rx.BufferSize));
+            if (reset || squelchThreshold != appliedSquelchThreshold)
+                WdspNative.SetRXAAMSQThreshold(Rx1Channel, appliedSquelchThreshold = squelchThreshold);
+            if (reset || rx.FMSquelchThreshold != appliedFmSquelchThreshold)
+                WdspNative.SetRXAFMSQThreshold(Rx1Channel, appliedFmSquelchThreshold = rx.FMSquelchThreshold);
+            if (reset || amplitudeSquelch != appliedAmplitudeSquelch)
+            {
+                WdspNative.SetRXAAMSQRun(Rx1Channel, amplitudeSquelch ? 1 : 0);
+                appliedAmplitudeSquelch = amplitudeSquelch;
+            }
+            if (reset || fmSquelch != appliedFmSquelch)
+            {
+                WdspNative.SetRXAFMSQRun(Rx1Channel, fmSquelch ? 1 : 0);
+                appliedFmSquelch = fmSquelch;
+            }
             if (reset || rx.ANFTaps != appliedAnfTaps || rx.ANFDelay != appliedAnfDelay ||
                 rx.ANFGain != appliedAnfGain || rx.ANFLeak != appliedAnfLeak)
                 WdspNative.SetRXAANFVals(Rx1Channel, appliedAnfTaps = rx.ANFTaps,

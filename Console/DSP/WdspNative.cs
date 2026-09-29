@@ -12,6 +12,15 @@ namespace PowerSDR
         private const string DllName = "wdsp.dll";
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void SetRXAAMSQRun(int channel, int run);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void SetRXAAMSQThreshold(int channel, double threshold);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void SetRXAFMSQRun(int channel, int run);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void SetRXAFMSQThreshold(int channel, double threshold);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void create_anbEXT(int id, int run, int size, double rate,
             double slew, double hang, double lead, double average, double threshold);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]

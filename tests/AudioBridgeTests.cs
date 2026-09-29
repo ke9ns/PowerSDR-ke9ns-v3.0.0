@@ -15,6 +15,9 @@ namespace PowerSDR
         public int RXAGCAttack=2, RXAGCDecay=100, RXAGCHang=100, RXAGCSlope=0, RXAGCHangThreshold=0;
         public float Pan=0.5f;
         public bool Active, BinOn;
+        public bool RXSquelchOn;
+        public int BufferSize=2048;
+        public float RXSquelchThreshold=-150, FMSquelchThreshold=1;
         public bool NBOn, SDROM;
         public bool RXEQOn;
         public int RXEQNumBands=3;
