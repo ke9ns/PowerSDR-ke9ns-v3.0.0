@@ -1,0 +1,20 @@
+Experimental WDSP RX1 active. Version=129 Rate=48000 Block=2048
+mono centered: L=9,99849E-05 R=9,99849E-05 fallback=0
+pan left: L=9,99849E-05 R=0 fallback=0
+pan right: L=6,12211E-21 R=9,99849E-05 fallback=0
+RX-M mute: L=0 R=0 fallback=0
+Experimental WDSP RX1 active. Version=129 Rate=48000 Block=2048
+RX-S independent: L=4,32964E-21 R=7,07107E-05 fallback=0
+RX-S out of passband: L=2,06967E-28 R=3,38014E-12 fallback=0
+RX-S 6 kHz shifted to 1 kHz: L=4,32964E-21 R=7,07107E-05 fallback=0
+AGC top 10 dB: L=0,00031618 R=0,00031618 fallback=0
+AGC top 40 dB: L=0,00999849 R=0,00999849 fallback=0
+diversity cancel: L=0 R=0 fallback=0
+diversity off: L=9,99849E-05 R=9,99849E-05 fallback=0
+NB1 clean tone: L=9,99849E-05 R=9,99849E-05 fallback=0
+NB2 clean tone: L=9,99849E-05 R=9,99849E-05 fallback=0
+NR1 + NB1/NB2: L=9,70881E-05 R=9,70881E-05 fallback=0
+NR2 + NB1/NB2: L=8,22898E-06 R=8,22898E-06 fallback=0
+NR3 + NB1/NB2: L=3,34949E-08 R=3,34949E-08 fallback=0
+NR4 + NB1/NB2: L=9,66301E-05 R=9,66301E-05 fallback=0
+PASS: routing, gain, AGC threshold, subreceiver, diversity and preserved RX2/TX buffers.

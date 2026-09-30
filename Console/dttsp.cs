@@ -453,13 +453,31 @@ namespace PowerSDR
         #region Diversity
 
         [DllImport("DttSP.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetDiversity")]
-        unsafe public static extern int SetDiversity(int on);
+        unsafe private static extern int SetDiversityNative(int on);
+        public static int SetDiversity(int on)
+        {
+            int result = SetDiversityNative(on);
+            DspBackend.SetDiversity(on != 0);
+            return result;
+        }
 
         [DllImport("DttSP.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetDiversityScalar")]
-        unsafe public static extern int SetDiversityScalar(float real, float imag);
+        unsafe private static extern int SetDiversityScalarNative(float real, float imag);
+        public static int SetDiversityScalar(float real, float imag)
+        {
+            int result = SetDiversityScalarNative(real, imag);
+            DspBackend.SetDiversityScalar(real, imag);
+            return result;
+        }
 
         [DllImport("DttSP.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetDiversityGain")]
-        unsafe public static extern int SetDiversityGain(float gain); // valid 0.0 - 1.0
+        unsafe private static extern int SetDiversityGainNative(float gain);
+        public static int SetDiversityGain(float gain)
+        {
+            int result = SetDiversityGainNative(gain);
+            DspBackend.SetDiversityGain(gain);
+            return result;
+        }
 
         #endregion
 

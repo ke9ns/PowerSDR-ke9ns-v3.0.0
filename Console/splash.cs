@@ -398,7 +398,7 @@ namespace PowerSDR
     {
         private const string SOFTWARE_KEY = "Software";
         private const string COMPANY_NAME = "FlexRadio";
-        private const string APPLICATION_NAME = "PowerSDR";
+        private const string APPLICATION_NAME = ProfilePaths.ProfileName;
 
         // Method for retrieving a Registry Value.
         static public string GetStringRegistryValue(string key,

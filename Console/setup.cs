@@ -89,6 +89,8 @@ namespace PowerSDR
             Debug.WriteLine("SETUP  FILE OPEN");
 
             InitializeComponent();
+            InitializeWdspNrTab();
+            InitializeWdspNbOptions();
 
             console = c;
             openFileDialog1.InitialDirectory = String.Empty;
@@ -144,6 +146,8 @@ namespace PowerSDR
             Audio.IN_TX_R = 5;
             comboDisplayLabelAlign.Text = "Auto";
             comboDisplayDriver.Text = "GDI+";
+            DirectX = Direct2DDisplay.IsSupported();
+            grpDisplayDriverEngine.Visible = true;
             comboDSPPhoneRXBuf.Text = "2048";
             comboDSPPhoneTXBuf.Text = "2048";
             comboDSPCWRXBuf.Text = "2048";
@@ -320,6 +324,9 @@ namespace PowerSDR
             comboAudioBuffer1_SelectedIndexChanged(this, EventArgs.Empty);
 
             initializing = false;
+            ApplyWdspNrSettings();
+            ApplyWdspNbSettings();
+            ApplyWdspNrModel();
             udDisplayScopeTime_ValueChanged(this, EventArgs.Empty);
 
             if (comboTXProfileName.SelectedIndex < 0 && comboTXProfileName.Items.Count > 0) comboTXProfileName.SelectedIndex = 0;
@@ -7727,9 +7734,10 @@ namespace PowerSDR
                 case "GDI+":
                     console.CurrentDisplayEngine = DisplayEngine.GDI_PLUS;
                     break;
-                    /*case "DirectX":
-                        console.CurrentDisplayEngine = DisplayEngine.DIRECT_X;
-                        break;*/
+                case "DirectX":
+                    console.CurrentDisplayEngine = DisplayEngine.DIRECT_X;
+                    if (!Direct2DDisplay.IsActive) comboDisplayDriver.Text = "GDI+";
+                    break;
             }
         }
 

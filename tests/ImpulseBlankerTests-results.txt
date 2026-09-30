@@ -1,0 +1,12 @@
+block=2048 rate=48000 NB1=False NB2=False mode=0 threshold=30: peak=10
+block=2048 rate=48000 NB1=True NB2=False mode=0 threshold=30: peak=0,01
+block=2048 rate=48000 NB1=False NB2=True mode=0 threshold=30: peak=0,01
+block=2048 rate=48000 NB1=False NB2=True mode=1 threshold=30: peak=0,01
+block=2048 rate=48000 NB1=False NB2=True mode=2 threshold=30: peak=0,01
+block=2048 rate=48000 NB1=False NB2=True mode=3 threshold=30: peak=0,01
+block=2048 rate=48000 NB1=False NB2=True mode=4 threshold=30: peak=0,01
+block=2048 rate=48000 NB1=True NB2=False mode=0 threshold=10000: peak=10
+block=2048 rate=48000 NB1=False NB2=True mode=0 threshold=10000: peak=10
+block=4096 rate=96000 NB1=True NB2=True mode=4 threshold=30: peak=0,01
+block=8192 rate=192000 NB1=True NB2=True mode=4 threshold=30: peak=0,01
+PASS: both real blankers, all NB2 modes, threshold, bypass, input preservation, resize/rate/re-enable.
