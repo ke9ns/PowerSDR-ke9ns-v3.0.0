@@ -48,7 +48,8 @@ namespace PowerSDR
 
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
                     + "\\FlexRadio Systems\\";
-            file_name = path + "master.xml";
+            Directory.CreateDirectory(ProfilePaths.DataDirectory);
+            file_name = ProfilePaths.DataDirectory + "master.xml";
 
             if (File.Exists(path + "production"))
                 production = true;

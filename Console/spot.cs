@@ -283,7 +283,7 @@ namespace PowerSDR
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
 
 
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\";
+            string path = ProfilePaths.DataDirectory;
             string file_name = path + "DXMemory.xml";
 
             // dataGridView1.Dock = DockStyle.Fill;
@@ -431,7 +431,7 @@ namespace PowerSDR
             }
 
 
-            string downloadPath1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
+            string downloadPath1 = ProfilePaths.DataDirectory;
             string originalFile = Path.Combine(downloadPath1, "AzimuthalMap.bmp");
 
             if (File.Exists(originalFile)) //.314
@@ -618,7 +618,7 @@ namespace PowerSDR
         public void BeamMap()
         {
 
-            string downloadPath1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
+            string downloadPath1 = ProfilePaths.DataDirectory;
             string fullPath = Path.Combine(downloadPath1, "AzimuthalMap.pdf");
             string BMPFile = Path.Combine(downloadPath1, "AzimuthalMap.bmp");
 
@@ -707,9 +707,9 @@ namespace PowerSDR
                     udDisplayLong.BackColor = Color.LightGreen;
 
                     // need to expand %userprofile% before creating the actual path
-                    string pdfPath = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.pdf");
-                    string jpgFile = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.jpg");
-                    string bmpFile = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.bmp");
+                    string pdfPath = Path.Combine(ProfilePaths.DataDirectory, "AzimuthalMap.pdf");
+                    string jpgFile = Path.Combine(ProfilePaths.DataDirectory, "AzimuthalMap.jpg");
+                    string bmpFile = Path.Combine(ProfilePaths.DataDirectory, "AzimuthalMap.bmp");
 
 
                     if (File.Exists(BMPFile))
@@ -793,7 +793,7 @@ namespace PowerSDR
 
                     textBox1.Text = textBox1.Text + "Lat and Long: " + latlong + "\r\n";
 
-                    string downloadPath1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),@"FlexRadio Systems\PowerSDR v2.8.0\");
+                    string downloadPath1 = ProfilePaths.DataDirectory;
                     string originalFile = Path.Combine(downloadPath1, "AzimuthalMap.pdf");
                     string BMPFile = Path.Combine(downloadPath1, "AzimuthalMap.bmp");
 
@@ -888,9 +888,9 @@ namespace PowerSDR
                                     udDisplayLong.BackColor = Color.LightGreen;
 
                                     // need to expand %userprofile% before creating the actual path
-                                    string pdfPath = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.pdf");
-                                    string jpgFile = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.jpg");
-                                    string bmpFile = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.bmp");
+                                    string pdfPath = Path.Combine(ProfilePaths.DataDirectory, "AzimuthalMap.pdf");
+                                    string jpgFile = Path.Combine(ProfilePaths.DataDirectory, "AzimuthalMap.jpg");
+                                    string bmpFile = Path.Combine(ProfilePaths.DataDirectory, "AzimuthalMap.bmp");
 
                                     if (File.Exists(BMPFile))
                                     {
@@ -19805,7 +19805,7 @@ namespace PowerSDR
             string url = "http://eibispace.de/dx/sked-a26.csv";
 
 
-            string targetDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
+            string targetDirectory = ProfilePaths.DataDirectory;
             string destinationFile = Path.Combine(targetDirectory, "SWL.csv");
             string backupFile = Path.Combine(targetDirectory, "swl_old.csv");
 
@@ -19864,7 +19864,7 @@ namespace PowerSDR
         {
             string url = "https://data.fcc.gov/download/pub/uls/complete/l_amat.zip";
 
-            string targetDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
+            string targetDirectory = ProfilePaths.DataDirectory;
             string destinationFile = Path.Combine(targetDirectory, "l_amat.zip");
             string backupFile = Path.Combine(targetDirectory, "l_amat_old.zip");
             string destinationFile1 = Path.Combine(targetDirectory, "FCCDATA.dat");
@@ -19893,9 +19893,9 @@ namespace PowerSDR
                     File.WriteAllBytes(destinationFile, fileBytes);
                 }
 
-                string zipPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\l_amat.zip");
+                string zipPath = Path.Combine(ProfilePaths.DataDirectory, "l_amat.zip");
 
-                string destinationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\EN.dat");
+                string destinationPath = Path.Combine(ProfilePaths.DataDirectory, "EN.dat");
 
                
                 using (ZipArchive archive = System.IO.Compression.ZipFile.OpenRead(zipPath))

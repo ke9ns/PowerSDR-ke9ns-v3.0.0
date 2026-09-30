@@ -24,13 +24,41 @@ data and fallback. Direct2D is a hybrid renderer, not a complete GPU rewrite.
 ## Conflict decisions
 
 - Keep upstream .NET 4.8, NuGet packages, Windows Media Player COM references
-  and application version metadata. Add SharpDX alongside them.
+  and multimedia dependencies. Add SharpDX alongside them; identify the
+  integrated application as version 3.0.0.0.
 - Keep upstream cursor-frequency text and cursor-size settings while queuing
   cursor lines for Direct2D with GDI+ fallback.
 - Use the tested elapsed-time FPS scheduler and startup audio-progress guard.
 - Select native v145 for VS 18+, otherwise v143, with an explicit
   `PowerSDRPlatformToolset` override available. Keep Release x86 mapping.
 - Preserve the legacy Windows-1252 encoding of `display.cs`.
+
+## Side-by-side v3 profile
+
+Assembly/file version and application deployment metadata are now 3.0.0.0.
+The default writable profile is
+`%APPDATA%\FlexRadio Systems\PowerSDR v3.0.0\` (with `Debug\` in debug builds).
+Database, master radio selection, channel/DX memories and backups, Spotter
+downloads/maps and FFTW wisdom use this profile. Splash timing registry
+values use their own v3 key. Manuals resolve relative to the executable.
+Shared installed drivers, firmware and ProgramData assets remain unchanged.
+
+There is deliberately no automatic migration or overwrite of a v2 profile.
+On first launch, select/configure the radio; export/import the database
+explicitly if desired, after backing up both profiles. Channel memories are
+separate files and are not implicitly migrated by database import.
+An explicit `-datapath:` override is honored by all these consumers, including
+DSP wisdom. Never point it to the v2 profile when testing side-by-side.
+The FULL installer/directory packaging remains under upstream maintainer
+control; this source change does not install or remove drivers.
+
+Profile path tests run in the State suite without writing user data.
+Validation of this follow-up: full Release x86 solution build succeeded
+with zero errors (1331 existing warnings); profile tests passed in Debug
+and Release; NR persistence and startup FPS state tests passed.
+The squelch-enabled v3 integration was reported successful on FLEX by the
+testers; the subsequent profile-isolation change still needs a fresh-profile
+hardware startup check.
 
 ## Build
 
@@ -114,5 +142,6 @@ Before merging upstream, test on FLEX-5000 with the official matching runtime:
 RX1/RX2 and diversity, RX/TX transitions, monitoring/mute, NR persistence,
 NR speech quality, NB1/NB2, notches/EQ/AGC, and cold startup at 32-50 FPS.
 Also test GDI+ fallback and the upstream cursor-frequency overlay. Back up
-the database and use a separate test installation. Earlier successful radio
-tests were on the old base, not this newly integrated v3 tree.
+the database and use a separate test installation. The initial automated
+validation above does not replace hardware testing; later tester feedback
+and the remaining fresh-profile check are recorded in the profile section.

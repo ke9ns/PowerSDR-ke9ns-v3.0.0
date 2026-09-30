@@ -106,13 +106,7 @@ namespace PowerSDR
 
         public void CreateDSP()
         {
-            // System.String app_data_path = "";
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-            System.String version = fvi.FileVersion.Substring(0, fvi.FileVersion.LastIndexOf("."));
-            System.String app_data_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\PowerSDR v" + version + "\\wisdom";
-
-            DttSP.SetupSDR(app_data_path);
+            DttSP.SetupSDR(ProfilePaths.WisdomFile);
         }
 
         public static void DestroyDSP()

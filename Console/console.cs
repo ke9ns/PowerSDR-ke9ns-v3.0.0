@@ -1741,7 +1741,7 @@ namespace PowerSDR
                 string version = fvi.FileVersion.Substring(0, fvi.FileVersion.LastIndexOf("."));
 
                 //  AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\PowerSDR" + version + "\\"; // ke9ns original
-                AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\PowerSDR v2.8.0\\"; // keep it the same otherwise everyone starts with a new database
+                AppDataPath = ProfilePaths.DefaultDirectory;
                                                                                                                                                //  AppDataPath1 = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\PowerSDR v2.7.2\\"; // keep it the same otherwise everyone starts with a new database
 
             }
@@ -1761,6 +1761,7 @@ namespace PowerSDR
             Debug.WriteLine("COMMON: " + common_data_path);
             Debug.WriteLine("Production: " + production);
 
+            Directory.CreateDirectory(AppDataPath);
             Master.Init();
 
             Debug.Assert(File.Exists(master_path + "master.xml"));
@@ -1956,9 +1957,6 @@ namespace PowerSDR
                 }
             }
 
-#if (DEBUG)
-            AppDataPath += "Debug\\";
-#endif
             if (!Directory.Exists(app_data_path))
             {
                 Directory.CreateDirectory(app_data_path); //%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\wisdom
@@ -2967,18 +2965,20 @@ namespace PowerSDR
                 FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
                 string version = fvi.FileVersion.Substring(0, fvi.FileVersion.LastIndexOf("."));
                 //   app_data_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)  + "\\FlexRadio Systems\\PowerSDR v" + version + "\\"; // ke9ns 2.8.0
-                app_data_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\PowerSDR v2.8.0\\"; // ke9ns add to copy over the old 2.7.2 folder into 2.8.0
+                app_data_path = ProfilePaths.DefaultDirectory;
                 app_data_path1 = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\PowerSDR v2.7.2\\"; // ke9ns add to copy over the old 2.7.2 folder into 2.8.0
 
 #if (DEBUG)
-                app_data_path += "Debug\\"; // ke9ns: this is what it will be:  %userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\Debug\     C:\Users\RADIO\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\Debug\
+                // The default profile already includes the Debug suffix.
 
 #endif
             }
 
             try
             {
-                if (!File.Exists(app_data_path + "wisdom"))  // look for %userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\wisdom
+                ProfilePaths.DataDirectory = app_data_path;
+                app_data_path = ProfilePaths.DataDirectory;
+                if (!File.Exists(ProfilePaths.WisdomFile))
                 {
                     // Need to create the directory in %appdata% before we go run wisdom
 
@@ -5564,8 +5564,8 @@ namespace PowerSDR
             //--------------------------------------------------------
             // ke9ns add  open up database for my stuff  here
             // AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\";
-            string file_name3 = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\" + "mem.bak"; // save original Memory.xml file just in case T10
-            string file_name4 = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\" + "memory.xml"; // save original Memory.xml file just in case T10
+            string file_name3 = ProfilePaths.DataDirectory + "mem.bak";
+            string file_name4 = ProfilePaths.DataDirectory + "memory.xml";
 
             if ((!File.Exists(file_name3)) && (File.Exists(file_name4)))
             {
@@ -27225,10 +27225,11 @@ namespace PowerSDR
             get { return app_data_path; }
             set
             {
-                app_data_path = value;
-                FWCEEPROM.AppDataPath = value;
-                HIDEEPROM.AppDataPath = value;
-                Skin.AppDataPath = value;
+                ProfilePaths.DataDirectory = value;
+                app_data_path = ProfilePaths.DataDirectory;
+                FWCEEPROM.AppDataPath = app_data_path;
+                HIDEEPROM.AppDataPath = app_data_path;
+                Skin.AppDataPath = app_data_path;
             }
         }
 
@@ -91263,7 +91264,7 @@ namespace PowerSDR
 
             try //.307 move manuals around
             {
-                System.Diagnostics.Process.Start(@"C:\Program Files (x86)\FlexRadio Systems\PowerSDR v2.8.0\FLEX-5000_Owners_Manual_v2.8.pdf");
+                System.Diagnostics.Process.Start(Path.Combine(Application.StartupPath, "FLEX-5000_Owners_Manual_v2.8.pdf"));
             }
             catch (Exception f)
             {
@@ -91283,7 +91284,7 @@ namespace PowerSDR
 
                 try
                 {
-                    System.Diagnostics.Process.Start(@"C:\Program Files (x86)\FlexRadio Systems\PowerSDR v2.8.0\PowerSDR_ke9ns_CAT_Commands.pdf");
+                    System.Diagnostics.Process.Start(Path.Combine(Application.StartupPath, "PowerSDR_ke9ns_CAT_Commands.pdf"));
                 }
                 catch (Exception f)
                 {
@@ -91299,7 +91300,7 @@ namespace PowerSDR
 
                 try
                 {
-                    System.Diagnostics.Process.Start(@"C:\Program Files (x86)\FlexRadio Systems\PowerSDR v2.8.0\PowerSDR ke9ns keyboard shortcuts.pdf");
+                    System.Diagnostics.Process.Start(Path.Combine(Application.StartupPath, "PowerSDR ke9ns keyboard shortcuts.pdf"));
                 }
                 catch (Exception f)
                 {

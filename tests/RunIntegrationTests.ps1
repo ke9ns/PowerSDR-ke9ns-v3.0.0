@@ -28,6 +28,7 @@ function Run-Test([string]$Name, [string[]]$Sources, [string[]]$References = @()
     if ($LASTEXITCODE -ne 0) { throw "Test failed: $Name" }
 }
 if ($Suite -in @('All','State')) {
+    Run-Test 'ProfilePathsTests' @((Join-Path $repo 'tests\ProfilePathsTests.cs'),(Join-Path $repo 'Console\ProfilePaths.cs'))
     Run-Test 'NrModeStateTests' @((Join-Path $repo 'tests\NrModeStateTests.cs'),(Join-Path $repo 'Console\DSP\NrModeState.cs'))
     Run-Test 'DisplayStartupGateTests' @((Join-Path $repo 'tests\DisplayStartupGateTests.cs'),(Join-Path $repo 'Console\DisplayStartupGate.cs'))
 }
