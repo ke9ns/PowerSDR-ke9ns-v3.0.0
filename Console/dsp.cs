@@ -790,6 +790,12 @@ namespace PowerSDR
             get { return rx_correct_iq_w_real; }
         }
 
+        internal unsafe bool TryGetRXIQCorrection(float[] values)
+        {
+            fixed (float* p = values)
+                return DttSP.GetRXIQCorrectionSnapshot(thread, subrx, p) != 0;
+        }
+
         //=====================================================================================
         private float rx_correct_iq_w_imag_dsp = 0.0f;
         private float rx_correct_iq_w_imag = 0.0f;

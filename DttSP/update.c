@@ -1154,6 +1154,23 @@ GetCorrectRXIQw(int thread, int subrx, REAL *realw, REAL *imagw, unsigned int in
 	sem_post(&top[thread].sync.upd.sem);
 }
 
+/* Audio bridge snapshot: reuse the original calibration and WBIR adaptation.
+ * Never block the sound callback behind the legacy DSP/update thread. */
+DttSP_EXP int
+GetRXIQCorrectionSnapshot(unsigned int thread, unsigned int subrx, float *values)
+{
+	extern int IQdoit;
+	if (!values || thread >= threadno || subrx >= 2) return 0;
+	if (sem_trywait(&top[thread].sync.upd.sem) != 0) return 0;
+	values[0] = IQdoit ? 1.0f : 0.0f;
+	values[1] = rx[thread][subrx].iqfix->w[0].re;
+	values[2] = rx[thread][subrx].iqfix->w[0].im;
+	values[3] = rx[thread][subrx].iqfix->w[1].re;
+	values[4] = rx[thread][subrx].iqfix->w[1].im;
+	sem_post(&top[thread].sync.upd.sem);
+	return 1;
+}
+
 DttSP_EXP void
 SetCorrectRXIQwReal (unsigned int thread, unsigned int subrx, REAL wr, unsigned int index)
 {

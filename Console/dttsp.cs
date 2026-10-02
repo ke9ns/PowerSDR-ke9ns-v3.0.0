@@ -255,6 +255,9 @@ namespace PowerSDR
         [DllImport("DttSP.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SetCorrectIQEnable")]
         public static extern void SetCorrectIQEnable(uint setit);
 
+        [DllImport("DttSP.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int GetRXIQCorrectionSnapshot(uint thread, uint subrx, float* values);
+
         [DllImport("DttSP.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetCorrectRXIQw")]
         public static extern void GetCorrectRXIQw(uint thread, uint subrx, float* real, float* imag, uint index);
 

@@ -18,6 +18,9 @@ namespace PowerSDR
         private readonly object channelLock = new object();
         private readonly bool requested = true;
         private readonly WdspImpulseBlankers blankers;
+        private readonly float[] iqCorrection = new float[5];
+        private bool haveIqCorrection;
+        private float[] correctedLeft, correctedRight;
         internal WdspReceiver(int channel) { Rx1Channel = channel; blankers = new WdspImpulseBlankers(channel); }
         private int appliedAnfTaps, appliedAnfDelay;
         private double appliedAnfGain, appliedAnfLeak;
@@ -168,14 +171,35 @@ namespace PowerSDR
                 int error = 0;
                 // Keep legacy buffer order: WDSP's complex FIR uses the
                 // opposite frequency sign to DttSP (see fir_bandpass).
-                if (blankers.Process(inputLeft, inputRight, sampleCount, Audio.SampleRate1,
-                    rx.NBOn, rx.SDROM, DspBackend.Nb1Settings, DspBackend.Nb2Settings))
+                bool blanked = blankers.Process(inputLeft, inputRight, sampleCount, Audio.SampleRate1,
+                    rx.NBOn, rx.SDROM, DspBackend.Nb1Settings, DspBackend.Nb2Settings);
+                // DttSP still learns WBIR coefficients for the spectrum/legacy
+                // path. Use a coherent snapshot of those exact two stages,
+                // after NB and before WDSP frequency shift and resampling.
+                // Original input belongs to DttSP, RX-S and diversity: never edit it.
+                if (rx.TryGetRXIQCorrection(iqCorrection)) haveIqCorrection = true;
+                if (!haveIqCorrection) return false;
+                if (correctedLeft == null || correctedLeft.Length != sampleCount)
+                { correctedLeft = new float[sampleCount]; correctedRight = new float[sampleCount]; }
+                for (int k = 0; k < iqCorrection.Length; k++)
+                    if (Single.IsNaN(iqCorrection[k]) || Single.IsInfinity(iqCorrection[k]))
+                        throw new InvalidOperationException("Invalid legacy RX IQ correction.");
+                for (int i = 0; i < sampleCount; i++)
                 {
-                    fixed (float* l = blankers.Left, r = blankers.Right)
-                        WdspNative.fexchange2(Rx1Channel, l, r,
-                            (float*)scratchLeft, (float*)scratchRight, &error);
+                    float re = blanked ? blankers.Left[i] : inputLeft[i];
+                    float im = blanked ? blankers.Right[i] : inputRight[i];
+                    if (iqCorrection[0] != 0)
+                    {
+                        float r = re + iqCorrection[1] * re + iqCorrection[2] * im;
+                        float q = im + iqCorrection[2] * re - iqCorrection[1] * im;
+                        re = r + iqCorrection[3] * r + iqCorrection[4] * q;
+                        im = q + iqCorrection[4] * r - iqCorrection[3] * q;
+                    }
+                    correctedLeft[i] = re;
+                    correctedRight[i] = im;
                 }
-                else WdspNative.fexchange2(Rx1Channel, inputLeft, inputRight,
+                fixed (float* l = correctedLeft, r = correctedRight)
+                    WdspNative.fexchange2(Rx1Channel, l, r,
                         (float*)scratchLeft, (float*)scratchRight, &error);
                 return error == 0;
             }
@@ -343,6 +367,7 @@ namespace PowerSDR
                 channelBlockSize = sampleCount;
                 channelSampleRate = sampleRate;
                 channelOpen = true;
+                haveIqCorrection = false;
                 settingsApplied = false;
                 appliedNotchVersion = -1;
                 appliedEqVersion = -1;

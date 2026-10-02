@@ -91,6 +91,37 @@ msbuild PowerSDR.sln /t:Build /p:Configuration=Release /p:Platform=x86 "/p:Refer
 
 ## Validation
 
+### RX image-rejection follow-up (2026-10-02)
+
+The bridge previously consumed uncorrected hardware IQ while the DttSP
+spectrum path applied correctIQ before frequency translation. A strong
+mirror image could therefore be audible without appearing on the spectrum.
+The WDSP input now applies both widely-linear stages from the original
+receiver's static calibration w[0] and adaptive WBIR w[1], after NB and
+before WDSP shift/resampling. It honors the original global IQ enable.
+
+A new DttSP export returns both complex weights and enable as one snapshot.
+It uses sem_trywait, not a blocking audio-thread lock. If busy, the receiver
+reuses its last complete snapshot; until the first snapshot is available it
+leaves legacy audio intact. DttSP remains the adaptation owner; the bridge
+does not train a competing estimator. Weights are held for one callback.
+Each receiver has its own scratch buffers and never edits the shared IQ.
+Existing diversity order is retained.
+
+PowerSDR.exe and DttSP.dll MUST be deployed together. An old native DLL
+without the new export causes WDSP to fall back to legacy processing.
+Both libfftw3-3.dll and libfftw3f-3.dll are still required.
+
+The IQ suite tests DIGU, 3 kHz BW, IF 10 kHz, 2% input imbalance on
+RX1/RX-S/RX2 at 48/96/192 kHz, including static/adaptive coefficients,
+cached snapshots, bypass and input isolation. At 192 kHz the simulated
+image changed from -40 dBc to below -160 dBc. This is a synthetic result,
+not a claim about hardware dynamic range. A separate native smoke test
+verified snapshots of both complex stages for DttSP threads 0/2 and both
+subreceivers, plus global disable. Full Release x86 build passed.
+Retest on FLEX-5000 with a strong signal, 192 kHz, DIGU/3 kHz and IF 10 kHz.
+The latest ke9ns_updates branch is not incorporated in this test build.
+
 ### Squelch follow-up
 
 The original squelch controls only reached DttSP. The WDSP bridge now reads

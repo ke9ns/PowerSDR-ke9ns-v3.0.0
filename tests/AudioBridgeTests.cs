@@ -19,6 +19,14 @@ namespace PowerSDR
         public int BufferSize=2048;
         public float RXSquelchThreshold=-150, FMSquelchThreshold=1;
         public bool NBOn, SDROM;
+        public float[] IQCorrection = new float[5];
+        public bool IQSnapshotAvailable = true;
+        internal bool TryGetRXIQCorrection(float[] values)
+        {
+            if (!IQSnapshotAvailable) return false;
+            Array.Copy(IQCorrection, values, 5);
+            return true;
+        }
         public bool RXEQOn;
         public int RXEQNumBands=3;
         public int RXEQVersion { get { return rxEqVersion; } }
