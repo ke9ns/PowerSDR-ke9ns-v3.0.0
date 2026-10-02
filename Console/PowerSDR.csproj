@@ -632,7 +632,9 @@
     <Compile Include="Direct2DDisplay.cs" />
     <Compile Include="DSP\NrModeState.cs" />
     <Compile Include="DisplayStartupGate.cs" />
-    <Compile Include="Setup.RenderDiagnostics.cs" />
+    <Compile Include="Setup.RenderDiagnostics.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DiversityForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -678,9 +680,13 @@
     <Compile Include="DSP\DspBackend.cs" />
     <Compile Include="DSP\WdspReceiver.cs" />
     <Compile Include="DSP\WdspImpulseBlankers.cs" />
-    <Compile Include="DSP\WdspNbSetupPanel.cs" />
+    <Compile Include="DSP\WdspNbSetupPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DSP\WdspNative.cs" />
-    <Compile Include="DSP\WdspNrSetupPanel.cs" />
+    <Compile Include="DSP\WdspNrSetupPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="eqform.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1181,8 +1187,7 @@
     <Content Include="FlexCW.dll" />
     <Content Include="Resources\blue1.png" />
     <None Include="Resources\DRAP.bmp" />
-    <Content Include="Resources\moonearth2.gif" />
-    <Content Include="Resources\moonearth6.gif" />
+    <Content Include="Resources\moonearth8.gif" />
     <Content Include="Resources\panGray.png" />
     <Content Include="Resources\PanRed.png" />
     <EmbeddedResource Include="Resources\radar.png" />
@@ -1591,14 +1596,10 @@
     <PostBuildEvent>copy "$(ProjectDir)CAT\CATstructs.xml" "$(ProjectDir)..\bin\Release";</PostBuildEvent>
   </PropertyGroup>
   <Target Name="BuildWdspRuntime" BeforeTargets="BeforeBuild">
-    <MSBuild Projects="..\WDSP\wdsp.vcxproj" Targets="Build"
-      Properties="Configuration=$(Configuration);Platform=Win32;SolutionDir=$(ProjectDir)..\" />
-    <Copy SourceFiles="..\artifacts\WDSP\$(Configuration)\Win32\wdsp.dll"
-      DestinationFolder="$(ProjectDir)..\bin\$(Configuration)" />
-    <Copy SourceFiles="..\lib\NR_Algorithms_x86\rnnoise.dll;..\lib\NR_Algorithms_x86\specbleach.dll"
-      DestinationFolder="$(ProjectDir)..\bin\$(Configuration)" />
-    <Copy SourceFiles="..\lib\fftw_x86\libfftw3-3.dll;..\lib\fftw_x86\libfftw3f-3.dll"
-      DestinationFolder="$(ProjectDir)..\bin\$(Configuration)" />
+    <MSBuild Projects="..\WDSP\wdsp.vcxproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=Win32;SolutionDir=$(ProjectDir)..\" />
+    <Copy SourceFiles="..\artifacts\WDSP\$(Configuration)\Win32\wdsp.dll" DestinationFolder="$(ProjectDir)..\bin\$(Configuration)" />
+    <Copy SourceFiles="..\lib\NR_Algorithms_x86\rnnoise.dll;..\lib\NR_Algorithms_x86\specbleach.dll" DestinationFolder="$(ProjectDir)..\bin\$(Configuration)" />
+    <Copy SourceFiles="..\lib\fftw_x86\libfftw3-3.dll;..\lib\fftw_x86\libfftw3f-3.dll" DestinationFolder="$(ProjectDir)..\bin\$(Configuration)" />
   </Target>
   <Import Project="..\packages\AutoItX.Dotnet.3.3.14.5\build\AutoItX.Dotnet.targets" Condition="Exists('..\packages\AutoItX.Dotnet.3.3.14.5\build\AutoItX.Dotnet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

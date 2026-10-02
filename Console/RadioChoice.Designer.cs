@@ -109,7 +109,7 @@ namespace PowerSDR
             this.Controls.Add(this.dataGridView1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "RadioChoice";
-            this.Text = "PowerSDR ke9ns v2.8.0  Available Radio Interfaces ";
+            this.Text = "PowerSDR ke9ns v3.0.0  Available Radio Interfaces ";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.RadioChoice_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radiosAvailableBindingSource)).EndInit();

@@ -223,19 +223,9 @@ namespace PowerSDR.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap moonearth2 {
+        public static System.Drawing.Bitmap moonearth8 {
             get {
-                object obj = ResourceManager.GetObject("moonearth2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap moonearth6 {
-            get {
-                object obj = ResourceManager.GetObject("moonearth6", resourceCulture);
+                object obj = ResourceManager.GetObject("moonearth8", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

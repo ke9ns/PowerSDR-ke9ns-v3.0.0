@@ -2216,7 +2216,15 @@ namespace PowerSDR
                         }
                         else
                         {
-                            group = "10m";
+                            if (satmode == true)
+                            {
+                                group = "10m Satellite";
+                            }
+                            else
+                            {
+                                group = "10m Utility";
+                            }                           
+                           
                         }
                     }
                     else if (((freq >= 50 && freq <= 54)))
@@ -2227,40 +2235,70 @@ namespace PowerSDR
                         }
                         else
                         {
-                            group = "6m";
+                            if(satmode == true)
+                            {
+                                group = "6m Satellite";
+                            }
+                            else
+                            {
+                                group = "6m Utility";
+                            }
+                           
                         }
                     }
                     else if (((freq >= 144.0 && freq <= 148)))
                     {
                         if (repeaterMode == FMTXMode.High || repeaterMode == FMTXMode.Low)
                         {
-                            group = "2m Repeater";
+                            if (satmode == true)
+                            {
+                                group = "2m Satellite";
+                            }
+                            else
+                            {
+                                group = "2m Repeater";
+                            }
+                          
                         }
                         else
                         {
-                            group = "2m Utility";
+                            if (satmode == true)
+                            {
+                                group = "2m Satellite";
+                            }
+                            else
+                            {
+                                group = "2m Utility";
+                            }
+                            
                         }
                     }
                     else if (((freq >= 440 && freq <= 450)))
                     {
                         if (repeaterMode == FMTXMode.High || repeaterMode == FMTXMode.Low)
                         {
-                            group = "70cm Repeater";
+                            if (satmode == true)
+                            {
+                                group = "70cm Satellite";
+                            }
+                            else
+                            {
+                                group = "70cm Repeater";
+                            }
+
+                           
                         }
                         else
                         {
-                            group = "70cm";
-                        }
-                    }
-                    else if (((freq >= 148 && freq <= 149)))
-                    {
-                        if (repeaterMode == FMTXMode.High || repeaterMode == FMTXMode.Low)
-                        {
-                            group = "VHF Utility Repeater";
-                        }
-                        else
-                        {
-                            group = "VHF Utility";
+                            if (satmode == true)
+                            {
+                                group = "70cm Satellite";
+                            }
+                            else
+                            {
+                                group = "70cm Utility";
+                            }
+                           
                         }
                     }
                     else if (((freq >= 148 && freq <= 174)))
@@ -2271,7 +2309,14 @@ namespace PowerSDR
                         }
                         else
                         {
-                            group = "VHF Business Band";
+                            if (satmode == true)
+                            {
+                                group = "VHF Satellite";
+                            }
+                            else
+                            {
+                                group = "VHF Business Band";
+                            }
                         }
                     }
                     else if (((freq >= 400 && freq <= 420)))
@@ -2300,17 +2345,11 @@ namespace PowerSDR
                     {
                         if (satmode == true)
                         {
-                            group = "HF Satellite";
+                            group = "10m Satellite";
                         }
 
                     }
-                    else if (((freq >= 144 && freq <= 146)))
-                    {
-                        if (satmode == true)
-                        {
-                            group = "2m Satellite";
-                        }
-                    }
+
                     else if (((freq >= 120 && freq <= 136)))
                     {
                         if (satmode == true)

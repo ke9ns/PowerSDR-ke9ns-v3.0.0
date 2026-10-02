@@ -97,7 +97,7 @@ namespace PowerSDR
         //======================================================================================================================
         public void Save1()
         {
-            string path = ProfilePaths.DataDirectory;
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\";   // ProfilePaths.DataDirectory;
             string file_name = path + "DXMemory.xml";
 
             Save1(file_name);
@@ -107,7 +107,7 @@ namespace PowerSDR
         //======================================================================================================================
         public static DXMemList Restore1()
         {
-            string path = ProfilePaths.DataDirectory;
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\";  //ProfilePaths.DataDirectory;
             string file_name = path + "DXMemory.xml";
             string bak_file_name = path + "DXMemory_bak.xml";
 

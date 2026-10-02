@@ -287,11 +287,11 @@ NO WARRANTY
 12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</value>
   </data>
   <data name="richTextBox1.Text" xml:space="preserve">
-    <value>PowerSDR KE9NS v2.8.0 Revision History:
+    <value>PowerSDR KE9NS v3.0.0 Revision History:
 
-Complete list of v2.8 Revision history visit: https://ke9ns.com/flexpage.html#GPLREV
+Complete list of v3.0 Revision history visit: https://ke9ns.com/flexpage.html#GPLREV
 
-For v2.8 Feature Videos: https://ke9ns.com/flexpage.html#videos
+For v3.0 Feature Videos: https://ke9ns.com/flexpage.html#videos
 
 DX Cluster List (if you wish to add/change DX Clusters in the Spotter windows): http://www.dxcluster.info/telnet/index.php
 
@@ -299,7 +299,7 @@ TX Waterfall ID PDF file:
 "file://%userprofile%\AppData\Roaming\FlexRadio%20Systems\PowerSDR%20v2.8.0\PowerSDR%20TX%20Waterfall%20ID.pdf"
 
 To download a new fcc database: https://data.fcc.gov/download/pub/uls/complete/l_amat.zip
-Extract the EN.dat file out and move it to the database folder: %userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\
+Extract the EN.dat file out and move it to the database folder: %userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v3.0.0\
 Delete the old FCCDATA.dat file. Next time you Right Click on the LoTW button in the Spotter screen, a new FCCDATA.dat will be created from the EN.dat file.</value>
   </data>
 </root>
