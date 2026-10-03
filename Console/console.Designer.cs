@@ -3716,12 +3716,12 @@ namespace PowerSDR
             // 
             resources.ApplyResources(this.chkRX2NR, "chkRX2NR");
             this.chkRX2NR.AutoCheck = false;
-            this.chkRX2NR.Click += new System.EventHandler(this.chkRX2NR_Click);
             this.chkRX2NR.FlatAppearance.BorderSize = 0;
             this.chkRX2NR.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.chkRX2NR.Name = "chkRX2NR";
             this.toolTip1.SetToolTip(this.chkRX2NR, resources.GetString("chkRX2NR.ToolTip"));
             this.chkRX2NR.CheckedChanged += new System.EventHandler(this.chkRX2NR_CheckedChanged);
+            this.chkRX2NR.Click += new System.EventHandler(this.chkRX2NR_Click);
             this.chkRX2NR.MouseDown += new System.Windows.Forms.MouseEventHandler(this.chkRX2NR_MouseDown);
             // 
             // chkRX2BIN

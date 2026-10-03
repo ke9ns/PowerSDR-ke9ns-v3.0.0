@@ -5563,9 +5563,18 @@ namespace PowerSDR
 
             //--------------------------------------------------------
             // ke9ns add  open up database for my stuff  here
-            // AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\";
-            string file_name3 = ProfilePaths.DataDirectory + "mem.bak";
-            string file_name4 = ProfilePaths.DataDirectory + "memory.xml";
+           //  AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\";
+           
+            // KE9NS: THIS NEEDS TO STAY OUTSIDE OF THE INSTALL FOLDER SO THAT DIFFERENT VERSIONS OF POWERSDR CAN SHARE THE SAME MEMORY.XML FILES
+            // ALSO INCLUDES DXMEMORY.XML AND MASTER.XML FILES AND CAT.SETTINGS AND DAX.SETTINGS, ATUdatabase.xml, production (for calibrating the PA), test_equip 
+            // THIS INCLUDES REFERENCES THROUGHOUT THE ENTIRE CODE BASE.
+
+            //  string file_name3 = ProfilePaths.DataDirectory + "mem.bak";
+            //  string file_name4 = ProfilePaths.DataDirectory + "memory.xml";
+
+            string file_name3 = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\" + "mem.bak"; // save original Memory.xml file just in case T10
+            string file_name4 = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\" + "memory.xml"; // save original Memory.xml file just in case T10
+            
 
             if ((!File.Exists(file_name3)) && (File.Exists(file_name4)))
             {
