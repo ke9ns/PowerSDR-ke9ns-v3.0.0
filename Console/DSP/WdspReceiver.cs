@@ -186,8 +186,10 @@ namespace PowerSDR
                         throw new InvalidOperationException("Invalid legacy RX IQ correction.");
                 for (int i = 0; i < sampleCount; i++)
                 {
-                    float re = blanked ? blankers.Left[i] : inputLeft[i];
-                    float im = blanked ? blankers.Right[i] : inputRight[i];
+                    // DttSP process_samples uses real=RIGHT, imag=LEFT.
+                    // Its calibration coefficients belong to that convention.
+                    float re = blanked ? blankers.Right[i] : inputRight[i];
+                    float im = blanked ? blankers.Left[i] : inputLeft[i];
                     if (iqCorrection[0] != 0)
                     {
                         float r = re + iqCorrection[1] * re + iqCorrection[2] * im;
@@ -195,8 +197,10 @@ namespace PowerSDR
                         re = r + iqCorrection[3] * r + iqCorrection[4] * q;
                         im = q + iqCorrection[4] * r - iqCorrection[3] * q;
                     }
-                    correctedLeft[i] = re;
-                    correctedRight[i] = im;
+                    // Restore the bridge's existing L/R order for WDSP.
+                    // Do not change the oscillator/sideband convention.
+                    correctedLeft[i] = im;
+                    correctedRight[i] = re;
                 }
                 fixed (float* l = correctedLeft, r = correctedRight)
                     WdspNative.fexchange2(Rx1Channel, l, r,

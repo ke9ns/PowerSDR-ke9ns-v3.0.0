@@ -93,6 +93,20 @@ msbuild PowerSDR.sln /t:Build /p:Configuration=Release /p:Platform=x86 "/p:Refer
 
 ### RX image-rejection follow-up (2026-10-02)
 
+**Superseded by R2 (2026-10-04):** hardware feedback showed that the initial
+patch did not resolve the image. Its correction interpreted left as real,
+but DttSP/sdr.c process_samples explicitly uses real=right, imaginary=left.
+R2 applies the copied coefficients in that DttSP convention and restores
+the original L/R order before WDSP exchange. It does not swap the WDSP
+oscillator/sideband convention. The original synthetic test also used the
+wrong coefficient convention and was not valid evidence for the hardware fix.
+
+The revised test derives a complex coefficient analytically from the
+DttSP input mapping, with BOTH gain and phase imbalance. It fails on
+537c1a2 and passes with R2, testing static/adaptive coefficients, cache,
+disable and shared-input preservation. The previous ZIP should not be used.
+Hardware confirmation of R2 is still required.
+
 The bridge previously consumed uncorrected hardware IQ while the DttSP
 spectrum path applied correctIQ before frequency translation. A strong
 mirror image could therefore be audible without appearing on the spectrum.
