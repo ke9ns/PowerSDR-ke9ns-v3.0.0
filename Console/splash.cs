@@ -100,8 +100,8 @@ namespace PowerSDR
             Random random = new Random();  
             bool randomBool = random.Next(2) == 0;  // Returns true or false randomly
 
-            if (randomBool) pictureBox1.Image = Properties.Resources.moonearth6;
-            else pictureBox1.Image = Properties.Resources.moonearth2;
+            if (randomBool) pictureBox1.Image = Properties.Resources.moonearth8;
+            else pictureBox1.Image = Properties.Resources.moonearth8;
 
 
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;

@@ -52,7 +52,7 @@ namespace PowerSDR
             // 
             this.pnlStatus.BackColor = System.Drawing.Color.Black;
             this.pnlStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.pnlStatus.Location = new System.Drawing.Point(64, 315);
+            this.pnlStatus.Location = new System.Drawing.Point(64, 240);
             this.pnlStatus.Name = "pnlStatus";
             this.pnlStatus.Size = new System.Drawing.Size(475, 2);
             this.pnlStatus.TabIndex = 2;
@@ -74,7 +74,7 @@ namespace PowerSDR
             this.textBox1.Size = new System.Drawing.Size(133, 24);
             this.textBox1.TabIndex = 3;
             this.textBox1.TabStop = false;
-            this.textBox1.Text = "v2.8.0.0";
+            this.textBox1.Text = "v3.0.0.0";
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // pictureBox1
@@ -90,7 +90,7 @@ namespace PowerSDR
             this.lblTimeRemaining.BackColor = System.Drawing.Color.Transparent;
             this.lblTimeRemaining.ForeColor = System.Drawing.Color.White;
             this.lblTimeRemaining.Image = null;
-            this.lblTimeRemaining.Location = new System.Drawing.Point(457, 298);
+            this.lblTimeRemaining.Location = new System.Drawing.Point(476, 208);
             this.lblTimeRemaining.Name = "lblTimeRemaining";
             this.lblTimeRemaining.Size = new System.Drawing.Size(100, 14);
             this.lblTimeRemaining.TabIndex = 1;
@@ -101,7 +101,7 @@ namespace PowerSDR
             this.lblStatus.BackColor = System.Drawing.Color.Transparent;
             this.lblStatus.ForeColor = System.Drawing.Color.White;
             this.lblStatus.Image = null;
-            this.lblStatus.Location = new System.Drawing.Point(12, 296);
+            this.lblStatus.Location = new System.Drawing.Point(61, 208);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(400, 16);
             this.lblStatus.TabIndex = 0;

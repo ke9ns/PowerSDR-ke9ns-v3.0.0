@@ -3246,13 +3246,11 @@ namespace PowerSDR
             // chkNR
             // 
             resources.ApplyResources(this.chkNR, "chkNR");
-            this.chkNR.AutoCheck = false;
             this.chkNR.FlatAppearance.BorderSize = 0;
             this.chkNR.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.chkNR.Name = "chkNR";
             this.toolTip1.SetToolTip(this.chkNR, resources.GetString("chkNR.ToolTip"));
             this.chkNR.CheckedChanged += new System.EventHandler(this.chkNR_CheckedChanged);
-            this.chkNR.Click += new System.EventHandler(this.chkNR_Click);
             this.chkNR.MouseDown += new System.Windows.Forms.MouseEventHandler(this.chkNR_MouseDown);
             // 
             // chkDSPNB2
@@ -3715,8 +3713,6 @@ namespace PowerSDR
             // chkRX2NR
             // 
             resources.ApplyResources(this.chkRX2NR, "chkRX2NR");
-            this.chkRX2NR.AutoCheck = false;
-            this.chkRX2NR.Click += new System.EventHandler(this.chkRX2NR_Click);
             this.chkRX2NR.FlatAppearance.BorderSize = 0;
             this.chkRX2NR.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.chkRX2NR.Name = "chkRX2NR";
@@ -5771,7 +5767,10 @@ namespace PowerSDR
             this.grpVFOB.Name = "grpVFOB";
             this.grpVFOB.Paint += new System.Windows.Forms.PaintEventHandler(this.grpVFOB_Paint);
             this.grpVFOB.MouseDown += new System.Windows.Forms.MouseEventHandler(this.grpVFOB_MouseDown);
+            this.grpVFOB.MouseLeave += new System.EventHandler(this.grpVFOB_MouseLeave);
             this.grpVFOB.MouseHover += new System.EventHandler(this.grpVFOB_MouseHover);
+            this.grpVFOB.MouseMove += new System.Windows.Forms.MouseEventHandler(this.grpVFOB_MouseMove);
+            this.grpVFOB.MouseUp += new System.Windows.Forms.MouseEventHandler(this.grpVFOB_MouseUp);
             // 
             // panelVFOBSubHover
             // 
@@ -5854,7 +5853,10 @@ namespace PowerSDR
             this.grpVFOA.Name = "grpVFOA";
             this.grpVFOA.Paint += new System.Windows.Forms.PaintEventHandler(this.grpVFOA_Paint);
             this.grpVFOA.MouseDown += new System.Windows.Forms.MouseEventHandler(this.grpVFOA_MouseDown);
+            this.grpVFOA.MouseLeave += new System.EventHandler(this.grpVFOA_MouseLeave);
             this.grpVFOA.MouseHover += new System.EventHandler(this.grpVFOA_MouseHover);
+            this.grpVFOA.MouseMove += new System.Windows.Forms.MouseEventHandler(this.grpVFOA_MouseMove);
+            this.grpVFOA.MouseUp += new System.Windows.Forms.MouseEventHandler(this.grpVFOA_MouseUp);
             // 
             // panelVFOASubHover
             // 

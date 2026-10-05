@@ -38,7 +38,7 @@ namespace PowerSDR
 
 #if (NO_DJ)
         //  public const string BUILT_BY = "Mods Compiled by [KE9NS]";
-        public const string BUILT_BY = "[Mods by KE9NS]"; //
+        public const string BUILT_BY = "[Mods by KE9NS, PY2ECM]"; //
 #else
         
 

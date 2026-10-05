@@ -5563,9 +5563,18 @@ namespace PowerSDR
 
             //--------------------------------------------------------
             // ke9ns add  open up database for my stuff  here
-            // AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\";
-            string file_name3 = ProfilePaths.DataDirectory + "mem.bak";
-            string file_name4 = ProfilePaths.DataDirectory + "memory.xml";
+           //  AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\";
+           
+            // KE9NS: THIS NEEDS TO STAY OUTSIDE OF THE INSTALL FOLDER SO THAT DIFFERENT VERSIONS OF POWERSDR CAN SHARE THE SAME MEMORY.XML FILES
+            // ALSO INCLUDES DXMEMORY.XML AND MASTER.XML FILES AND CAT.SETTINGS AND DAX.SETTINGS, ATUdatabase.xml, production (for calibrating the PA), test_equip 
+            // THIS INCLUDES REFERENCES THROUGHOUT THE ENTIRE CODE BASE.
+
+            //  string file_name3 = ProfilePaths.DataDirectory + "mem.bak";
+            //  string file_name4 = ProfilePaths.DataDirectory + "memory.xml";
+
+            string file_name3 = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\" + "mem.bak"; // save original Memory.xml file just in case T10
+            string file_name4 = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\" + "memory.xml"; // save original Memory.xml file just in case T10
+            
 
             if ((!File.Exists(file_name3)) && (File.Exists(file_name4)))
             {
@@ -19828,12 +19837,7 @@ namespace PowerSDR
             if (KWAutoInformation7) BroadcastFreqChange7("B", freq); // TCP/IP CAT
 
 
-            //.334
-            if (setupForm != null && setupForm.chkVisualBandInd.Checked)
-            {
-                grpVFOB.Invalidate(new Rectangle(12, 80, grpVFOB.Width - 12, 99));
-
-            }
+            // .1 .339 SliderUpdate now under VFOAFreq
 
         } //   UpdateVFOBFreq
 
@@ -30901,7 +30905,7 @@ namespace PowerSDR
             get { return current_display_engine; }
             set
             {
-                if (value == DisplayEngine.DIRECT_X)
+                if (value == DisplayEngine.DIRECT_X) //v3
                 {
                     current_display_engine = Direct2DDisplay.TryInitialize(picDisplay)
                         ? DisplayEngine.DIRECT_X : DisplayEngine.GDI_PLUS;
@@ -38284,24 +38288,18 @@ namespace PowerSDR
                     catch (Exception)
                     {
                         Debug.WriteLine("ZZOOM VFOAFreq convert string to double failed " + txtVFOAFreq.Text);
-
-
                     }
-
-
-
-
-
-
-
-
-
-
 
                 }
 
-            } //set
+               // ke9ns: this is for the visual band indicator "VFOA Slider"
+                if ((setupForm != null && setupForm.chkVisualBandInd.Checked) || initializing)
+                {
+                   grpVFOA.Invalidate(new Rectangle(12, 80, grpVFOA.Width - 12, 99)); // .334 slider redraw just the slider area
 
+                } // setupForm.chkVisualBandInd.Checked
+
+            } //set
 
         } // VFOAFreq
 
@@ -38311,7 +38309,6 @@ namespace PowerSDR
         private delegate void VFOUpdateDel(double freq);
         private void VFOAUpdate(double freq)
         {
-
 
             txtVFOAFreq.Text = freq.ToString("f6"); // fixed point with 6 digits
 
@@ -38588,12 +38585,13 @@ namespace PowerSDR
                 {
                     picRadar.Invalidate(); //.246 .249
                     if (diversityForm != null) diversityForm.picRadar.Invalidate(); //.310
-
                 }
 
-
-
-
+                if ((setupForm != null && setupForm.chkVisualBandInd.Checked) || initializing)
+                {
+                    grpVFOB.Invalidate(new Rectangle(12, 80, grpVFOB.Width - 12, 99)); // .339 slider redraw just the slider area
+                }
+ 
             } // set
 
         } // VFOBFreq
@@ -40559,7 +40557,7 @@ namespace PowerSDR
         #endregion
 
         #region Display Routines
-
+		//v3
         private int displayPaintActive;
         private volatile int displayStartupFps;
         private long displayNextPaintTick;
@@ -40594,14 +40592,14 @@ namespace PowerSDR
         {
             // WM_PAINT has priority over WM_TIMER. Do not keep invalidating
             // while a costly frame is painting: leave time for clock/input.
-            if (Interlocked.CompareExchange(ref displayPaintActive, 0, 0) != 0) return;
+            if (Interlocked.CompareExchange(ref displayPaintActive, 0, 0) != 0) return; //v3
             switch (current_display_engine)
             {
                 case DisplayEngine.GDI_PLUS:
                     picDisplay.Invalidate();
                     break;
                 case DisplayEngine.DIRECT_X:
-                    picDisplay.Invalidate();
+                    picDisplay.Invalidate(); //v3
                     break;
             }
         }
@@ -40859,7 +40857,7 @@ namespace PowerSDR
         public int AMCAR_NEG_FLAG = 0;
 
         private void picDisplay_Paint(object sender, PaintEventArgs e) //System.Windows.Forms.PaintEventArgs
-        {
+        {   // v3
             long started = Stopwatch.GetTimestamp();
             long snapshot = Interlocked.Read(ref displayTopSnapshotTick);
             if (mox && chkVFOBTX.Checked && chkRX2.Checked)
@@ -40893,7 +40891,7 @@ namespace PowerSDR
             }
         }
 
-        private void PaintDisplayFrame(object sender, PaintEventArgs e)
+        private void PaintDisplayFrame(object sender, PaintEventArgs e) 
         {
             PD = e;
 
@@ -40977,7 +40975,7 @@ namespace PowerSDR
                     Display.RenderGDIPlus(ref PD);  // System.Windows.Forms.PaintEventArgs
                     break;
                 case DisplayEngine.DIRECT_X:
-                    bool rendered = Direct2DDisplay.Render(picDisplay, delegate(Graphics graphics)
+                    bool rendered = Direct2DDisplay.Render(picDisplay, delegate(Graphics graphics) // v3
                     {
                         PaintEventArgs accelerated = new PaintEventArgs(graphics,
                             new Rectangle(0, 0, picDisplay.ClientSize.Width, picDisplay.ClientSize.Height));
@@ -49994,7 +49992,7 @@ namespace PowerSDR
 #if (WRITE_FFT_TEST)
             BinaryWriter writer = new BinaryWriter(File.Open("test.fft", FileMode.OpenOrCreate, FileAccess.Write));
 #endif
-            Stopwatch displayClock = Stopwatch.StartNew();
+            Stopwatch displayClock = Stopwatch.StartNew();  //v3
             DisplayStartupGate startupGate = new DisplayStartupGate(DspBackend.CompletedAudioBlocks);
             long nextDisplayFrame = 0;
             //			display_running = true;
@@ -50002,7 +50000,7 @@ namespace PowerSDR
             {
                 // Wait BEFORE taking the spectrum snapshot. Skipping an
                 // invalidation after sampling added a whole frame period.
-                while (chkPower.Checked && Display.CurrentDisplayMode != DisplayMode.OFF)
+                while (chkPower.Checked && Display.CurrentDisplayMode != DisplayMode.OFF) //v3
                 {
                     long waitTicks = Interlocked.Read(ref displayNextPaintTick) - Stopwatch.GetTimestamp();
                     if (Interlocked.CompareExchange(ref displayPaintActive, 0, 0) == 0 && waitTicks <= 0)
@@ -50082,7 +50080,7 @@ namespace PowerSDR
                                 break;
                         }
 
-                        Interlocked.Exchange(ref displayTopSnapshotTick, Stopwatch.GetTimestamp());
+                        Interlocked.Exchange(ref displayTopSnapshotTick, Stopwatch.GetTimestamp()); //v3
                         Display.DataReady = true; // ke9ns: dont allow screen to show next line of pan data until UPDATEOFF is clear
                                                   // but not used by getscope routine
 
@@ -50123,7 +50121,7 @@ namespace PowerSDR
                                 //Audio.phase_mutex.ReleaseMutex();
                                 break;
                         }
-                        Interlocked.Exchange(ref displayBottomSnapshotTick, Stopwatch.GetTimestamp());
+                        Interlocked.Exchange(ref displayBottomSnapshotTick, Stopwatch.GetTimestamp());  //v3
                         Display.DataReadyBottom = true;
                     }
 
@@ -50416,6 +50414,7 @@ namespace PowerSDR
                     // slept for the full delay after doing its work, making the
                     // real period "render work + delay" and increasingly laggy
                     // at higher settings. Catch up without building a backlog.
+                    // v3
                     displayStartupFps = startupGate.GetFps(display_fps,
                         displayClock.ElapsedMilliseconds, DspBackend.CompletedAudioBlocks);
                     nextDisplayFrame += Math.Max(1, 1000 / displayStartupFps);
@@ -57639,7 +57638,7 @@ namespace PowerSDR
         // ke9ns: actually runs Console_Closing1 just before this below
         public void Console_Closing(object sender, FormClosingEventArgs e)
         {
-            Direct2DDisplay.Shutdown();
+            Direct2DDisplay.Shutdown();  //v3
 
             if (chkPower.Checked) //.254
             {
@@ -62380,8 +62379,6 @@ namespace PowerSDR
                 {
                     freq = freq / 1000000; // 14123456 = 14.123456
                 }
-
-
 
                 txtVFOAFreq.Text = freq.ToString("0.######"); //.253
 
@@ -70641,6 +70638,7 @@ namespace PowerSDR
 
         // Experimental WDSP RX1 selector. Matches Thetis left-click cycling:
         // OFF -> NR1 (ANR) -> NR2 (EMNR) -> NR3 (RNNoise) -> NR4 (SpecBleach).
+        //v3
         private int experimental_rx1_nr_mode = 0;
         private bool experimental_rx1_nr_updating = false;
 
@@ -74044,6 +74042,8 @@ namespace PowerSDR
 				btnHidden.Focus();*/
         }
 
+		//v3
+		
         private int experimental_rx2_nr_mode;
         private bool experimental_rx2_nr_updating;
 
@@ -78775,6 +78775,159 @@ namespace PowerSDR
 
 
         public PowerMaster pm; // .212
+        
+
+               //=====================================================
+        // .339 for slidervfo use VFOfreq info to determine where you are on slider then update slider
+
+        private (double flow, double fhigh) SliderCheck(double vfocheck) //.339 works for VFOA and B
+        {
+            double flow = 0;
+            double fhigh = 0;
+
+            if (vfocheck >= 0.0 && vfocheck <= 0.00003)                       // ---ELF Extreme Low Freq 3-30hz
+            { flow = 0.0; fhigh = 0.00003; }
+            else if (vfocheck >= 0.000031 && vfocheck <= 0.0003)             // ---SLF Super Low Freq 0.03-0.3khz
+            { flow = 0.000031; fhigh = 0.0003; }
+            else if (vfocheck >= 0.000301 && vfocheck <= 0.003)               // ---ULF Ultra Low Freq 0.3-3khz
+            { flow = 0.000301; fhigh = 0.003; }
+            else if (vfocheck >= 0.003001 && vfocheck <= 0.03)                // ---VLF Very Low Freq 3-30khz
+            { flow = 0.003001; fhigh = 0.03; }
+            else if (vfocheck >= 0.135700 && vfocheck <= 0.137799)            // 2200m
+            { flow = 0.135700; fhigh = 0.137799; }
+            else if (vfocheck >= 0.148500 && vfocheck <= 0.283500)            // AM LW
+            { flow = 0.148500; fhigh = 0.283500; }
+            else if (vfocheck >= 0.283501 && vfocheck <= 0.300000)            // LW NDB nav beacons
+            { flow = 0.283501; fhigh = 0.300000; }
+            else if (vfocheck >= 0.030001 && vfocheck <= 0.3)                 // ---LF/LW Low Freq 30-300khz
+            { flow = 0.030001; fhigh = 0.3; }
+            else if (vfocheck >= 0.300001 && vfocheck <= 0.414999)            // MW NDB Nav Beacons
+            { flow = 0.300001; fhigh = 0.414999; }
+            else if (vfocheck >= 0.472 && vfocheck <= 0.478999) // 630m
+            { flow = 0.472; fhigh = 0.478999; }
+            else if (vfocheck >= 0.415000 && vfocheck <= 0.526400)            // MW Maritime band
+            { flow = 0.415000; fhigh = 0.526400; }
+            else if (vfocheck >= 0.526401 && vfocheck <= 0.529999)            // MW beacons
+            { flow = 0.526401; fhigh = 0.529999; }
+            else if (vfocheck >= 0.530 && vfocheck <= 1.710000)               // MW AM BCAST band
+            { flow = 0.530; fhigh = 1.710000; }
+            else if (vfocheck >= 0.300001 && vfocheck <= 1.799999)            // ---MW Freq 300khz-1.8mhz
+            { flow = 0.300001; fhigh = 1.799999; }
+            else if (vfocheck >= 1.8 && vfocheck <= 2.0)        //160m
+            { flow = 1.8; fhigh = 2.0; }
+            else if (vfocheck >= 2.0 && vfocheck <= 3.0)        // SW 120m
+            { flow = 2.0; fhigh = 3.0; }
+            else if (vfocheck >= 3.0 && vfocheck <= 3.5)        // SW 90m
+            { flow = 3.0; fhigh = 3.5; }
+            else if (vfocheck >= 3.5 && vfocheck <= 4.0)        // 80m
+            { flow = 3.5; fhigh = 4.0; }
+            else if (vfocheck >= 4.0 && vfocheck <= 5.3)        // SW 61m
+            { flow = 4.0; fhigh = 5.3; }
+            else if (vfocheck >= 5.250 && vfocheck <= 5.45)     // 60m
+            { flow = 5.250; fhigh = 5.45; }
+            else if (vfocheck >= 5.4 && vfocheck <= 7.0)        // SW 49m
+            { flow = 5.4; fhigh = 7.0; }
+            else if (vfocheck >= 7.0 && vfocheck <= 7.3)        // 40m
+            { flow = 7.0; fhigh = 7.3; }
+            else if (vfocheck >= 7.2 && vfocheck <= 9.0)        // SW 41m
+            { flow = 7.2; fhigh = 9.0; }
+            else if (vfocheck >= 9.000001 && vfocheck <= 10.1)  // SW 31m
+            { flow = 9.000001; fhigh = 10.1; }
+            else if (vfocheck >= 10.1 && vfocheck <= 10.15)         // 30m
+            { flow = 10.1; fhigh = 10.15; }
+            else if (vfocheck >= 10.150001 && vfocheck <= 13.57)    // SW 25m
+            { flow = 10.150001; fhigh = 13.57; }
+            else if (vfocheck >= 13.570001 && vfocheck <= 14.00)    // SW 22m
+            { flow = 13.570001; fhigh = 14.0; }
+            else if (vfocheck >= 14.0 && vfocheck <= 14.35)         //20m
+            { flow = 14.0; fhigh = 14.35; }
+            else if (vfocheck >= 14.350 && vfocheck <= 18.068)        // SW 19m
+            { flow = 14.350; fhigh = 18.068; }
+            else if (vfocheck >= 18.068 && vfocheck <= 18.168)           // 17m
+            { flow = 18.068; fhigh = 18.168; }
+            else if (vfocheck >= 18.168 && vfocheck <= 21.0)          // SW 16m
+            { flow = 18.168; fhigh = 21.0; }
+            else if (vfocheck >= 21.0 && vfocheck <= 21.45)         // 15m
+            { flow = 21.0; fhigh = 21.45; }
+            else if (vfocheck >= 21.450 && vfocheck <= 23.0)          // SW 14m      
+            { flow = 21.45; fhigh = 23.0; }
+            else if (vfocheck >= 23.0 && vfocheck <= 24.89)            // SW 13m
+            { flow = 23.0; fhigh = 24.89; }
+            else if (vfocheck >= 24.89 && vfocheck <= 24.99)        // 12m
+            { flow = 24.89; fhigh = 24.99; }
+            else if (vfocheck >= 24.990001 && vfocheck <= 28.0)      // CB 11m
+            { flow = 24.990001; fhigh = 28.0; }
+            else if (vfocheck >= 28.0 && vfocheck <= 29.7)         // 10m
+            { flow = 28.0; fhigh = 29.7; }
+            else if (vfocheck >= 29.7 && vfocheck <= 38.0)         // 9m
+            { flow = 29.7; fhigh = 38.0; }
+            else if (vfocheck >= 38.0 && vfocheck <= 40.0)         // 8m
+            { flow = 38.0; fhigh = 40.0; }
+            else if (vfocheck >= 40.0 && vfocheck <= 50.0)         // 7m
+            { flow = 40.0; fhigh = 50.0; }
+            else if (vfocheck >= 50.0 && vfocheck <= 54.0)          // VHF 6m
+            { flow = 50.0; fhigh = 54.0; }
+            else if (vfocheck >= 54.0 && vfocheck <= 70.0)          // VHF channel 2-4 TV
+            { flow = 54.0; fhigh = 70.0; }
+            else if (vfocheck >= 70.0 && vfocheck <= 70.5)          // VHF 4m
+            { flow = 70.0; fhigh = 70.5; }
+            else if (vfocheck >= 87.9 && vfocheck <= 108.0)          // FM band
+            { flow = 87.9; fhigh = 108.0; }
+            else if (vfocheck >= 120.0 && vfocheck <= 144.00)       // VHF air/space
+            { flow = 120.0; fhigh = 144.0; }
+            else if (vfocheck >= 144.0 && vfocheck <= 148.0)        // 2m
+            { flow = 144.0; fhigh = 148.0; }
+            else if (vfocheck >= 148.0 && vfocheck <= 165.0)        // VHF bus
+            { flow = 148.0; fhigh = 165.0; }
+            else if (vfocheck >= 219.0 && vfocheck <= 225.0)        // 1.25m
+            { flow = 219.0; fhigh = 225.0; }
+            else if (vfocheck >= 400.00 && vfocheck <= 420.0)       // UHF bus
+            { flow = 400.0; fhigh = 420.0; }
+            else if (vfocheck >= 420.0 && vfocheck <= 450.0)        // UHF 70cm
+            { flow = 420.0; fhigh = 450.0; }
+            else if (vfocheck >= 450.00 && vfocheck <= 490.0)       // UHF bus
+            { flow = 450.0; fhigh = 490.0; }
+            else if (vfocheck >= 902.00 && vfocheck <= 928.0)       // 33cm
+            { flow = 902.0; fhigh = 928.0; }
+            else if (vfocheck >= 1240.00 && vfocheck <= 1300.0)       // 23m
+            { flow = 1240.0; fhigh = 1300.0; }
+            else if (vfocheck >= 2300.00 && vfocheck <= 2310.0)       // 13cm
+            { flow = 2300.0; fhigh = 2310.0; }
+            else if (vfocheck >= 2390 && vfocheck <= 2450.0)       // 13cm
+            { flow = 2390.0; fhigh = 2450.0; }
+            else if (vfocheck >= 3300.00 && vfocheck <= 3450.0)       // 9cm
+            { flow = 3300.0; fhigh = 3450.0; }
+            else if (vfocheck >= 5650.00 && vfocheck <= 5925.0)       //5cm
+            { flow = 5650.0; fhigh = 5925.0; }
+            else
+            {
+                //  Debug.WriteLine("VFOA PAINT:  vfocheck out of range " + vfocheck);
+                return (0, 0);
+            }
+
+            return (flow, fhigh);
+
+
+        } // SliderCheck
+
+
+
+        double Slidex2A = 0; // fhigh - flow; //width  2.0 - 1.8 = 0.2mhz
+        double Slidex3A = 0;  // VFOAFreq; // in mhz  1.8mhz
+        double Slidex4A = 0;  // grpVFOA.Width - 30;  // width of available line in pixels
+        double Slidex5A = 0; // ((x3 - flow) / x2); // percent of the way
+        int Slidex1A = 0;   // (int)(x4 * x5);
+        double SlideflowA = 0;
+        double SlidefhighA = 0;
+
+        double Slidex2B = 0; // fhigh - flow; //width  2.0 - 1.8 = 0.2mhz
+        double Slidex3B = 0;  // VFOAFreq; // in mhz  1.8mhz
+        double Slidex4B = 0;  // grpVFOA.Width - 30;  // width of available line in pixels
+        double Slidex5B = 0; // ((x3 - flow) / x2); // percent of the way
+        int Slidex1B = 0;   // (int)(x4 * x5);
+        double SlideflowB = 0;
+        double SlidefhighB = 0;
+      
 
         //=================================================================================
         // ke9ns add to draw curved colored line around groupbox
@@ -78823,156 +78976,34 @@ namespace PowerSDR
             //  p.Graphics.DrawImage(vfoa, new Rectangle(-8,-9, 50, 40));
 
             
-
             //.334
-            if (setupForm != null && setupForm.chkVisualBandInd.Checked)
+            if (setupForm != null && setupForm.chkVisualBandInd.Checked || initializing)
             {
-                double flow = VFOAFreq;
-                double fhigh = VFOAFreq;
-               
-                if (VFOAFreq >= 0.0 && VFOAFreq <= 0.00003)                       // ---ELF Extreme Low Freq 3-30hz
-                { flow = 0.0; fhigh = 0.00003; }
-                else  if (VFOAFreq >= 0.000031 && VFOAFreq <= 0.0003)             // ---SLF Super Low Freq 0.03-0.3khz
-                { flow = 0.000031; fhigh = 0.0003; }
-                else if (VFOAFreq >= 0.000301 && VFOAFreq <= 0.003)               // ---ULF Ultra Low Freq 0.3-3khz
-                { flow = 0.000301; fhigh = 0.003; }
-                else if (VFOAFreq >= 0.003001 && VFOAFreq <= 0.03)                // ---VLF Very Low Freq 3-30khz
-                { flow = 0.003001; fhigh = 0.03; }
-                else if (VFOAFreq >= 0.135700 && VFOAFreq <= 0.137799)            // 2200m
-                { flow = 0.135700; fhigh = 0.137799; }
-                else if (VFOAFreq >= 0.148500 && VFOAFreq <= 0.283500)            // AM LW
-                { flow = 0.148500; fhigh = 0.283500; }
-                else if (VFOAFreq >= 0.283501 && VFOAFreq <= 0.300000)            // LW NDB nav beacons
-                { flow = 0.283501; fhigh = 0.300000; } 
-                else if (VFOAFreq >= 0.030001 && VFOAFreq <= 0.3)                 // ---LF/LW Low Freq 30-300khz
-                { flow = 0.030001; fhigh = 0.3; }
-                else if (VFOAFreq >= 0.300001 && VFOAFreq <= 0.414999)            // MW NDB Nav Beacons
-                { flow = 0.300001; fhigh = 0.414999; }
-                else if (VFOAFreq >= 0.472 && VFOAFreq <= 0.478999) // 630m
-                { flow = 0.472; fhigh = 0.478999; }
-                else if (VFOAFreq >= 0.415000 && VFOAFreq <= 0.526400)            // MW Maritime band
-                { flow = 0.415000; fhigh = 0.526400; }
-                else if (VFOAFreq >= 0.526401 && VFOAFreq <= 0.529999)            // MW beacons
-                { flow = 0.526401; fhigh = 0.529999; }
-                else if (VFOAFreq >= 0.530 && VFOAFreq <= 1.710000)               // MW AM BCAST band
-                { flow = 0.530; fhigh = 1.710000; }
-                else if (VFOAFreq >= 0.300001 && VFOAFreq <= 1.799999)            // ---MW Freq 300khz-1.8mhz
-                { flow = 0.300001; fhigh = 1.799999; }
-                else if (VFOAFreq >= 1.8 && VFOAFreq <= 2.0)        //160m
-                { flow = 1.8; fhigh = 2.0; }
-                else if (VFOAFreq >= 2.0 && VFOAFreq <= 3.0)        // SW 120m
-                { flow = 2.0; fhigh = 3.0; }
-                else if (VFOAFreq >= 3.0 && VFOAFreq <= 3.5)        // SW 90m
-                { flow = 3.0; fhigh = 3.5; }
-                else if (VFOAFreq >= 3.5 && VFOAFreq <= 4.0)        // 80m
-                { flow = 3.5; fhigh = 4.0; }
-                else if (VFOAFreq >= 4.0 && VFOAFreq <= 5.3)        // SW 61m
-                { flow = 4.0; fhigh = 5.3; }
-                else if (VFOAFreq >= 5.250 && VFOAFreq <= 5.45)     // 60m
-                { flow = 5.250; fhigh = 5.45; }
-                else if (VFOAFreq >= 5.4 && VFOAFreq <= 7.0)        // SW 49m
-                { flow = 5.4; fhigh = 7.0; }
-                else if (VFOAFreq >= 7.0 && VFOAFreq <= 7.3)        // 40m
-                { flow = 7.0; fhigh = 7.3; }
-                else if (VFOAFreq >= 7.2 && VFOAFreq <= 9.0)        // SW 41m
-                { flow = 7.2; fhigh = 9.0; }
-                else if (VFOAFreq >= 9.000001 && VFOAFreq <= 10.1)  // SW 31m
-                { flow = 9.000001; fhigh = 10.1; }
-                else if (VFOAFreq >= 10.1 && VFOAFreq <= 10.15)         // 30m
-                { flow = 10.1; fhigh = 10.15; }
-                else if (VFOAFreq >= 10.150001 && VFOAFreq <= 13.57)    // SW 25m
-                { flow = 10.150001; fhigh = 13.57; }
-                else if (VFOAFreq >= 13.570001 && VFOAFreq <= 14.00)    // SW 22m
-                { flow = 13.570001; fhigh = 14.0; }
-                else if (VFOAFreq >= 14.0 && VFOAFreq <= 14.35)         //20m
-                { flow = 14.0; fhigh = 14.35;  }
-                else if (VFOAFreq >= 14.350 && VFOAFreq <= 18.068)        // SW 19m
-                { flow = 14.350; fhigh = 18.068; }
-                else if (VFOAFreq >= 18.068 && VFOAFreq <= 18.168)           // 17m
-                { flow = 18.068; fhigh = 18.168; }
-                else if (VFOAFreq >= 18.168 && VFOAFreq <= 21.0)          // SW 16m
-                { flow = 18.168; fhigh = 21.0; }
-                else if (VFOAFreq >= 21.0 && VFOAFreq <= 21.45)         // 15m
-                { flow = 21.0; fhigh = 21.45; }
-                else if (VFOAFreq >= 21.450 && VFOAFreq <= 23.0)          // SW 14m      
-                { flow = 21.45; fhigh = 23.0; }
-                else if (VFOAFreq >= 23.0 && VFOAFreq <= 24.89)            // SW 13m
-                { flow = 23.0; fhigh = 24.89; }
-                else if (VFOAFreq >= 24.89 && VFOAFreq <= 24.99)        // 12m
-                { flow = 24.89; fhigh = 24.99; }
-                else if (VFOAFreq >= 24.990001 && VFOAFreq <= 28.0)      // CB 11m
-                { flow = 24.990001; fhigh = 28.0; }
-                else if (VFOAFreq >= 28.0 && VFOAFreq <= 29.7)         // 10m
-                { flow = 28.0; fhigh = 29.7; }
-                else if (VFOAFreq >= 29.7 && VFOAFreq <= 38.0)         // 9m
-                { flow = 29.7; fhigh = 38.0; }
-                else if (VFOAFreq >= 38.0 && VFOAFreq <= 40.0)         // 8m
-                { flow = 38.0; fhigh = 40.0; }
-                else if (VFOAFreq >= 40.0 && VFOAFreq <= 50.0)         // 7m
-                { flow = 40.0; fhigh = 50.0; }
-                else if (VFOAFreq >= 50.0 && VFOAFreq <= 54.0)          // VHF 6m
-                { flow = 50.0; fhigh = 54.0; }
-                else if (VFOAFreq >= 54.0 && VFOAFreq <= 70.0)          // VHF channel 2-4 TV
-                { flow = 54.0; fhigh = 70.0; }
-                else if (VFOAFreq >= 70.0 && VFOAFreq <= 70.5)          // VHF 4m
-                { flow = 70.0; fhigh = 70.5; }
-                else if (VFOAFreq >= 87.9 && VFOAFreq <= 108.0)          // FM band
-                { flow = 87.9; fhigh = 108.0; }
-                else if (VFOAFreq >= 120.0 && VFOAFreq <= 144.00)       // VHF air/space
-                { flow = 120.0; fhigh = 144.0; }
-                else if (VFOAFreq >= 144.0 && VFOAFreq <= 148.0)        // 2m
-                { flow = 144.0; fhigh = 148.0; }
-                 else if (VFOAFreq >= 148.0 && VFOAFreq <= 165.0)        // VHF bus
-                { flow = 148.0; fhigh = 165.0; }
-                else if (VFOAFreq >= 219.0 && VFOAFreq <= 225.0)        // 1.25m
-                { flow = 219.0; fhigh = 225.0; }
-                else if (VFOAFreq >= 400.00 && VFOAFreq <= 420.0)       // UHF bus
-                { flow = 400.0; fhigh = 420.0; }
-                else if (VFOAFreq >= 420.0 && VFOAFreq <= 450.0)        // UHF 70cm
-                { flow = 420.0; fhigh = 450.0; }
-                  else if (VFOAFreq >= 450.00 && VFOAFreq <= 490.0)       // UHF bus
-                { flow = 450.0; fhigh = 490.0; }
-                else if (VFOAFreq >= 902.00 && VFOAFreq <= 928.0)       // 33cm
-                { flow = 902.0; fhigh = 928.0; }
-                else if (VFOAFreq >= 1240.00 && VFOAFreq <= 1300.0)       // 23m
-                { flow = 1240.0; fhigh = 1300.0; }
-                else if (VFOAFreq >= 2300.00 && VFOAFreq <= 2310.0)       // 13cm
-                { flow = 2300.0; fhigh = 2310.0; }
-                else if (VFOAFreq >= 2390 && VFOAFreq <= 2450.0)       // 13cm
-                { flow = 2390.0; fhigh = 2450.0; }
-                else if (VFOAFreq >= 3300.00 && VFOAFreq <= 3450.0)       // 9cm
-                { flow = 3300.0; fhigh = 3450.0; }
-               else if (VFOAFreq >= 5650.00 && VFOAFreq <= 5925.0)       //5cm
-                { flow = 5650.0; fhigh = 5925.0; }
-                else
-                {
-                  //  Debug.WriteLine("VFOA PAINT:  VFOAFreq out of range " + VFOAFreq);
-                   return;
-                }
-                
+				//.339 get trigger from VFOAFreq set 
+            
+                 (SlideflowA, SlidefhighA) = SliderCheck(VFOAFreq); //.339 update the slider position based on the VFOA frequency
+
+                Slidex2A = SlidefhighA - SlideflowA; //width  2.0 - 1.8 = 0.2mhz
+                Slidex3A = VFOAFreq; // in mhz  1.8mhz
+                Slidex4A = grpVFOA.Width - 30;  // width of available line in pixels
+
+                Slidex5A = ((Slidex3A - SlideflowA) / Slidex2A); // percent of the way
+
+                Slidex1A = (int)(Slidex4A * Slidex5A);
+
                 p9.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO1.Color, 2.0F), 15, 86, grpVFOA.Width - 15, 86);  // .334 ke9ns add line across top of VFOA box
                 p9.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO1.Color, 2.0F), 15, 83, 15, 89);  // .334
                 p9.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO1.Color, 2.0F), grpVFOA.Width - 15, 83, grpVFOA.Width - 15, 89);  // .334
 
-                double x2 = fhigh - flow; //width  2.0 - 1.8 = 0.2mhz
-                double x3 = VFOAFreq; // in mhz  1.8mhz
-                double x4 = grpVFOA.Width - 30;  // width of available line in pixels
-
-                double x5 = ((x3 - flow) / x2); // percent of the way
-
-                int x1 = (int)(x4 * x5);
-
-                //   Debug.WriteLine("LINELINE " + x2 + ", " + x3 + ", " + x4 + ", " + x5 + ", " + x1 + ", " + fhigh + ", " + flow);
-
-                SizeF size = p9.Graphics.MeasureString(fhigh.ToString("0.0##"), ff2a);
+                SizeF size = p9.Graphics.MeasureString(SlidefhighA.ToString("0.0##"), ff2a);
                 float w = size.Width;
                
-                p9.Graphics.DrawString(flow.ToString("0.0##"), ff2a, Brushes.White, 16, 87); //new SolidBrush(VFOTextLightColor)
-                p9.Graphics.DrawString(fhigh.ToString("0.0##"), ff2a, Brushes.White, grpVFOA.Width -18 - w, 87);
+                p9.Graphics.DrawString(SlideflowA.ToString("0.0##"), ff2a, Brushes.White, 16, 87); //new SolidBrush(VFOTextLightColor)
+                p9.Graphics.DrawString(SlidefhighA.ToString("0.0##"), ff2a, Brushes.White, grpVFOA.Width -18 - w, 87);
 
-                p9.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO2.Color, 3.0F), x1 + 15, 82, x1 + 15, 88);
+                p9.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO2.Color, 3.0F), Slidex1A + 15, 82, Slidex1A + 15, 88);
 
-            } // if (setupForm != null && setupForm.chkVisualBandInd.Checked)
+            } // if (setupForm != null && setupForm.chkVisualBandInd.Checked) .334
 
 
         } // grpVFOA_Paint
@@ -79144,7 +79175,6 @@ namespace PowerSDR
                 if ((setupForm.chkVFOBoldFont.Checked == true)) VFOBoldFont = true;
                 else VFOBoldFont = false;
 
-
             }
 
             PanelTS box = (PanelTS)sender;
@@ -79166,7 +79196,6 @@ namespace PowerSDR
             if ((MOX) && (chkVFOBTX.Checked == true))
             {
                 p7.Graphics.DrawPath(new Pen(Color.Red, BorderThk), gPath); // ke9ns take color from setup Ring VFO color
-
             }
             else
             {
@@ -79175,157 +79204,33 @@ namespace PowerSDR
 
             p7.Graphics.DrawString("VFO B", box.Font, Brushes.White, 8, 0);
 
-
             //.334
             if (setupForm != null && setupForm.chkVisualBandInd.Checked)
             {
-                double flow = VFOBFreq;
-                double fhigh = VFOBFreq;
+              //.339 trigger is VFOBFrq
+                (SlideflowB, SlidefhighB) = SliderCheck(VFOBFreq); //.339 update the slider position based on the VFOB frequency
 
-                if (VFOBFreq >= 0.0 && VFOBFreq <= 0.00003)                       // ---ELF Extreme Low Freq 3-30hz
-                { flow = 0.0; fhigh = 0.00003; }
-                else if (VFOBFreq >= 0.000031 && VFOBFreq <= 0.0003)             // ---SLF Super Low Freq 0.03-0.3khz
-                { flow = 0.000031; fhigh = 0.0003; }
-                else if (VFOBFreq >= 0.000301 && VFOBFreq <= 0.003)               // ---ULF Ultra Low Freq 0.3-3khz
-                { flow = 0.000301; fhigh = 0.003; }
-                else if (VFOBFreq >= 0.003001 && VFOBFreq <= 0.03)                // ---VLF Very Low Freq 3-30khz
-                { flow = 0.003001; fhigh = 0.03; }
-                else if (VFOBFreq >= 0.135700 && VFOBFreq <= 0.137799)            // 2200m
-                { flow = 0.135700; fhigh = 0.137799; }
-                else if (VFOBFreq >= 0.148500 && VFOBFreq <= 0.283500)            // AM LW
-                { flow = 0.148500; fhigh = 0.283500; }
-                else if (VFOBFreq >= 0.283501 && VFOBFreq <= 0.300000)            // LW NDB nav beacons
-                { flow = 0.283501; fhigh = 0.300000; }
-                else if (VFOBFreq >= 0.030001 && VFOBFreq <= 0.3)                 // ---LF/LW Low Freq 30-300khz
-                { flow = 0.030001; fhigh = 0.3; }
-                else if (VFOBFreq >= 0.300001 && VFOBFreq <= 0.414999)            // MW NDB Nav Beacons
-                { flow = 0.300001; fhigh = 0.414999; }
-                else if (VFOBFreq >= 0.472 && VFOBFreq <= 0.478999) // 630m
-                { flow = 0.472; fhigh = 0.478999; }
-                else if (VFOBFreq >= 0.415000 && VFOBFreq <= 0.526400)            // MW Maritime band
-                { flow = 0.415000; fhigh = 0.526400; }
-                else if (VFOBFreq >= 0.526401 && VFOBFreq <= 0.529999)            // MW beacons
-                { flow = 0.526401; fhigh = 0.529999; }
-                else if (VFOBFreq >= 0.530 && VFOBFreq <= 1.710000)               // MW AM BCAST band
-                { flow = 0.530; fhigh = 1.710000; }
-                else if (VFOBFreq >= 0.300001 && VFOBFreq <= 1.799999)            // ---MW Freq 300khz-1.8mhz
-                { flow = 0.300001; fhigh = 1.799999; }
-                else if (VFOBFreq >= 1.8 && VFOBFreq <= 2.0)        //160m
-                { flow = 1.8; fhigh = 2.0; }
-                else if (VFOBFreq >= 2.0 && VFOBFreq <= 3.0)        // SW 120m
-                { flow = 2.0; fhigh = 3.0; }
-                else if (VFOBFreq >= 3.0 && VFOBFreq <= 3.5)        // SW 90m
-                { flow = 3.0; fhigh = 3.5; }
-                else if (VFOBFreq >= 3.5 && VFOBFreq <= 4.0)        // 80m
-                { flow = 3.5; fhigh = 4.0; }
-                else if (VFOBFreq >= 4.0 && VFOBFreq <= 5.3)        // SW 61m
-                { flow = 4.0; fhigh = 5.3; }
-                else if (VFOBFreq >= 5.250 && VFOBFreq <= 5.45)     // 60m
-                { flow = 5.250; fhigh = 5.45; }
-                else if (VFOBFreq >= 5.4 && VFOBFreq <= 7.0)        // SW 49m
-                { flow = 5.4; fhigh = 7.0; }
-                else if (VFOBFreq >= 7.0 && VFOBFreq <= 7.3)        // 40m
-                { flow = 7.0; fhigh = 7.3; }
-                else if (VFOBFreq >= 7.2 && VFOBFreq <= 9.0)        // SW 41m
-                { flow = 7.2; fhigh = 9.0; }
-                else if (VFOBFreq >= 9.000001 && VFOBFreq <= 10.1)  // SW 31m
-                { flow = 9.000001; fhigh = 10.1; }
-                else if (VFOBFreq >= 10.1 && VFOBFreq <= 10.15)         // 30m
-                { flow = 10.1; fhigh = 10.15; }
-                else if (VFOBFreq >= 10.150001 && VFOBFreq <= 13.57)    // SW 25m
-                { flow = 10.150001; fhigh = 13.57; }
-                else if (VFOBFreq >= 13.570001 && VFOBFreq <= 14.00)    // SW 22m
-                { flow = 13.570001; fhigh = 14.0; }
-                else if (VFOBFreq >= 14.0 && VFOBFreq <= 14.35)         //20m
-                { flow = 14.0; fhigh = 14.35; }
-                else if (VFOBFreq >= 14.350 && VFOBFreq <= 18.068)        // SW 19m
-                { flow = 14.350; fhigh = 18.068; }
-                else if (VFOBFreq >= 18.068 && VFOBFreq <= 18.168)           // 17m
-                { flow = 18.068; fhigh = 18.168; }
-                else if (VFOBFreq >= 18.168 && VFOBFreq <= 21.0)          // SW 16m
-                { flow = 18.168; fhigh = 21.0; }
-                else if (VFOBFreq >= 21.0 && VFOBFreq <= 21.45)         // 15m
-                { flow = 21.0; fhigh = 21.45; }
-                else if (VFOBFreq >= 21.450 && VFOBFreq <= 23.0)          // SW 14m      
-                { flow = 21.45; fhigh = 23.0; }
-                else if (VFOBFreq >= 23.0 && VFOBFreq <= 24.89)            // SW 13m
-                { flow = 23.0; fhigh = 24.89; }
-                else if (VFOBFreq >= 24.89 && VFOBFreq <= 24.99)        // 12m
-                { flow = 24.89; fhigh = 24.99; }
-                else if (VFOBFreq >= 24.990001 && VFOBFreq <= 28.0)      // CB 11m
-                { flow = 24.990001; fhigh = 28.0; }
-                else if (VFOBFreq >= 28.0 && VFOBFreq <= 29.7)         // 10m
-                { flow = 28.0; fhigh = 29.7; }
-                else if (VFOBFreq >= 29.7 && VFOBFreq <= 38.0)         // 9m
-                { flow = 29.7; fhigh = 38.0; }
-                else if (VFOBFreq >= 38.0 && VFOBFreq <= 40.0)         // 8m
-                { flow = 38.0; fhigh = 40.0; }
-                else if (VFOBFreq >= 40.0 && VFOBFreq <= 50.0)         // 7m
-                { flow = 40.0; fhigh = 50.0; }
-                else if (VFOBFreq >= 50.0 && VFOBFreq <= 54.0)          // VHF 6m
-                { flow = 50.0; fhigh = 54.0; }
-                else if (VFOBFreq >= 54.0 && VFOBFreq <= 70.0)          // VHF channel 2-4 TV
-                { flow = 54.0; fhigh = 70.0; }
-                else if (VFOBFreq >= 70.0 && VFOBFreq <= 70.5)          // VHF 4m
-                { flow = 70.0; fhigh = 70.5; }
-                else if (VFOBFreq >= 87.9 && VFOBFreq <= 108.0)          // FM band
-                { flow = 87.9; fhigh = 108.0; }
-                else if (VFOBFreq >= 120.0 && VFOBFreq <= 144.00)       // VHF air/space
-                { flow = 120.0; fhigh = 144.0; }
-                else if (VFOBFreq >= 144.0 && VFOBFreq <= 148.0)        // 2m
-                { flow = 144.0; fhigh = 148.0; }
-                else if (VFOBFreq >= 148.0 && VFOBFreq <= 165.0)        // VHF bus
-                { flow = 148.0; fhigh = 165.0; }
-                else if (VFOBFreq >= 219.0 && VFOBFreq <= 225.0)        // 1.25m
-                { flow = 219.0; fhigh = 225.0; }
-                else if (VFOBFreq >= 400.00 && VFOBFreq <= 420.0)       // UHF bus
-                { flow = 400.0; fhigh = 420.0; }
-                else if (VFOBFreq >= 420.0 && VFOBFreq <= 450.0)        // UHF 70cm
-                { flow = 420.0; fhigh = 450.0; }
-                else if (VFOBFreq >= 450.00 && VFOBFreq <= 490.0)       // UHF bus
-                { flow = 450.0; fhigh = 490.0; }
-                else if (VFOBFreq >= 902.00 && VFOBFreq <= 928.0)       // 33cm
-                { flow = 902.0; fhigh = 928.0; }
-                else if (VFOBFreq >= 1240.00 && VFOBFreq <= 1300.0)       // 23m
-                { flow = 1240.0; fhigh = 1300.0; }
-                else if (VFOBFreq >= 2300.00 && VFOBFreq <= 2310.0)       // 13cm
-                { flow = 2300.0; fhigh = 2310.0; }
-                else if (VFOBFreq >= 2390 && VFOBFreq <= 2450.0)       // 13cm
-                { flow = 2390.0; fhigh = 2450.0; }
-                else if (VFOBFreq >= 3300.00 && VFOBFreq <= 3450.0)       // 9cm
-                { flow = 3300.0; fhigh = 3450.0; }
-                else if (VFOBFreq >= 5650.00 && VFOBFreq <= 5925.0)       //5cm
-                { flow = 5650.0; fhigh = 5925.0; }
-                else
-                {
-                    //  Debug.WriteLine("VFOB PAINT:  VFOBFreq out of range " + VFOBFreq);
-                    return;
-                }
+                Slidex2B = SlidefhighB - SlideflowB; //width  2.0 - 1.8 = 0.2mhz
+                Slidex3B = VFOBFreq; // in mhz  1.8mhz
+                Slidex4B = grpVFOB.Width - 30;  // width of available line in pixels
 
-                p7.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO1.Color, 2.0F), 15, 86, grpVFOB.Width - 15, 86);  // .334 ke9ns add line across top of VFOB box
+                Slidex5B = ((Slidex3B - SlideflowB) / Slidex2B); // percent of the way
+
+                Slidex1B = (int)(Slidex4B * Slidex5B);
+
+                p7.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO1.Color, 2.0F), 15, 86, grpVFOB.Width - 15, 86);  // .334 ke9ns add line across top of VFOA box
                 p7.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO1.Color, 2.0F), 15, 83, 15, 89);  // .334
                 p7.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO1.Color, 2.0F), grpVFOB.Width - 15, 83, grpVFOB.Width - 15, 89);  // .334
 
-                double x2 = fhigh - flow; //width  2.0 - 1.8 = 0.2mhz
-                double x3 = VFOBFreq; // in mhz  1.8mhz
-                double x4 = grpVFOB.Width - 30;  // width of available line in pixels
-
-                double x5 = ((x3 - flow) / x2); // percent of the way
-
-                int x1 = (int)(x4 * x5);
-
-                //   Debug.WriteLine("LINELINE " + x2 + ", " + x3 + ", " + x4 + ", " + x5 + ", " + x1 + ", " + fhigh + ", " + flow);
-
-                SizeF size = p7.Graphics.MeasureString(fhigh.ToString("0.0##"), ff2a);
+                SizeF size = p7.Graphics.MeasureString(SlidefhighA.ToString("0.0##"), ff2a);
                 float w = size.Width;
 
+                p7.Graphics.DrawString(SlideflowB.ToString("0.0##"), ff2a, Brushes.White, 16, 87); //new SolidBrush(VFOTextLightColor)
+                p7.Graphics.DrawString(SlidefhighB.ToString("0.0##"), ff2a, Brushes.White, grpVFOB.Width - 18 - w, 87);
 
-                p7.Graphics.DrawString(flow.ToString("0.0##"), ff2a, Brushes.White, 16, 87); // new SolidBrush(VFOTextLightColor)
-                p7.Graphics.DrawString(fhigh.ToString("0.0##"), ff2a, Brushes.White, grpVFOB.Width - 18 - w, 87);
+                p7.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO2.Color, 3.0F), Slidex1B + 15, 82, Slidex1B + 15, 88);
 
-                p7.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO2.Color, 3.0F), x1 + 15, 82, x1 + 15, 89);
-
-            } // if (setupForm != null && setupForm.chkVisualBandInd.Checked)
+            } // if (setupForm != null && setupForm.chkVisualBandInd.Checked) .334
 
 
         } //grpVFOB_Paint
@@ -91535,286 +91440,89 @@ namespace PowerSDR
 
         } // chkMON_mousedown
 
-        private void grpVFOA_MouseDown(object sender, MouseEventArgs e)  //.334
+        bool SliderMouseDown = false; //.339
+
+        private void grpVFOA_MouseDown(object sender, MouseEventArgs e)  //.339 for slider mouse down
         {
-            
             if (setupForm != null && setupForm.chkVisualBandInd.Checked)
             {
+                
+                    mouse_X = e.X;
+                    mouse_Y = e.Y;
 
+                    SliderMouseDown = true; //.339
+                    grpVFOA_MouseMove(this, e);
+               
+            }
+
+        } // grpVFOA_MouseDown
+
+        private void grpVFOA_MouseMove(object sender, MouseEventArgs e)  //.339 for slider mouse move
+        {
+
+            if (SliderMouseDown && setupForm != null && setupForm.chkVisualBandInd.Checked) 
+            {
                 mouse_X = e.X;
                 mouse_Y = e.Y;
 
                 if (mouse_Y >= 80 && mouse_X >= 15 && mouse_X <= (grpVFOA.Width - 15)) // check that mouse click in on the vfo slide
                 {
-
-                    double flow = VFOAFreq;
-                    double fhigh = VFOAFreq;
-
-                    if (VFOAFreq >= 0.0 && VFOAFreq <= 0.00003)                       // ---ELF Extreme Low Freq 3-30hz
-                    { flow = 0.0; fhigh = 0.00003; }
-                    else if (VFOAFreq >= 0.000031 && VFOAFreq <= 0.0003)             // ---SLF Super Low Freq 0.03-0.3khz
-                    { flow = 0.000031; fhigh = 0.0003; }
-                    else if (VFOAFreq >= 0.000301 && VFOAFreq <= 0.003)               // ---ULF Ultra Low Freq 0.3-3khz
-                    { flow = 0.000301; fhigh = 0.003; }
-                    else if (VFOAFreq >= 0.003001 && VFOAFreq <= 0.03)                // ---VLF Very Low Freq 3-30khz
-                    { flow = 0.003001; fhigh = 0.03; }
-                    else if (VFOAFreq >= 0.135700 && VFOAFreq <= 0.137799)            // 2200m
-                    { flow = 0.135700; fhigh = 0.137799; }
-                    else if (VFOAFreq >= 0.148500 && VFOAFreq <= 0.283500)            // AM LW
-                    { flow = 0.148500; fhigh = 0.283500; }
-                    else if (VFOAFreq >= 0.283501 && VFOAFreq <= 0.300000)            // LW NDB nav beacons
-                    { flow = 0.283501; fhigh = 0.300000; }
-                    else if (VFOAFreq >= 0.030001 && VFOAFreq <= 0.3)                 // ---LF/LW Low Freq 30-300khz
-                    { flow = 0.030001; fhigh = 0.3; }
-                    else if (VFOAFreq >= 0.300001 && VFOAFreq <= 0.414999)            // MW NDB Nav Beacons
-                    { flow = 0.300001; fhigh = 0.414999; }
-                    else if (VFOAFreq >= 0.472 && VFOAFreq <= 0.478999) // 630m
-                    { flow = 0.472; fhigh = 0.478999; }
-                    else if (VFOAFreq >= 0.415000 && VFOAFreq <= 0.526400)            // MW Maritime band
-                    { flow = 0.415000; fhigh = 0.526400; }
-                    else if (VFOAFreq >= 0.526401 && VFOAFreq <= 0.529999)            // MW beacons
-                    { flow = 0.526401; fhigh = 0.529999; }
-                    else if (VFOAFreq >= 0.530 && VFOAFreq <= 1.710000)               // MW AM BCAST band
-                    { flow = 0.530; fhigh = 1.710000; }
-                    else if (VFOAFreq >= 0.300001 && VFOAFreq <= 1.799999)            // ---MW Freq 300khz-1.8mhz
-                    { flow = 0.300001; fhigh = 1.799999; }
-                    else if (VFOAFreq >= 1.8 && VFOAFreq <= 2.0)        //160m
-                    { flow = 1.8; fhigh = 2.0; }
-                    else if (VFOAFreq >= 2.0 && VFOAFreq <= 3.0)        // SW 120m
-                    { flow = 2.0; fhigh = 3.0; }
-                    else if (VFOAFreq >= 3.0 && VFOAFreq <= 3.5)        // SW 90m
-                    { flow = 3.0; fhigh = 3.5; }
-                    else if (VFOAFreq >= 3.5 && VFOAFreq <= 4.0)        // 80m
-                    { flow = 3.5; fhigh = 4.0; }
-                    else if (VFOAFreq >= 4.0 && VFOAFreq <= 5.3)        // SW 61m
-                    { flow = 4.0; fhigh = 5.3; }
-                    else if (VFOAFreq >= 5.250 && VFOAFreq <= 5.45)     // 60m
-                    { flow = 5.250; fhigh = 5.45; }
-                    else if (VFOAFreq >= 5.4 && VFOAFreq <= 7.0)        // SW 49m
-                    { flow = 5.4; fhigh = 7.0; }
-                    else if (VFOAFreq >= 7.0 && VFOAFreq <= 7.3)        // 40m
-                    { flow = 7.0; fhigh = 7.3; }
-                    else if (VFOAFreq >= 7.2 && VFOAFreq <= 9.0)        // SW 41m
-                    { flow = 7.2; fhigh = 9.0; }
-                    else if (VFOAFreq >= 9.000001 && VFOAFreq <= 10.1)  // SW 31m
-                    { flow = 9.000001; fhigh = 10.1; }
-                    else if (VFOAFreq >= 10.1 && VFOAFreq <= 10.15)         // 30m
-                    { flow = 10.1; fhigh = 10.15; }
-                    else if (VFOAFreq >= 10.150001 && VFOAFreq <= 13.57)    // SW 25m
-                    { flow = 10.150001; fhigh = 13.57; }
-                    else if (VFOAFreq >= 13.570001 && VFOAFreq <= 14.00)    // SW 22m
-                    { flow = 13.570001; fhigh = 14.0; }
-                    else if (VFOAFreq >= 14.0 && VFOAFreq <= 14.35)         //20m
-                    { flow = 14.0; fhigh = 14.35; }
-                    else if (VFOAFreq >= 14.350 && VFOAFreq <= 18.068)        // SW 19m
-                    { flow = 14.350; fhigh = 18.068; }
-                    else if (VFOAFreq >= 18.068 && VFOAFreq <= 18.168)           // 17m
-                    { flow = 18.068; fhigh = 18.168; }
-                    else if (VFOAFreq >= 18.168 && VFOAFreq <= 21.0)          // SW 16m
-                    { flow = 18.168; fhigh = 21.0; }
-                    else if (VFOAFreq >= 21.0 && VFOAFreq <= 21.45)         // 15m
-                    { flow = 21.0; fhigh = 21.45; }
-                    else if (VFOAFreq >= 21.450 && VFOAFreq <= 23.0)          // SW 14m      
-                    { flow = 21.45; fhigh = 23.0; }
-                    else if (VFOAFreq >= 23.0 && VFOAFreq <= 24.89)            // SW 13m
-                    { flow = 23.0; fhigh = 24.89; }
-                    else if (VFOAFreq >= 24.89 && VFOAFreq <= 24.99)        // 12m
-                    { flow = 24.89; fhigh = 24.99; }
-                    else if (VFOAFreq >= 24.990001 && VFOAFreq <= 28.0)      // CB 11m
-                    { flow = 24.990001; fhigh = 28.0; }
-                    else if (VFOAFreq >= 28.0 && VFOAFreq <= 29.7)         // 10m
-                    { flow = 28.0; fhigh = 29.7; }
-                    else if (VFOAFreq >= 29.7 && VFOAFreq <= 38.0)         // 9m
-                    { flow = 29.7; fhigh = 38.0; }
-                    else if (VFOAFreq >= 38.0 && VFOAFreq <= 40.0)         // 8m
-                    { flow = 38.0; fhigh = 40.0; }
-                    else if (VFOAFreq >= 40.0 && VFOAFreq <= 50.0)         // 7m
-                    { flow = 40.0; fhigh = 50.0; }
-                    else if (VFOAFreq >= 50.0 && VFOAFreq <= 54.0)          // VHF 6m
-                    { flow = 50.0; fhigh = 54.0; }
-                    else if (VFOAFreq >= 54.0 && VFOAFreq <= 70.0)          // VHF channel 2-4 TV
-                    { flow = 54.0; fhigh = 70.0; }
-                    else if (VFOAFreq >= 70.0 && VFOAFreq <= 70.5)          // VHF 4m
-                    { flow = 70.0; fhigh = 70.5; }
-                    else if (VFOAFreq >= 87.9 && VFOAFreq <= 108.0)          // FM band
-                    { flow = 87.9; fhigh = 108.0; }
-                    else if (VFOAFreq >= 120.0 && VFOAFreq <= 144.00)       // VHF air/space
-                    { flow = 120.0; fhigh = 144.0; }
-                    else if (VFOAFreq >= 144.0 && VFOAFreq <= 148.0)        // 2m
-                    { flow = 144.0; fhigh = 148.0; }
-                    else if (VFOAFreq >= 148.0 && VFOAFreq <= 165.0)        // VHF bus
-                    { flow = 148.0; fhigh = 165.0; }
-                    else if (VFOAFreq >= 219.0 && VFOAFreq <= 225.0)        // 1.25m
-                    { flow = 219.0; fhigh = 225.0; }
-                    else if (VFOAFreq >= 400.00 && VFOAFreq <= 420.0)       // UHF bus
-                    { flow = 400.0; fhigh = 420.0; }
-                    else if (VFOAFreq >= 420.0 && VFOAFreq <= 450.0)        // UHF 70cm
-                    { flow = 420.0; fhigh = 450.0; }
-                    else if (VFOAFreq >= 450.00 && VFOAFreq <= 490.0)       // UHF bus
-                    { flow = 450.0; fhigh = 490.0; }
-                    else if (VFOAFreq >= 902.00 && VFOAFreq <= 928.0)       // 33cm
-                    { flow = 902.0; fhigh = 928.0; }
-                    else if (VFOAFreq >= 1240.00 && VFOAFreq <= 1300.0)       // 23m
-                    { flow = 1240.0; fhigh = 1300.0; }
-                    else if (VFOAFreq >= 2300.00 && VFOAFreq <= 2310.0)       // 13cm
-                    { flow = 2300.0; fhigh = 2310.0; }
-                    else if (VFOAFreq >= 2390 && VFOAFreq <= 2450.0)       // 13cm
-                    { flow = 2390.0; fhigh = 2450.0; }
-                    else if (VFOAFreq >= 3300.00 && VFOAFreq <= 3450.0)       // 9cm
-                    { flow = 3300.0; fhigh = 3450.0; }
-                    else if (VFOAFreq >= 5650.00 && VFOAFreq <= 5925.0)       //5cm
-                    { flow = 5650.0; fhigh = 5925.0; }
-                    else
-                    {
-                        return;
-                    }
+                    VFOAFreq = SnapTune((SlideflowA + ((double)(mouse_X - 15) / (double)(grpVFOA.Width - 30)) * (SlidefhighA - SlideflowA)), CurrentTuneStepHz, 1);
     
-                    VFOAFreq = SnapTune((flow + ((double)(mouse_X - 15)/(double)(grpVFOA.Width-30)) * (fhigh - flow)), CurrentTuneStepHz, 1);
-               
-                    grpVFOA.Invalidate(new Rectangle(12, 80, grpVFOA.Width - 12, 99));
                 } // mouse check
             } // display vfo slide on
 
-        } // grpVFOA_MouseDown
+        } // grpVFOA_MouseMove .339
 
-        private void grpVFOB_MouseDown(object sender, MouseEventArgs e)
+        private void grpVFOB_MouseDown(object sender, MouseEventArgs e) // .339 for slider mouse down
         {
             if (setupForm != null && setupForm.chkVisualBandInd.Checked)
             {
+               
+                    mouse_X = e.X;
+                    mouse_Y = e.Y;
 
+                    SliderMouseDown = true; //.339
+                    grpVFOB_MouseMove(this, e);
+                
+
+            }
+        } // grpVFOB_MouseDown
+
+        private void grpVFOB_MouseMove(object sender, MouseEventArgs e) //.339 for slider mouse move
+        {
+            if (setupForm != null && setupForm.chkVisualBandInd.Checked && SliderMouseDown)
+            {
                 mouse_X = e.X;
                 mouse_Y = e.Y;
 
                 if (mouse_Y >= 80 && mouse_X >= 15 && mouse_X <= (grpVFOB.Width - 15)) // check that mouse click in on the vfo slide
                 {
+                    VFOBFreq = SnapTune((SlideflowB + ((double)(mouse_X - 15) / (double)(grpVFOB.Width - 30)) * (SlidefhighB - SlideflowB)), CurrentTuneStepHz, 1);
 
-                    double flow = VFOBFreq;
-                    double fhigh = VFOBFreq;
-
-                    if (VFOBFreq >= 0.0 && VFOBFreq <= 0.00003)                       // ---ELF Extreme Low Freq 3-30hz
-                    { flow = 0.0; fhigh = 0.00003; }
-                    else if (VFOBFreq >= 0.000031 && VFOBFreq <= 0.0003)             // ---SLF Super Low Freq 0.03-0.3khz
-                    { flow = 0.000031; fhigh = 0.0003; }
-                    else if (VFOBFreq >= 0.000301 && VFOBFreq <= 0.003)               // ---ULF Ultra Low Freq 0.3-3khz
-                    { flow = 0.000301; fhigh = 0.003; }
-                    else if (VFOBFreq >= 0.003001 && VFOBFreq <= 0.03)                // ---VLF Very Low Freq 3-30khz
-                    { flow = 0.003001; fhigh = 0.03; }
-                    else if (VFOBFreq >= 0.135700 && VFOBFreq <= 0.137799)            // 2200m
-                    { flow = 0.135700; fhigh = 0.137799; }
-                    else if (VFOBFreq >= 0.148500 && VFOBFreq <= 0.283500)            // AM LW
-                    { flow = 0.148500; fhigh = 0.283500; }
-                    else if (VFOBFreq >= 0.283501 && VFOBFreq <= 0.300000)            // LW NDB nav beacons
-                    { flow = 0.283501; fhigh = 0.300000; }
-                    else if (VFOBFreq >= 0.030001 && VFOBFreq <= 0.3)                 // ---LF/LW Low Freq 30-300khz
-                    { flow = 0.030001; fhigh = 0.3; }
-                    else if (VFOBFreq >= 0.300001 && VFOBFreq <= 0.414999)            // MW NDB Nav Beacons
-                    { flow = 0.300001; fhigh = 0.414999; }
-                    else if (VFOBFreq >= 0.472 && VFOBFreq <= 0.478999) // 630m
-                    { flow = 0.472; fhigh = 0.478999; }
-                    else if (VFOBFreq >= 0.415000 && VFOBFreq <= 0.526400)            // MW Maritime band
-                    { flow = 0.415000; fhigh = 0.526400; }
-                    else if (VFOBFreq >= 0.526401 && VFOBFreq <= 0.529999)            // MW beacons
-                    { flow = 0.526401; fhigh = 0.529999; }
-                    else if (VFOBFreq >= 0.530 && VFOBFreq <= 1.710000)               // MW AM BCAST band
-                    { flow = 0.530; fhigh = 1.710000; }
-                    else if (VFOBFreq >= 0.300001 && VFOBFreq <= 1.799999)            // ---MW Freq 300khz-1.8mhz
-                    { flow = 0.300001; fhigh = 1.799999; }
-                    else if (VFOBFreq >= 1.8 && VFOBFreq <= 2.0)        //160m
-                    { flow = 1.8; fhigh = 2.0; }
-                    else if (VFOBFreq >= 2.0 && VFOBFreq <= 3.0)        // SW 120m
-                    { flow = 2.0; fhigh = 3.0; }
-                    else if (VFOBFreq >= 3.0 && VFOBFreq <= 3.5)        // SW 90m
-                    { flow = 3.0; fhigh = 3.5; }
-                    else if (VFOBFreq >= 3.5 && VFOBFreq <= 4.0)        // 80m
-                    { flow = 3.5; fhigh = 4.0; }
-                    else if (VFOBFreq >= 4.0 && VFOBFreq <= 5.3)        // SW 61m
-                    { flow = 4.0; fhigh = 5.3; }
-                    else if (VFOBFreq >= 5.250 && VFOBFreq <= 5.45)     // 60m
-                    { flow = 5.250; fhigh = 5.45; }
-                    else if (VFOBFreq >= 5.4 && VFOBFreq <= 7.0)        // SW 49m
-                    { flow = 5.4; fhigh = 7.0; }
-                    else if (VFOBFreq >= 7.0 && VFOBFreq <= 7.3)        // 40m
-                    { flow = 7.0; fhigh = 7.3; }
-                    else if (VFOBFreq >= 7.2 && VFOBFreq <= 9.0)        // SW 41m
-                    { flow = 7.2; fhigh = 9.0; }
-                    else if (VFOBFreq >= 9.000001 && VFOBFreq <= 10.1)  // SW 31m
-                    { flow = 9.000001; fhigh = 10.1; }
-                    else if (VFOBFreq >= 10.1 && VFOBFreq <= 10.15)         // 30m
-                    { flow = 10.1; fhigh = 10.15; }
-                    else if (VFOBFreq >= 10.150001 && VFOBFreq <= 13.57)    // SW 25m
-                    { flow = 10.150001; fhigh = 13.57; }
-                    else if (VFOBFreq >= 13.570001 && VFOBFreq <= 14.00)    // SW 22m
-                    { flow = 13.570001; fhigh = 14.0; }
-                    else if (VFOBFreq >= 14.0 && VFOBFreq <= 14.35)         //20m
-                    { flow = 14.0; fhigh = 14.35; }
-                    else if (VFOBFreq >= 14.350 && VFOBFreq <= 18.068)        // SW 19m
-                    { flow = 14.350; fhigh = 18.068; }
-                    else if (VFOBFreq >= 18.068 && VFOBFreq <= 18.168)           // 17m
-                    { flow = 18.068; fhigh = 18.168; }
-                    else if (VFOBFreq >= 18.168 && VFOBFreq <= 21.0)          // SW 16m
-                    { flow = 18.168; fhigh = 21.0; }
-                    else if (VFOBFreq >= 21.0 && VFOBFreq <= 21.45)         // 15m
-                    { flow = 21.0; fhigh = 21.45; }
-                    else if (VFOBFreq >= 21.450 && VFOBFreq <= 23.0)          // SW 14m      
-                    { flow = 21.45; fhigh = 23.0; }
-                    else if (VFOBFreq >= 23.0 && VFOBFreq <= 24.89)            // SW 13m
-                    { flow = 23.0; fhigh = 24.89; }
-                    else if (VFOBFreq >= 24.89 && VFOBFreq <= 24.99)        // 12m
-                    { flow = 24.89; fhigh = 24.99; }
-                    else if (VFOBFreq >= 24.990001 && VFOBFreq <= 28.0)      // CB 11m
-                    { flow = 24.990001; fhigh = 28.0; }
-                    else if (VFOBFreq >= 28.0 && VFOBFreq <= 29.7)         // 10m
-                    { flow = 28.0; fhigh = 29.7; }
-                    else if (VFOBFreq >= 29.7 && VFOBFreq <= 38.0)         // 9m
-                    { flow = 29.7; fhigh = 38.0; }
-                    else if (VFOBFreq >= 38.0 && VFOBFreq <= 40.0)         // 8m
-                    { flow = 38.0; fhigh = 40.0; }
-                    else if (VFOBFreq >= 40.0 && VFOBFreq <= 50.0)         // 7m
-                    { flow = 40.0; fhigh = 50.0; }
-                    else if (VFOBFreq >= 50.0 && VFOBFreq <= 54.0)          // VHF 6m
-                    { flow = 50.0; fhigh = 54.0; }
-                    else if (VFOBFreq >= 54.0 && VFOBFreq <= 70.0)          // VHF channel 2-4 TV
-                    { flow = 54.0; fhigh = 70.0; }
-                    else if (VFOBFreq >= 70.0 && VFOBFreq <= 70.5)          // VHF 4m
-                    { flow = 70.0; fhigh = 70.5; }
-                    else if (VFOBFreq >= 87.9 && VFOBFreq <= 108.0)          // FM band
-                    { flow = 87.9; fhigh = 108.0; }
-                    else if (VFOBFreq >= 120.0 && VFOBFreq <= 144.00)       // VHF air/space
-                    { flow = 120.0; fhigh = 144.0; }
-                    else if (VFOBFreq >= 144.0 && VFOBFreq <= 148.0)        // 2m
-                    { flow = 144.0; fhigh = 148.0; }
-                    else if (VFOBFreq >= 148.0 && VFOBFreq <= 165.0)        // VHF bus
-                    { flow = 148.0; fhigh = 165.0; }
-                    else if (VFOBFreq >= 219.0 && VFOBFreq <= 225.0)        // 1.25m
-                    { flow = 219.0; fhigh = 225.0; }
-                    else if (VFOBFreq >= 400.00 && VFOBFreq <= 420.0)       // UHF bus
-                    { flow = 400.0; fhigh = 420.0; }
-                    else if (VFOBFreq >= 420.0 && VFOBFreq <= 450.0)        // UHF 70cm
-                    { flow = 420.0; fhigh = 450.0; }
-                    else if (VFOBFreq >= 450.00 && VFOBFreq <= 490.0)       // UHF bus
-                    { flow = 450.0; fhigh = 490.0; }
-                    else if (VFOBFreq >= 902.00 && VFOBFreq <= 928.0)       // 33cm
-                    { flow = 902.0; fhigh = 928.0; }
-                    else if (VFOBFreq >= 1240.00 && VFOBFreq <= 1300.0)       // 23m
-                    { flow = 1240.0; fhigh = 1300.0; }
-                    else if (VFOBFreq >= 2300.00 && VFOBFreq <= 2310.0)       // 13cm
-                    { flow = 2300.0; fhigh = 2310.0; }
-                    else if (VFOBFreq >= 2390 && VFOBFreq <= 2450.0)       // 13cm
-                    { flow = 2390.0; fhigh = 2450.0; }
-                    else if (VFOBFreq >= 3300.00 && VFOBFreq <= 3450.0)       // 9cm
-                    { flow = 3300.0; fhigh = 3450.0; }
-                    else if (VFOBFreq >= 5650.00 && VFOBFreq <= 5925.0)       //5cm
-                    { flow = 5650.0; fhigh = 5925.0; }
-                    else
-                    {
-                        return;
-                    }
-                 
-                    VFOBFreq = SnapTune((flow + ((double)(mouse_X - 15) / (double)(grpVFOB.Width - 30)) * (fhigh - flow)), CurrentTuneStepHz, 1);
-
-                    grpVFOB.Invalidate(new Rectangle(12, 80, grpVFOB.Width - 12, 99));
                 } // mouse check
             } // display vfo slide on
+        } // grpVFOB_MouseMove
+
+
+        private void grpVFOA_MouseLeave(object sender, EventArgs e) //.339
+        {
+            SliderMouseDown = false; // .339
+        }
+
+        private void grpVFOA_MouseUp(object sender, MouseEventArgs e) //.339
+        {
+            SliderMouseDown = false; // .339
+        }
+
+        private void grpVFOB_MouseLeave(object sender, EventArgs e) //.339
+        {
+            SliderMouseDown = false; //.339
+        }
+
+        private void grpVFOB_MouseUp(object sender, MouseEventArgs e) //.339
+        {
+            SliderMouseDown = false; //.339
         }
 
         private void lblVACRXIndicator_Click(object sender, EventArgs e)
