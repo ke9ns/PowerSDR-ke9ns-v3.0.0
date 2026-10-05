@@ -95,7 +95,7 @@ namespace PowerSDR
 
         //====================================================================================================
         int NamesTot = 0; // total number of unique Group names found in the memory list (no repeats)
-        string[] Names = new string[1000]; // all the Group names found in the memory list (no repeats)
+        string[] Names = new string[2000]; // all the Group names found in the memory list (no repeats)
 
         StringBuilder sb = new StringBuilder();
 
@@ -931,12 +931,12 @@ namespace PowerSDR
         } // ScanControl_FormClosing
 
 
-        MemoryRecord[] m1 = new MemoryRecord[1000];
+        MemoryRecord[] m1 = new MemoryRecord[2000];
 
-        int[] memIndex = new int[1000]; // holder for memories that match the group name
+        int[] memIndex = new int[2000]; // holder for memories that match the group name
         int memtotal = 0; // total matching group name memories found
         int memcount = 0; // total memories found
-        string[] memsignal = new string[1000]; // db signal and sql brk
+        string[] memsignal = new string[2000]; // db signal and sql brk
 
         bool ScanVFOB = false; // .236
 
