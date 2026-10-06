@@ -1184,7 +1184,6 @@
     <EmbeddedResource Include="Resources\bar2.png" />
     <Content Include="atu.dll" />
     <Content Include="Flex1500USB.dll" />
-    <Content Include="FlexCW.dll" />
     <Content Include="Resources\blue1.png" />
     <None Include="Resources\DRAP.bmp" />
     <Content Include="Resources\moonearth8.gif" />

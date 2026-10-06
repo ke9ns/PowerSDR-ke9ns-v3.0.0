@@ -4,10 +4,10 @@
 // PowerSDR is a C# implementation of a Software Defined Radio.
 // KE9NS This was extracted from FlexCW.dll
 
-#region Assembly FlexCW, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null
+//#region Assembly FlexCW, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null
 // C:\Users\RADIO\source\PowerSDR_v2.8.0\Source\Console\FlexCW.dll
 // Decompiled with ICSharpCode.Decompiler 8.2.0.7535
-#endregion
+//#endregion
 
 
 //using FlexCW;

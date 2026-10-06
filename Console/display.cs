@@ -20922,7 +20922,7 @@ namespace PowerSDR
 
                 //=========================================================================
                 // ke9ns add auto
-                if (autobright6 == 2) // RX1 panadapter level adjust
+                if (autobright6 == 2 && console.ESCSYNC == false) // RX1 panadapter level adjust .339
                 {
                     if ((!mox) && (rx == 1))
                     {
@@ -20932,7 +20932,7 @@ namespace PowerSDR
 
                 } // autobright6 == 2
 
-                else if (autobright7 == 3) // rx1 pan scale adjust
+                else if (autobright7 == 3 && console.ESCSYNC == false) // rx1 pan scale adjust .339
                 {
                     if ((!mox) && (rx == 1)) // rx only on rx1
                     {
@@ -20999,7 +20999,7 @@ namespace PowerSDR
             // ke9ns Panadapter level adjust
             //=========================================================================
             // ke9ns add auto
-            if (autobright6 == 2) // rx1 adjust
+            if (autobright6 == 2 && console.ESCSYNC == false) // rx1 adjust .339
             {
                 //  Debug.WriteLine(" ");
                 //   Debug.WriteLine("==========PAN AUTOBRIGHT6=================");
@@ -21045,7 +21045,7 @@ namespace PowerSDR
             // ke9ns Panadapter SMALL SIGNAL SCALER (increase size of signals on panadapter)  (ZOOM)
             //=========================================================================
             // ke9ns add: auto scale pan
-            else if (autobright7 == 3) // rx1 adjust
+            else if (autobright7 == 3 && console.ESCSYNC == false) // rx1 adjust .339
             {
 
                 //  Debug.WriteLine("==========AUTOBRIGHT7=================");
@@ -23366,7 +23366,7 @@ namespace PowerSDR
                 }
                 else if (rx == 1) // RX1 receive here
                 {
-                    if (autobright == 1) // rx1 adjust
+                    if (autobright == 1 && console.ESCSYNC == false) // rx1 adjust .339
                     {
                         AB3 = (float)(AB / W); // get avg of the entire read
 

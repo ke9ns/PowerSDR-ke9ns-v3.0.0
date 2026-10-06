@@ -19652,14 +19652,6 @@ namespace PowerSDR
 
             if (KWAutoInformation7) BroadcastFreqChange7("A", freq); // TCP/IP CAT
 
-            //.334
-            if (setupForm != null && setupForm.chkVisualBandInd.Checked)
-            {
-                grpVFOA.Invalidate(new Rectangle(12, 80, grpVFOA.Width - 12, 99));
-
-            }
-
-
         } // update vfoA freq
 
 
@@ -41100,9 +41092,9 @@ namespace PowerSDR
             g1.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //   g1.CompositingMode = CompositingMode.SourceOver;
             //   g1.CompositingQuality = CompositingQuality.HighQuality;
-            g1.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g1.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             g1.SmoothingMode = SmoothingMode.HighQuality;
-            g1.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            g1.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;
 
 
 
@@ -41263,9 +41255,9 @@ namespace PowerSDR
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //   g.CompositingMode = CompositingMode.SourceOver;
             //   g.CompositingQuality = CompositingQuality.HighQuality;
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             g.SmoothingMode = SmoothingMode.HighQuality;
-            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            g.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;
 
             const float slam = 5.0f;  //-10.0f; // RX signal which is considered not a real value
 
@@ -45143,9 +45135,9 @@ namespace PowerSDR
             //   g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //   g.CompositingMode = CompositingMode.SourceOver;
             //   g.CompositingQuality = CompositingQuality.HighQuality;
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             g.SmoothingMode = SmoothingMode.HighQuality;
-            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            g.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;
 
             line_dark_pen = new Pen(// this causes a shadow color around the needle of the EDGE meters
                         Color.FromArgb((edge_avg_color.R + edge_meter_background_color.R) / 2, // red
@@ -45547,9 +45539,9 @@ namespace PowerSDR
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //  g.CompositingMode = CompositingMode.SourceOver;
             //   g.CompositingQuality = CompositingQuality.HighQuality;
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             g.SmoothingMode = SmoothingMode.HighQuality;
-            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            g.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;
 
             line_dark_pen = new Pen(// this causes a shadow color around the needle of the EDGE meters
                         Color.FromArgb((edge_avg_color.R + edge_meter_background_color.R) / 2, // red
@@ -64736,7 +64728,6 @@ namespace PowerSDR
             if (ZoomOn) //.241
             {
 
-
                 int xx = picDisplay.Width;  // size of picdisplay as user scales it to their screen
                 int yy = picDisplay.Height;
 
@@ -64764,12 +64755,7 @@ namespace PowerSDR
 
                 //    Debug.WriteLine("Zoom scaled to 1000,50 Y " + ZoomY);
 
-
-
-
             } // ZoomOn
-
-
 
             if (AGCTDIS == true)
             {
@@ -78543,9 +78529,9 @@ namespace PowerSDR
             //  p4.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //   p4.Graphics.CompositingMode = CompositingMode.SourceOver;
             //   p4.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-            p4.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            p4.Graphics.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             p4.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            p4.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            p4.Graphics.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;
 
             GraphicsPath gPath = CreatePath(1, 1, box.Width - BorderThk, box.Height - BorderThk, 8, true, true, true, true); //
 
@@ -78904,12 +78890,9 @@ namespace PowerSDR
                 //  Debug.WriteLine("VFOA PAINT:  vfocheck out of range " + vfocheck);
                 return (0, 0);
             }
-
             return (flow, fhigh);
 
-
         } // SliderCheck
-
 
 
         double Slidex2A = 0; // fhigh - flow; //width  2.0 - 1.8 = 0.2mhz
@@ -78950,13 +78933,13 @@ namespace PowerSDR
             }
 
             PanelTS box = (PanelTS)sender;
-           
-           //   p9.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+
+            //   p9.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //   p9.Graphics.CompositingMode = CompositingMode.SourceOver;
             //   p9.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-            p9.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            p9.Graphics.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic; .339
             p9.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            p9.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            p9.Graphics.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;
             
 
             GraphicsPath gPath = CreatePath(1, 1, box.Width - BorderThk, box.Height - BorderThk, 8, true, true, true, true); //
@@ -78996,10 +78979,9 @@ namespace PowerSDR
                 p9.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO1.Color, 2.0F), grpVFOA.Width - 15, 83, grpVFOA.Width - 15, 89);  // .334
 
                 SizeF size = p9.Graphics.MeasureString(SlidefhighA.ToString("0.0##"), ff2a);
-                float w = size.Width;
-               
+                             
                 p9.Graphics.DrawString(SlideflowA.ToString("0.0##"), ff2a, Brushes.White, 16, 87); //new SolidBrush(VFOTextLightColor)
-                p9.Graphics.DrawString(SlidefhighA.ToString("0.0##"), ff2a, Brushes.White, grpVFOA.Width -18 - w, 87);
+                p9.Graphics.DrawString(SlidefhighA.ToString("0.0##"), ff2a, Brushes.White, grpVFOA.Width -18 - size.Width, 87);
 
                 p9.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO2.Color, 3.0F), Slidex1A + 15, 82, Slidex1A + 15, 88);
 
@@ -79178,16 +79160,13 @@ namespace PowerSDR
             }
 
             PanelTS box = (PanelTS)sender;
-            //   p7.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            //  p7.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            //  p7.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
+           
             //  p7.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //  p7.Graphics.CompositingMode = CompositingMode.SourceOver;
             //   p7.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-            p7.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            p7.Graphics.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             p7.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            p7.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            p7.Graphics.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;
 
             GraphicsPath gPath = CreatePath(1, 1, box.Width - BorderThk, box.Height - BorderThk, 8, true, true, true, true); //
 
@@ -79223,10 +79202,9 @@ namespace PowerSDR
                 p7.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO1.Color, 2.0F), grpVFOB.Width - 15, 83, grpVFOB.Width - 15, 89);  // .334
 
                 SizeF size = p7.Graphics.MeasureString(SlidefhighA.ToString("0.0##"), ff2a);
-                float w = size.Width;
-
+                
                 p7.Graphics.DrawString(SlideflowB.ToString("0.0##"), ff2a, Brushes.White, 16, 87); //new SolidBrush(VFOTextLightColor)
-                p7.Graphics.DrawString(SlidefhighB.ToString("0.0##"), ff2a, Brushes.White, grpVFOB.Width - 18 - w, 87);
+                p7.Graphics.DrawString(SlidefhighB.ToString("0.0##"), ff2a, Brushes.White, grpVFOB.Width - 18 - size.Width, 87);
 
                 p7.Graphics.DrawLine(new Pen(setupForm.clrbtnVFO2.Color, 3.0F), Slidex1B + 15, 82, Slidex1B + 15, 88);
 
@@ -79253,9 +79231,9 @@ namespace PowerSDR
             // p11.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //  p11.Graphics.CompositingMode = CompositingMode.SourceOver;
             //  p11.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-            p11.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            p11.Graphics.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             p11.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            p11.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            p11.Graphics.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;
 
             GraphicsPath gPath = CreatePath(1, 1, box.Width - BorderThk, box.Height - BorderThk, 4, true, true, true, true); //
 
@@ -79380,16 +79358,13 @@ namespace PowerSDR
         private void grpRX2Meter_Paint(object sender, PaintEventArgs p10)
         {
             PanelTS box = (PanelTS)sender;
-            //  p10.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            //   p10.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            //  p10.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
+           
             //  p10.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //  p10.Graphics.CompositingMode = CompositingMode.SourceOver;
             //  p10.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-            p10.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            p10.Graphics.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             p10.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            p10.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            p10.Graphics.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;
 
             GraphicsPath gPath = CreatePath(1, 1, box.Width - BorderThk, box.Height - BorderThk, 4, true, true, true, true); //
 
@@ -79549,10 +79524,7 @@ namespace PowerSDR
 
             p6.Graphics.Clear(Color.Transparent);  // box.Parent.BackColor
 
-            //   p6.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            //   p6.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            //   p6.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
+          
             //   p6.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //   p6.Graphics.CompositingMode = CompositingMode.SourceOver;
             //   p6.Graphics.CompositingQuality = CompositingQuality.HighQuality;
@@ -89581,7 +89553,7 @@ namespace PowerSDR
 
             Graphics g1 = e.Graphics; // ke9ns .191 used to improve image quality
             g1.SmoothingMode = SmoothingMode.HighQuality;
-            g1.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g1.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             g1.DrawImage(vfoA, new Rectangle(0, 0, 23, 29));  // rectangle to show bitmap image in
 
         }
@@ -89591,7 +89563,7 @@ namespace PowerSDR
 
             Graphics g1 = e.Graphics; // ke9ns .191 used to improve image quality
             g1.SmoothingMode = SmoothingMode.HighQuality;
-            g1.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g1.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             g1.DrawImage(vfoB, new Rectangle(0, 0, 23, 29));  // rectangle to show bitmap image in
 
         }
