@@ -11,6 +11,25 @@ namespace PowerSDR
     {
         private const string DllName = "wdsp.dll";
 
+        // WDSP uses double-precision FFTW; the legacy DttSP wisdom is a
+        // different, single-precision cache and must not be overwritten.
+        [DllImport("libfftw3-3.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        internal static extern int fftw_import_wisdom_from_string(string wisdom);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void WisdomWriter(byte character, System.IntPtr data);
+        [DllImport("libfftw3-3.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void fftw_export_wisdom(WisdomWriter writer, System.IntPtr data);
+        internal static string ExportWisdom()
+        {
+            // The string-returning FFTW API uses malloc, not fftw_malloc;
+            // avoid cross-CRT deallocation and ANSI filesystem paths entirely.
+            System.Text.StringBuilder text = new System.Text.StringBuilder();
+            WisdomWriter writer = delegate(byte c, System.IntPtr data) { text.Append((char)c); };
+            fftw_export_wisdom(writer, System.IntPtr.Zero);
+            System.GC.KeepAlive(writer);
+            return text.ToString();
+        }
+
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void SetRXAAMSQRun(int channel, int run);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]

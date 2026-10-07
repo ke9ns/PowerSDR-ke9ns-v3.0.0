@@ -20966,29 +20966,14 @@ namespace PowerSDR
             if ((console.setupForm.chkBoxRestart.Checked) && (console.chkPower.Checked) && !mox) // ((rx1_dsp_mode != DSPMode.CWL && rx1_dsp_mode != DSPMode.CWU) || !mox))  // ke9ns only check for DttSP freeze if PowerSDR is running.
             {
                 //  Debug.WriteLine("DttSP check");
-                if ((int)max2 == lastvalue)
+                if (console.IsDspSpectrumFrozen(rx - 1, max2))
                 {
-                    if (lastvaluecount++ > 3) // if same exact display for 3 cycles
-                    {
-                        Debug.WriteLine("DttSP appears to be frozen. Will unfreeze");
-
-                        console.chkPower.Checked = false; // turn off
-
-                        lastvaluecount = 0;
-                        console.restartcount++;
-                        console.setupForm.textBoxRestart.Text = console.restartcount.ToString();
-
-                        console.chkPower.Checked = true; // turn back on
-                    }
-                    else
-                    {
-                        Debug.WriteLine("DttSP freeze value: " + lastvaluecount);
-                    }
-                }
-                else
-                {
-                    lastvalue = (int)max2;
-                    lastvaluecount = 0; // reset value and counter
+                    Debug.WriteLine("DttSP spectrum stalled for two seconds after startup grace. Restarting.");
+                    console.chkPower.Checked = false;
+                    lastvaluecount = 0;
+                    console.restartcount++;
+                    console.setupForm.textBoxRestart.Text = console.restartcount.ToString();
+                    console.chkPower.Checked = true;
                 }
 
             } // 
@@ -23298,29 +23283,14 @@ namespace PowerSDR
                     if ((console.setupForm.chkBoxRestart.Checked) && (console.chkPower.Checked) && !mox)  // ke9ns only check for DttSP freeze if PowerSDR is running.
                     {
                         //  Debug.WriteLine("DttSP check");
-                        if ((int)max2 == lastvalue1)
+                        if (console.IsDspSpectrumFrozen(rx + 1, max2))
                         {
-                            if (lastvaluecount1++ > 3) // if same exact display for 3 cycles
-                            {
-                                Debug.WriteLine("DttSP appears to be frozen. Will unfreeze");
-
-                                console.chkPower.Checked = false; // turn off
-
-                                lastvaluecount1 = 0;
-                                console.restartcount++;
-                                console.setupForm.textBoxRestart.Text = console.restartcount.ToString();
-
-                                console.chkPower.Checked = true; // turn back on
-                            }
-                            else
-                            {
-                                Debug.WriteLine("DttSP freeze value: " + lastvaluecount);
-                            }
-                        }
-                        else
-                        {
-                            lastvalue1 = (int)max2;
-                            lastvaluecount1 = 0; // reset value and counter
+                            Debug.WriteLine("DttSP spectrum stalled for two seconds after startup grace. Restarting.");
+                            console.chkPower.Checked = false;
+                            lastvaluecount1 = 0;
+                            console.restartcount++;
+                            console.setupForm.textBoxRestart.Text = console.restartcount.ToString();
+                            console.chkPower.Checked = true;
                         }
 
                     }

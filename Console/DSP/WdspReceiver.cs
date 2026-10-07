@@ -150,6 +150,26 @@ namespace PowerSDR
             }
         }
 
+        // Called before the hardware stream starts. Native FFT planning must
+        // not monopolize the first real-time audio callback for several seconds.
+        internal void Prepare(DSPRX rx, int sampleCount, int sampleRate)
+        {
+            if (disabled || rx == null || sampleCount <= 0) return;
+            try
+            {
+                EnsureChannel(sampleCount, sampleRate);
+                mode = rx.DSPMode;
+                filterLow = rx.RXFilterLow;
+                filterHigh = rx.RXFilterHigh;
+                agcMode = rx.RXAGCMode;
+                ApplyReceiverControls(rx);
+                ApplySettings();
+                ApplyEqualizer(rx);
+                ApplyManualNotches(rx);
+            }
+            catch (Exception ex) { DisableAfterFailure(ex); }
+        }
+
         internal bool Process(DSPRX rx, float* inputLeft, float* inputRight,
             int sampleCount)
         {
@@ -205,7 +225,11 @@ namespace PowerSDR
                 fixed (float* l = correctedLeft, r = correctedRight)
                     WdspNative.fexchange2(Rx1Channel, l, r,
                         (float*)scratchLeft, (float*)scratchRight, &error);
-                return error == 0;
+                // -2 means the nonblocking WDSP output queue is temporarily
+                // empty; fexchange2 has already zeroed BOTH scratch buffers.
+                // Do not insert an unrelated DttSP audio block (different delay,
+                // gain and NR) into this stream during a scheduling hiccup.
+                return error == 0 || error == -2;
             }
             catch (Exception ex)
             {

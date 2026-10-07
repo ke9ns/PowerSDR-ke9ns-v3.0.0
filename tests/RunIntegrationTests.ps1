@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('All', 'Audio', 'Rx2', 'Graphics', 'State', 'Speech', 'Squelch', 'IQ')]
+    [ValidateSet('All', 'Audio', 'Rx2', 'Graphics', 'State', 'Speech', 'Squelch', 'IQ', 'Resume')]
     [string]$Suite = 'All',
     [string]$RuntimePath = '',
     [string]$OutputPath = ''
@@ -34,6 +34,10 @@ if ($Suite -in @('All','State')) {
 }
 if ($Suite -in @('All','Audio')) { Run-Test 'AudioBridgeTests' $dspSources }
 if ($Suite -in @('All','IQ')) { Run-Test 'IqImageTests' ($dspSources + (Join-Path $repo 'tests\IqImageTests.cs')) }
+if ($Suite -in @('All','Resume')) {
+    Run-Test 'WdspStartupTests' ($dspSources + (Join-Path $repo 'tests\WdspStartupTests.cs'))
+    Run-Test 'NrResumeTests' ($dspSources + (Join-Path $repo 'tests\NrResumeTests.cs'))
+}
 if ($Suite -in @('All','Rx2')) { Run-Test 'PhysicalRx2Tests' ($dspSources + (Join-Path $repo 'tests\PhysicalRx2Tests.cs')) }
 if ($Suite -in @('All','Squelch')) { Run-Test 'SquelchTests' ($dspSources + (Join-Path $repo 'tests\SquelchTests.cs')) }
 if ($Suite -in @('All','Graphics')) {

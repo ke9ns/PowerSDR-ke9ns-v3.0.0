@@ -49976,6 +49976,14 @@ namespace PowerSDR
         public int max2lastvalue = 0; //ke9ns add
         public int lastvaluecount = 0; //ke9ns add 
         public int restartcount = 0; // ke9ns add.183
+        private readonly DspRestartWatchdog dspRestartWatchdog = new DspRestartWatchdog();
+        private static long DspWatchdogMilliseconds
+        { get { return (long)(Stopwatch.GetTimestamp() * (1000.0 / Stopwatch.Frequency)); } }
+        internal bool IsDspSpectrumFrozen(int source, double spectrumSum)
+        {
+            return dspRestartWatchdog.Observe(source, spectrumSum,
+                DspWatchdogMilliseconds, DspBackend.CompletedAudioBlocks);
+        }
         //-------------------------------------------------------
 
 
@@ -50146,29 +50154,14 @@ namespace PowerSDR
                                 }
 
                                 //  Debug.WriteLine("DttSP check");
-                                if ((int)max2 == max2lastvalue)
+                                if (IsDspSpectrumFrozen(4, max2))
                                 {
-                                    if (lastvaluecount++ > 3) // if same exact display for 3 cycles
-                                    {
-                                        Debug.WriteLine("DttSP appears to be frozen. Will unfreeze");
-
-                                        chkPower.Checked = false; // turn off
-
-                                        lastvaluecount = 0;
-                                        restartcount++;
-                                        setupForm.textBoxRestart.Text = restartcount.ToString();
-
-                                        chkPower.Checked = true; // turn back on
-                                    }
-                                    else
-                                    {
-                                        //  Debug.WriteLine("DttSP freeze value-: " + lastvaluecount);
-                                    }
-                                }
-                                else
-                                {
-                                    max2lastvalue = (int)max2;
-                                    lastvaluecount = 0; // reset value and counter
+                                    Debug.WriteLine("DttSP spectrum stalled for two seconds after startup grace. Restarting.");
+                                    chkPower.Checked = false;
+                                    lastvaluecount = 0;
+                                    restartcount++;
+                                    setupForm.textBoxRestart.Text = restartcount.ToString();
+                                    chkPower.Checked = true;
                                 }
 
                             } // check for DttSP freeze
@@ -50191,29 +50184,14 @@ namespace PowerSDR
                                 }
 
                                 //  Debug.WriteLine("DttSP check");
-                                if ((int)max2 == max2lastvalue)
+                                if (IsDspSpectrumFrozen(5, max2))
                                 {
-                                    if (lastvaluecount++ > 3) // if same exact display for 3 cycles
-                                    {
-                                        Debug.WriteLine("DttSP appears to be frozen. Will unfreeze");
-
-                                        chkPower.Checked = false; // turn off
-
-                                        lastvaluecount = 0;
-                                        restartcount++;
-                                        setupForm.textBoxRestart.Text = restartcount.ToString();
-
-                                        chkPower.Checked = true; // turn back on
-                                    }
-                                    else
-                                    {
-                                        //  Debug.WriteLine("DttSP freeze value-: " + lastvaluecount);
-                                    }
-                                }
-                                else
-                                {
-                                    max2lastvalue = (int)max2;
-                                    lastvaluecount = 0; // reset value and counter
+                                    Debug.WriteLine("DttSP spectrum stalled for two seconds after startup grace. Restarting.");
+                                    chkPower.Checked = false;
+                                    lastvaluecount = 0;
+                                    restartcount++;
+                                    setupForm.textBoxRestart.Text = restartcount.ToString();
+                                    chkPower.Checked = true;
                                 }
 
                             } // check for DttSP freeze
@@ -56665,6 +56643,7 @@ namespace PowerSDR
         private bool one_time = true;
         private void chkPower_CheckedChanged(object sender, System.EventArgs e)
         {
+            dspRestartWatchdog.Reset(DspWatchdogMilliseconds, DspBackend.CompletedAudioBlocks);
 
             if (chkPower.Checked)
             {
@@ -56764,6 +56743,9 @@ namespace PowerSDR
                 }
 
                 Thread.Sleep(100); // wait for hardware to settle before starting audio (possible sample rate change)
+
+                DspBackend.PrepareForAudio(block_size1, sample_rate1, app_data_path);
+                dspRestartWatchdog.Reset(DspWatchdogMilliseconds, DspBackend.CompletedAudioBlocks);
 
                 switch (current_model)
                 {
@@ -60069,6 +60051,12 @@ namespace PowerSDR
 
             bool tx = chkMOX.Checked;
 
+            DspBackend.BeginRadioTransition(Audio.RX2AutoMuteTX);
+
+            // TX spectra are deliberately different; begin a fresh observation
+            // interval on both edges, without touching any NR adaptive state.
+            dspRestartWatchdog.Reset(DspWatchdogMilliseconds, DspBackend.CompletedAudioBlocks);
+
             if (!tx) WBIRRX1Holdoff();  // do this is TX turned OFF
 
             if (tx) mox = tx;
@@ -60376,6 +60364,11 @@ namespace PowerSDR
                         break;
                 }
 #endif
+                // The original FLEX-3000/5000 DttSP switch allows up to 50 ms
+                // for relay settling, then ramps RX. WDSP replaces that output,
+                // so it needs its own guard, after the hardware has returned.
+                DspBackend.CompleteReceiveTransition(
+                    current_model == Model.FLEX5000 || current_model == Model.FLEX3000 ? 50 : 0);
             } // NO TX
 
 
