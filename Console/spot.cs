@@ -283,7 +283,7 @@ namespace PowerSDR
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer, true);
 
 
-            string path = ProfilePaths.DataDirectory;
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FlexRadio Systems\\";
             string file_name = path + "DXMemory.xml";
 
             // dataGridView1.Dock = DockStyle.Fill;
@@ -305,11 +305,11 @@ namespace PowerSDR
 
             if (!File.Exists(file_name))
             {
-                console.DXMemList.List.Add(new DXMemRecord("wb8zrl.no-ip.org:7300")); // 
-                console.DXMemList.List.Add(new DXMemRecord("ve7cc.net:23"));
+                console.DXMemList.List.Add(new DXMemRecord("dxc.ai9t.com:7300")); // 
+                console.DXMemList.List.Add(new DXMemRecord("dxc.ve7cc.net:23"));
                 console.DXMemList.List.Add(new DXMemRecord("telnet.reversebeacon.net:7000"));
-                console.DXMemList.List.Add(new DXMemRecord("n7od.pentux.net:7300"));
-                console.DXMemList.List.Add(new DXMemRecord("dxspots.com:23"));
+                console.DXMemList.List.Add(new DXMemRecord("dxcluster.k0mvh.io:7300"));
+                console.DXMemList.List.Add(new DXMemRecord("dxc.dxspots.com:23"));
                 console.DXMemList.List.Add(new DXMemRecord(""));
                 console.DXMemList.List.Add(new DXMemRecord(""));
                 console.DXMemList.List.Add(new DXMemRecord(""));
@@ -431,7 +431,7 @@ namespace PowerSDR
             }
 
 
-            string downloadPath1 = ProfilePaths.DataDirectory;
+            string downloadPath1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
             string originalFile = Path.Combine(downloadPath1, "AzimuthalMap.bmp");
 
             if (File.Exists(originalFile)) //.314
@@ -618,7 +618,7 @@ namespace PowerSDR
         public void BeamMap()
         {
 
-            string downloadPath1 = ProfilePaths.DataDirectory;
+             string downloadPath1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
             string fullPath = Path.Combine(downloadPath1, "AzimuthalMap.pdf");
             string BMPFile = Path.Combine(downloadPath1, "AzimuthalMap.bmp");
 
@@ -707,9 +707,9 @@ namespace PowerSDR
                     udDisplayLong.BackColor = Color.LightGreen;
 
                     // need to expand %userprofile% before creating the actual path
-                    string pdfPath = Path.Combine(ProfilePaths.DataDirectory, "AzimuthalMap.pdf");
-                    string jpgFile = Path.Combine(ProfilePaths.DataDirectory, "AzimuthalMap.jpg");
-                    string bmpFile = Path.Combine(ProfilePaths.DataDirectory, "AzimuthalMap.bmp");
+                    string pdfPath = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.pdf");
+                    string jpgFile = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.jpg");
+                    string bmpFile = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.bmp");
 
 
                     if (File.Exists(BMPFile))
@@ -793,7 +793,7 @@ namespace PowerSDR
 
                     textBox1.Text = textBox1.Text + "Lat and Long: " + latlong + "\r\n";
 
-                    string downloadPath1 = ProfilePaths.DataDirectory;
+                   string downloadPath1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),@"FlexRadio Systems\PowerSDR v2.8.0\");
                     string originalFile = Path.Combine(downloadPath1, "AzimuthalMap.pdf");
                     string BMPFile = Path.Combine(downloadPath1, "AzimuthalMap.bmp");
 
@@ -888,9 +888,9 @@ namespace PowerSDR
                                     udDisplayLong.BackColor = Color.LightGreen;
 
                                     // need to expand %userprofile% before creating the actual path
-                                    string pdfPath = Path.Combine(ProfilePaths.DataDirectory, "AzimuthalMap.pdf");
-                                    string jpgFile = Path.Combine(ProfilePaths.DataDirectory, "AzimuthalMap.jpg");
-                                    string bmpFile = Path.Combine(ProfilePaths.DataDirectory, "AzimuthalMap.bmp");
+                                     string pdfPath = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.pdf");
+                                    string jpgFile = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.jpg");
+                                    string bmpFile = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.bmp");
 
                                     if (File.Exists(BMPFile))
                                     {
@@ -1093,20 +1093,20 @@ namespace PowerSDR
 
 
         // these are pulled from SWL2.csv file
-        public static string[] SWL2_Station = new string[2000];       // Station name
-        public static int[] SWL2_Freq = new int[2000];              // in hz
-        public static int[] SWL2_Band = new int[2000];              // in Mhz was byte .275
+        public static string[] SWL2_Station = new string[3000];       // Station name
+        public static int[] SWL2_Freq = new int[3000];              // in hz
+        public static int[] SWL2_Band = new int[3000];              // in Mhz was byte .275
 
-        public static string[] SWL2_Lang = new string[2000];          // language of transmitter
-        public static int[] SWL2_TimeN = new int[2000];                // UTC time of operation ON air
-        public static int[] SWL2_TimeF = new int[2000];                // UTC time of operation OFF air
-        public static string[] SWL2_Mode = new string[2000];          // operating mode
-        public static string[] SWL2_Day = new string[2000];          // days of operation
-        public static byte[] SWL2_Day1 = new byte[2000];          // days of operation mo,tu,we,th,fr,sa,su = 1,2,4,8,16,32,64
+        public static string[] SWL2_Lang = new string[3000];          // language of transmitter
+        public static int[] SWL2_TimeN = new int[3000];                // UTC time of operation ON air
+        public static int[] SWL2_TimeF = new int[3000];                // UTC time of operation OFF air
+        public static string[] SWL2_Mode = new string[3000];          // operating mode
+        public static string[] SWL2_Day = new string[3000];          // days of operation
+        public static byte[] SWL2_Day1 = new byte[3000];          // days of operation mo,tu,we,th,fr,sa,su = 1,2,4,8,16,32,64
 
 
-        public static string[] SWL2_Loc = new string[2000];          // location of transmitter
-        public static string[] SWL2_Target = new string[2000];          // target area of station
+        public static string[] SWL2_Loc = new string[3000];          // location of transmitter
+        public static string[] SWL2_Target = new string[3000];          // target area of station
         public static int SWL2_Index1;  // local index that reset back to 0 after reaching max
         public static byte Flag21 = 0; // flag to skip header line in SWL.csv file
 
@@ -18161,6 +18161,7 @@ namespace PowerSDR
                         {
                             button4.BackColor = Color.Red;
                             textBox1.Text += "No US State FCC database, could not find EN.dat nor FCCDATA.dat files..\r\n";
+                            textBox1.Text += "Middle button click over the LoTW button to download now.\r\n"; // .340
 
                             Debug.WriteLine("Failed opening EN.dat file");
                             goto LoTW1; // cant open file so end it now.
@@ -19805,8 +19806,8 @@ namespace PowerSDR
             string url = "http://eibispace.de/dx/sked-a26.csv";
 
 
-            string targetDirectory = ProfilePaths.DataDirectory;
-            string destinationFile = Path.Combine(targetDirectory, "SWL.csv");
+             string targetDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
+           string destinationFile = Path.Combine(targetDirectory, "SWL.csv");
             string backupFile = Path.Combine(targetDirectory, "swl_old.csv");
 
             try
@@ -19864,8 +19865,8 @@ namespace PowerSDR
         {
             string url = "https://data.fcc.gov/download/pub/uls/complete/l_amat.zip";
 
-            string targetDirectory = ProfilePaths.DataDirectory;
-            string destinationFile = Path.Combine(targetDirectory, "l_amat.zip");
+             string targetDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
+           string destinationFile = Path.Combine(targetDirectory, "l_amat.zip");
             string backupFile = Path.Combine(targetDirectory, "l_amat_old.zip");
             string destinationFile1 = Path.Combine(targetDirectory, "FCCDATA.dat");
             string backupFile1 = Path.Combine(targetDirectory, "FCCDATA_old.dat");
@@ -19893,9 +19894,9 @@ namespace PowerSDR
                     File.WriteAllBytes(destinationFile, fileBytes);
                 }
 
-                string zipPath = Path.Combine(ProfilePaths.DataDirectory, "l_amat.zip");
+                 string zipPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\l_amat.zip");
 
-                string destinationPath = Path.Combine(ProfilePaths.DataDirectory, "EN.dat");
+                string destinationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\EN.dat");
 
                
                 using (ZipArchive archive = System.IO.Compression.ZipFile.OpenRead(zipPath))

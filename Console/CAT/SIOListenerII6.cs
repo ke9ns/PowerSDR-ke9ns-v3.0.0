@@ -19,6 +19,7 @@
 //
 // You may contact the author via email at: k6kdn@arrl.net
 //=================================================================
+//send CAT data to VFOB RX2 instead of the normal VFOA RX1
 
 #define DBG_PRINT
 
@@ -349,7 +350,7 @@ namespace PowerSDR
                         // ZZOA > ZZOB GET/SET ANT CONNECTED TO RX1 SPOOF RX2
 
 
-                        Debug.WriteLine("S SIO6----->" + m.Value);
+                        Debug.WriteLine("SIO6 Received----->" + m.Value);
 
                         console.SpoofAB = true; // ke9ns add: .200 used by IF command in CATCommands.cs
 
@@ -362,7 +363,8 @@ namespace PowerSDR
                             result = SIO6.put(answer);                                   //send the answer to the serial port
 
                         console.SpoofAB = false;
-                        Debug.WriteLine("R SIO6----->" + answer + "<---");
+                        Debug.WriteLine("SIO6 returned----->" + answer + "<---");
+                        Debug.WriteLine("");
 
                         CommBuffer = CommBuffer.Replace(m.Value, "", 0, m.Length);                   //remove the match from the buffer
                                                                                                      //Debug.WriteLine("Parser decode time for "+m.Value.ToString()+":  "+T0.ToString()+ "ms");
