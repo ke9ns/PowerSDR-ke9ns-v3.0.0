@@ -12014,7 +12014,7 @@ namespace PowerSDR
             try
             {
 
-                ds.WriteXml(file_name, XmlWriteMode.WriteSchema); // ds.WriteXml(file_name, XmlWriteMode.WriteSchema);
+                WriteDatabase();
                                                                   //  writer.WriteLine("1) Done");
 
             }
@@ -12032,6 +12032,11 @@ namespace PowerSDR
 
 
         } // Update()
+
+        internal static void WriteDatabase()
+        {
+            ds.WriteXml(file_name, XmlWriteMode.WriteSchema);
+        }
 
         public static void Exit()
         {

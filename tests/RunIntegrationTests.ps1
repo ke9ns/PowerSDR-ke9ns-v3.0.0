@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('All', 'Audio', 'Rx2', 'Graphics', 'State', 'Speech', 'Squelch', 'IQ', 'Resume')]
+    [ValidateSet('All', 'Audio', 'Rx2', 'Graphics', 'State', 'Speech', 'Squelch', 'IQ', 'Resume', 'Map')]
     [string]$Suite = 'All',
     [string]$RuntimePath = '',
     [string]$OutputPath = ''
@@ -33,6 +33,10 @@ if ($Suite -in @('All','State')) {
     Run-Test 'DisplayStartupGateTests' @((Join-Path $repo 'tests\DisplayStartupGateTests.cs'),(Join-Path $repo 'Console\DisplayStartupGate.cs'))
 }
 if ($Suite -in @('All','Audio')) { Run-Test 'AudioBridgeTests' $dspSources }
+if ($Suite -in @('All','Map')) {
+    Run-Test 'MapShutdownTests' @((Join-Path $repo 'tests\MapShutdownTests.cs'),(Join-Path $repo 'Console\MapWorkerLifetime.cs'),(Join-Path $repo 'Console\MapShutdown.cs')) @('System.Drawing.dll','System.Windows.Forms.dll') @($OutputPath)
+    Run-Test 'DatabaseCheckpointTests' @((Join-Path $repo 'tests\DatabaseCheckpointTests.cs')) @('System.Data.dll') @((Join-Path $RuntimePath 'PowerSDR.exe'), $OutputPath)
+}
 if ($Suite -in @('All','IQ')) { Run-Test 'IqImageTests' ($dspSources + (Join-Path $repo 'tests\IqImageTests.cs')) }
 if ($Suite -in @('All','Resume')) {
     Run-Test 'WdspStartupTests' ($dspSources + (Join-Path $repo 'tests\WdspStartupTests.cs'))

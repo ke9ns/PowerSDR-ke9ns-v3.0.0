@@ -2829,7 +2829,25 @@ namespace PowerSDR
 
             Debug.WriteLine("disposed of components here");
 
-            base.Dispose(disposing);
+            writer.WriteLine("2b) Disposing main form and controls");
+            try
+            {
+                if (disposing && picDisplay != null) picDisplay.BackgroundImage = null;
+            }
+            catch (Exception ex)
+            {
+                writer.WriteLine("2b) Detaching map FAILED: " + ex);
+            }
+            try
+            {
+                base.Dispose(disposing);
+            }
+            catch (Exception ex)
+            {
+                writer.WriteLine("2b) Visual disposal FAILED: " + ex);
+                ShutdownTrace.Write(app_data_path, "Visual disposal FAILED: " + ex);
+                // Do not skip hardware cleanup and the final database save.
+            }
 
 
             writer.WriteLine("2) Done");
@@ -2858,7 +2876,7 @@ namespace PowerSDR
 
             Debug.WriteLine("((((((((Go to EXITCONSOLE here))))))))))))))))");
 
-            writer.WriteLine("4) ExitConsole here... View PowerDown_3of3.log file for details");
+            writer.WriteLine("4) ExitConsole here... View shutdown3.log for details");
 
             ExitConsole();   // ke9ns shutdown3.log    (PAL exit, TXProfile data, DB exit, DTTSP exit, and .Dispose of forms)
 
@@ -4331,7 +4349,7 @@ namespace PowerSDR
 
 
             writer.WriteLine("3) SAVE DATABASE TO FILE NAME: " + db_file_name);
-            writer.WriteLine("3) Check PowerDown3.log for DB details ");
+            writer.WriteLine("3) Saving database; see shutdown-map.log for the earlier checkpoint");
 
 
 
@@ -57613,6 +57631,7 @@ namespace PowerSDR
         // ke9ns: actually runs Console_Closing1 just before this below
         public void Console_Closing(object sender, FormClosingEventArgs e)
         {
+            if (DeferCloseForMap(e)) return;
             Direct2DDisplay.Shutdown();  //v3
 
             if (chkPower.Checked) //.254
@@ -57833,9 +57852,10 @@ namespace PowerSDR
 
             Debug.WriteLine("CONSOLE_CLOSING------ ALL FORMS CLOSED DONE");
 
+            SaveShutdownCheckpoint();
             this.Hide(); // hide the console.
 
-            writer.WriteLine("8) done with Console_closing, on to PowerDown_2of3  Dispose");
+            writer.WriteLine("8) done with Console_closing, on to shutdown2.log Dispose");
             // ke9ns console_closing(), then Dispose(), then ExitConsole(), then back to Displose() to finish
 
             writer.Close();

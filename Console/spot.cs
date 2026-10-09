@@ -579,11 +579,8 @@ namespace PowerSDR
 
             //  checkBoxMUF.Checked = false; // turn voacap mapping off
 
-            do
-            {
-                Debug.WriteLine("Waiting for VOACAP thread to finish");
-
-            } while (VOATHREAD == true);
+            // This form is hidden, not disposed. Do not spin on the UI thread.
+            // Console shutdown separately waits for every registered map worker.
 
 
             if (timerID != 0)
@@ -8269,15 +8266,7 @@ namespace PowerSDR
 
                 if (chkISS.Checked == true)
                 {
-                    Thread t1 = new Thread(new ThreadStart(ISSOrbit));                                // turn on track map (sun, grayline, voacap, or beacon)
-
-                    t1.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-                    t1.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-
-                    t1.Name = "ISS Orbit Plot Thread";
-                    t1.IsBackground = true;
-                    t1.Priority = ThreadPriority.BelowNormal;
-                    t1.Start();
+                    StartMapWorker("ISS Orbit Plot Thread", ISSOrbit, ThreadPriority.BelowNormal);
 
                 } //  if (chkISS.Checked == true)
 
@@ -8287,17 +8276,8 @@ namespace PowerSDR
 
                 VOATHREAD1 = false;
 
-                Thread t = new Thread(new ThreadStart(TrackSun));  // turn on track map (sun, grayline, voacap, or beacon)
-
-                t.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-                t.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-
                 textBox1.Text = "Clicked to Turn ON GrayLine Sun Tracker\r\n";
-
-                t.Name = "Track Thread";
-                t.IsBackground = true;
-                t.Priority = ThreadPriority.Normal;
-                t.Start();
+                StartMapWorker("Track Thread", RunTrackSun, ThreadPriority.Normal);
 
 
                 if (SP5_Active == 0) textBox1.Text += "ON but just turned OFF1";
@@ -8484,7 +8464,7 @@ namespace PowerSDR
 
             ISSCount = 0;
 
-            while (ISSCount < 20) // was 360 for 90min orbit period 
+            while (ISSCount < 20 && !mapWorkers.Stopping) // was 360 for 90min orbit period
             {
 
                 Thread.Sleep(50);
@@ -8552,7 +8532,9 @@ namespace PowerSDR
                             ISS_YY[ISSCount] = ISS_Y = (int)(((180 - (ISSLATMap + 90)) / 180.0) * Sun_WidthY1) + Sun_Top1;  //latitude 90N to -90S
                             ISS_XX[ISSCount] = ISS_X = (int)(((ISSLONMap + 180.0) / 360.0) * Sun_Width) + Sun_Left;  // longitude -180W to +180E
 
-                            if (g != null) g.DrawLine(OrgPen, ISS_X, ISS_Y, ISS_X + 1, ISS_Y + 1);
+                            // TrackSun draws these stored points on its next frame.
+                            // Never share its Graphics instance with this worker.
+                            Map_Last |= 2;
 
 
                         } //get next data point
@@ -8631,7 +8613,6 @@ namespace PowerSDR
         public int hpos = 0; // horizontal pos of day of week indicator .100
 
         public int lastholdY = 0; // ke9ns add .193
-        Graphics g;
 
         public bool TrackOFF = false; // ke9ns add .197
 
@@ -8699,12 +8680,12 @@ namespace PowerSDR
 
             //--------------------------------------------------------------------------------------------
             // stay in this thread loop until you turn off tracking
-            for (; SP5_Active == 1;) // turn on track map (sun, grayline, voacap, or beacon)
+            for (; SP5_Active == 1 && !mapWorkers.Stopping;) // map tracking
             {
 
                 Thread.Sleep(100);
 
-                if (SP5_Active == 0)
+                if (SP5_Active == 0 || mapWorkers.Stopping)
                 {
                     UTCLAST2 = 0;
                     continue; // tracking turned OFF
@@ -9302,7 +9283,9 @@ namespace PowerSDR
                         //   else MAP = new Bitmap(Map_image2); // load up Map image
 
 
-                        g = Graphics.FromImage(MAP); //  MAP = Lighten(new Bitmap(Map_image), MB);  darken or light world map first
+                        System.Drawing.Image completedMap = MAP;
+                        using (Graphics g = Graphics.FromImage(completedMap))
+                        {
 
 
                         g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -10905,8 +10888,8 @@ namespace PowerSDR
 
                         //  Darken();
 
-                        console.picDisplay.SizeMode = PictureBoxSizeMode.StretchImage;           // put image back onto picDisplay background image
-                        console.picDisplay.BackgroundImage = MAP;                                  // MAP.Save("test.bmp");  save modified map_image to actual file on hard drive
+                        } // release Graphics before publishing the completed map
+                        PublishTrackedMap(completedMap);
 
 
                         beacon4 = false; // reset the beacon scanner flag (you just updated the map)
@@ -11869,15 +11852,7 @@ namespace PowerSDR
 
                     if (chkISS.Checked == true)
                     {
-                        Thread t1 = new Thread(new ThreadStart(ISSOrbit));                                // turn on track map (sun, grayline, voacap, or beacon)
-
-                        t1.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-                        t1.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-
-                        t1.Name = "ISS Orbit Plot Thread";
-                        t1.IsBackground = true;
-                        t1.Priority = ThreadPriority.BelowNormal;
-                        t1.Start();
+                        StartMapWorker("ISS Orbit Plot Thread", ISSOrbit, ThreadPriority.BelowNormal);
 
                     } //  if (chkISS.Checked == true)
 
@@ -11887,18 +11862,8 @@ namespace PowerSDR
                     UTCLAST2 = 0;
                     VOATHREAD1 = false;
 
-                    Thread t = new Thread(new ThreadStart(TrackSun)); // turn on track map (sun, grayline, voacap, or beacon)
-
-                    t.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-                    t.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-
                     UTCLAST2 = 0;
-
-
-                    t.Name = "Track Thread";
-                    t.IsBackground = true;
-                    t.Priority = ThreadPriority.Normal;
-                    t.Start();
+                    StartMapWorker("Track Thread", RunTrackSun, ThreadPriority.Normal);
 
 
 
@@ -14234,7 +14199,7 @@ namespace PowerSDR
             Debug.WriteLine("VOA_CHECK: " + VOARUN);
 
 
-            if (VOARUN == true || VOATHREAD1 == true)
+            if (VOARUN == true || VOATHREAD1 == true || mapWorkers.Stopping)
             {
                 return; // dont do a VOACAP update if your aleady doing one.
             }
@@ -14344,15 +14309,8 @@ namespace PowerSDR
 
                 if (VOATHREAD1 == false) // if true, then form must be closing
                 {
-                    Thread t = new Thread(new ThreadStart(VOACAP)); // generate the VOA data on the MAP
-
-                    t.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-                    t.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-
-                    t.Name = "VOACAP Thread";
-                    t.IsBackground = true;
-                    t.Priority = ThreadPriority.Normal;
-                    t.Start();
+                    if (!StartMapWorker("VOACAP Thread", RunVoacap, ThreadPriority.Normal)
+                        && mapWorkers.Stopping) VOARUN = false;
                 }
 
             }
