@@ -13,7 +13,7 @@ namespace PowerSDR
             try
             {
                 Assembly app = Assembly.LoadFrom(Path.GetFullPath(args[0]));
-                Check(app.GetName().Version.ToString() == "3.0.0.3", "Expected tested version 3.0.0.3");
+                Check(app.GetName().Version.ToString() == "3.0.0.4", "Expected tested version 3.0.0.4");
                 Type db = app.GetType("PowerSDR.DB", true);
                 FieldInfo data = db.GetField("ds", BindingFlags.Static | BindingFlags.Public);
                 FieldInfo path = db.GetField("file_name", BindingFlags.Static | BindingFlags.NonPublic);
@@ -42,7 +42,7 @@ namespace PowerSDR
                 Check(data.GetValue(null) == null, "Normal Exit still releases dataset");
                 restored = new DataSet(); restored.ReadXml(output, XmlReadMode.ReadSchema);
                 Check((string)restored.Tables["State"].Rows[0]["Value"] == "final save", "Normal final save preserved");
-                System.Console.WriteLine("PASS: actual 3.0.0.3 DB code: XML round trip, checkpoint retains ds, errors propagate, final Exit persists/releases. Synthetic file: " + output);
+                System.Console.WriteLine("PASS: actual " + app.GetName().Version + " DB code: XML round trip, checkpoint retains ds, errors propagate, final Exit persists/releases. Synthetic file: " + output);
                 return 0;
             }
             catch (Exception ex) { System.Console.WriteLine(ex); return 1; }
