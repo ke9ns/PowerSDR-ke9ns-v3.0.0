@@ -256,6 +256,12 @@ namespace PowerSDR
             }
         }
 
+        internal void DeliverCwAudio(Action<IntPtr, IntPtr, int, int> sink, int count, int rate)
+        {
+            // Decoder failures must not propagate into the radio audio callback.
+            try { sink(scratchLeft, scratchRight, count, rate); } catch { }
+        }
+
         private void ApplyReceiverControls(DSPRX rx)
         {
             bool reset = !settingsApplied;
