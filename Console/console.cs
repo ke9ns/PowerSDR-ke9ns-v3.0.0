@@ -248,7 +248,7 @@ using System.Windows.Forms;
 using System.Speech.Synthesis; // ke9ns add
 //using System.Object;
 //using System.Windows.Threading.DispatcherObject;
-//using FlexCW; // .250
+//using FlexCW; // .250 ke9ns: I extracted the actual code from the DLL
 using System.Linq; // ke9ns add
 using NAudio.Wave; // ke9ns add
 using NAudio.Lame; // ke9ns add
@@ -19607,10 +19607,7 @@ namespace PowerSDR
 
             Debug.WriteLine("UpdateVFOAFreq=============" + freq);
 
-            
-
             //  freq = freq.ToString(CultureInfo.CurrentCulture.NumberFormat); // .253
-
 
             dialcheckA = true;  // update DIAL if active
 
@@ -19652,13 +19649,15 @@ namespace PowerSDR
 
             if (KWAutoInformation7) BroadcastFreqChange7("A", freq); // TCP/IP CAT
 
+			 //.339 SliderUpdate now under VFOAFreq
+
         } // update vfoA freq
 
 
         public bool SpoofAB = false; // .200     use special CAT port to spoof VFOB data as VFOA (to run 2 instances of a digitial mode program and use RX2 VFOB as VFOA
                                         // set in SIOListenerII6.cs
         public bool LastVFOBTX = false; // .200  true = SpoofAB caused the TX on VFOB, so return TX to VFOA after TX is over.
-        public bool SpoofTX = false; // 200       true=TX in spoof mode, false=not in TX with spoof
+        public bool SpoofTX = false; // 200    if your using the CAT spoof port, this flag lets you know your TX on VFOB    true=TX in spoof mode, false=not in TX with spoof
 
         public bool SpoofRXATXB = false; //.311   true = RX to VFOA, RX to VFOB
         public bool SpoofRXATXBF = false; //.311  flag... true = skimmer sent new split TX freq to vfob, so send END key to skimmer
@@ -27150,6 +27149,7 @@ namespace PowerSDR
             set { fwc_mic_ptt = value; }
         }
 
+      //ke9ns: part of SpoofAB, SwapVFOA_BTX is for the TX button false = VFOA, true = VFOB
         private bool swap_vfo_ab_tx = false;
         public bool SwapVFOA_BTX
         {
@@ -41255,6 +41255,7 @@ namespace PowerSDR
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //   g.CompositingMode = CompositingMode.SourceOver;
             //   g.CompositingQuality = CompositingQuality.HighQuality;
+          
             g.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;
@@ -78533,13 +78534,11 @@ namespace PowerSDR
             if (txtTimer.ForeColor == Color.Red)
             {
                 p4.Graphics.DrawPath(new Pen(Color.Yellow, BorderThk), gPath); // ke9ns take color from setup Ring VFO color
-
             }
             else
             {
                 p4.Graphics.DrawPath(new Pen(ring_vfo_color, BorderThk), gPath); // ke9ns take color from setup Ring VFO color
             }
-
 
 
         } //panelDateTime_Paint
@@ -78930,6 +78929,7 @@ namespace PowerSDR
             //   p9.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //   p9.Graphics.CompositingMode = CompositingMode.SourceOver;
             //   p9.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+           
             p9.Graphics.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic; .339
             p9.Graphics.SmoothingMode = SmoothingMode.HighQuality;
             p9.Graphics.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;
@@ -79135,7 +79135,6 @@ namespace PowerSDR
         private void grpVFOA_MouseHover(object sender, EventArgs e)
         {
             grpVFOA.Invalidate();
-
         }
 
         //=================================================================================
@@ -79157,6 +79156,7 @@ namespace PowerSDR
             //  p7.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //  p7.Graphics.CompositingMode = CompositingMode.SourceOver;
             //   p7.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+           
             p7.Graphics.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             p7.Graphics.SmoothingMode = SmoothingMode.HighQuality;
             p7.Graphics.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;
@@ -79355,6 +79355,7 @@ namespace PowerSDR
             //  p10.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             //  p10.Graphics.CompositingMode = CompositingMode.SourceOver;
             //  p10.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+          
             p10.Graphics.InterpolationMode = InterpolationMode.Bilinear; //HighQualityBicubic;
             p10.Graphics.SmoothingMode = SmoothingMode.HighQuality;
             p10.Graphics.PixelOffsetMode = PixelOffsetMode.Half; // HighQuality;

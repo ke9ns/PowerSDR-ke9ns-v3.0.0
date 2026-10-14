@@ -613,63 +613,40 @@ namespace PowerSDR
         // Sets or reads the transceiver mode
         public string MD(string s)
         {
+           Debug.WriteLine("MD: " + s);
 
-            Debug.WriteLine("MD: " + s);
-
-            if (console.SpoofAB == true)
+            if (console.SpoofAB == true && console.CurrentModel == Model.FLEX5000 && FWCEEPROM.RX2OK)  //.339
             {
-                if (console.CurrentModel == Model.FLEX5000 && FWCEEPROM.RX2OK)
+                if (s.Length == parser.nSet)
                 {
-                    if (s.Length == parser.nGet)
+                    if (Convert.ToInt32(s) > 0 && Convert.ToInt32(s) <= 9)
                     {
-                        Debug.WriteLine("MD spoofab Get" + console.RX2DSPMode);
+                        KString2ModeRX2(s);
 
-                        return Mode2String(console.RX2DSPMode);
-                    }
-                    else if (s.Length == parser.nSet && s != "8")
-                    {
-                        switch (s)
-                        {
-                            case "0":
-                                console.RX2DSPMode = DSPMode.LSB;
-                                break;
-                            case "1":
-                                console.RX2DSPMode = DSPMode.USB;
-                                break;
-                            case "2":
-                                console.RX2DSPMode = DSPMode.DSB;
-                                break;
-                            case "3":
-                                console.RX2DSPMode = DSPMode.CWL;
-                                break;
-                            case "4":
-                                console.RX2DSPMode = DSPMode.CWU;
-                                break;
-                            case "5":
-                                console.RX2DSPMode = DSPMode.FM;
-                                break;
-                            case "6":
-                                console.RX2DSPMode = DSPMode.AM;
-                                break;
-                            case "7":
-                                console.RX2DSPMode = DSPMode.DIGU;
-                                break;
-                            case "9":
-                                console.RX2DSPMode = DSPMode.DIGL;
-                                break;
-
-                        }
+                        Debug.WriteLine("MDspoof Set: " + console.RX2DSPMode);
                         return "";
                     }
                     else
+                    {
+                        Debug.WriteLine("MDspoof Error1: " + s);
+
                         return parser.Error1;
+                    }
+                }
+                else if (s.Length == parser.nGet)
+                {
+                    Debug.WriteLine("MDspoof Get: " + console.RX1DSPMode);
+
+                    return Mode2KString(console.RX1DSPMode);
+
                 }
                 else
                 {
-                    parser.Verbose_Error_Code = 7;
+                    Debug.WriteLine("MDspoof Error1: " + s);
                     return parser.Error1;
                 }
-            }
+
+            } // spoofAB == true
             else
             {
                 if (s.Length == parser.nSet)
@@ -701,7 +678,7 @@ namespace PowerSDR
                     return parser.Error1;
                 }
             }
-        }
+        } // MD
 
         // Sets or reads the Mic Gain thumbwheel
         public string MG(string s)
@@ -4143,29 +4120,59 @@ namespace PowerSDR
 
 
 
-        // Sets or reads the SDR-1000 DSP mode
+        // Sets or reads RX1 operating mode (LSB, USB, CW, etc.)
         public string ZZMD(string s)
         {
-            if (s.Length == parser.nSet)
+           
+            if (console.SpoofAB == true && console.CurrentModel == Model.FLEX5000 && FWCEEPROM.RX2OK) //.340
             {
-                if (Convert.ToInt32(s) >= 0 && Convert.ToInt32(s) <= 11)
+                if (s.Length == parser.nSet)
                 {
-                    String2Mode(s);
-                    return "";
+                    if (Convert.ToInt32(s) >= 0 && Convert.ToInt32(s) <= 11)
+                    {
+                        String2ModeRX2(s);
+                        return "";
+                    }
+                    else
+                        return parser.Error1;
+                }
+                else if (s.Length == parser.nGet)
+                {
+                    return Mode2String(console.RX2DSPMode);
                 }
                 else
+                {
                     return parser.Error1;
-            }
-            else if (s.Length == parser.nGet)
-            {
-                return Mode2String(console.RX1DSPMode);
-            }
+                }
+
+
+            } //  spoofAB == true
             else
             {
-                return parser.Error1;
-            }
-        }
+                if (s.Length == parser.nSet)
+                {
+                    if (Convert.ToInt32(s) >= 0 && Convert.ToInt32(s) <= 11)
+                    {
+                        String2Mode(s);
+                        return "";
+                    }
+                    else
+                        return parser.Error1;
+                }
+                else if (s.Length == parser.nGet)
+                {
+                    return Mode2String(console.RX1DSPMode);
+                }
+                else
+                {
+                    return parser.Error1;
+                }
 
+            } // spoofAB == false
+
+        } //ZZMD
+
+        // Sets or reads RX2 operating mode (LSB, USB, CW, etc.) So this is only for the FLEX-5000 with RX2 installed.  Returns error if not.
         public string ZZME(string s)
         {
             if (console.CurrentModel == Model.FLEX5000 && FWCEEPROM.RX2OK)
@@ -4222,7 +4229,7 @@ namespace PowerSDR
                 parser.Verbose_Error_Code = 7;
                 return parser.Error1;
             }
-        }
+        } // ZZME
 
         //Sets or reads the Mic gain control
         public string ZZMG(string s)
@@ -6621,6 +6628,7 @@ namespace PowerSDR
         }
 
         //Swaps VFO A/B TX buttons
+        //ke9ns: part of SpoofAB, SwapVFOA_BTX is for the TX button false = VFOA, true = VFOB
         public string ZZSW(string s)
         {
             //  if (console.SpoofAB == true) // ke9ns add .200
@@ -6629,7 +6637,7 @@ namespace PowerSDR
             //  }
 
 
-            if (s.Length == parser.nSet && (s == "0" || s == "1"))
+            if (s.Length == parser.nSet && (s == "0" || s == "1")) // SET
             {
                 if (s == "0")
                     console.SwapVFOA_BTX = false; //ke9ns: false = VFOA
@@ -6638,7 +6646,7 @@ namespace PowerSDR
 
                 return "";
             }
-            else if (s.Length == parser.nGet)
+            else if (s.Length == parser.nGet)  // READ
             {
                 bool retval = console.SwapVFOA_BTX;
                 if (retval)
@@ -7066,11 +7074,11 @@ namespace PowerSDR
            
             if (s.Length == parser.nSet && (s == "0" || s == "1"))
             {
-                if (s == "0")
+                if (s == "0") // CAT says turn off transmit now
                 {
                     console.CATPTT = false;
 
-                    if (console.SpoofTX == true)
+                    if (console.SpoofTX == true) // if we spoofed the TX button, we need to turn it back to the original VFOA
                     {
                         console.SpoofTX = false;
                         if (console.LastVFOBTX == true)
@@ -7083,14 +7091,21 @@ namespace PowerSDR
 
                     }
                 }
-                else if (s == "1")
+                else if (s == "1") // CAT want to transtmit, so we need to set the TX button and spoof if needed
                 {
                     if (console.SpoofAB == true) // ke9ns add .200
                     {
                         // check which VFO is TX and save it here to return it back when done with TX
                         //   console.SwapVFOA_BTX = false; // VFOA is TX
-                        console.SwapVFOA_BTX = true; // VFOB is TX
-                        console.SpoofTX = true;
+
+                        if (console.chkVFOATX.Checked)
+                        {
+                            console.LastVFOBTX = true; //.340 flag that VFOA was the TX prior, so go back when your done TXing
+                            Debug.WriteLine("VFOA was checked before transmit");
+                        }
+                        console.SwapVFOA_BTX = true; // VFOB is TX so this sets console.chkVFOBTX.Checked = true; and console.chkVFOATX.Checked = false;
+                        console.SpoofTX = true; // flag to put back TX to VFOA when done with TX
+                       
                     }
                     else
                     {
@@ -10295,7 +10310,52 @@ namespace PowerSDR
                     console.RX1DSPMode = DSPMode.DRM;
                     break;
             }
-        }
+        } // String2Mode
+
+       public void String2ModeRX2(string pIndex) //.340
+        {
+            string s = pIndex;
+
+            switch (s)
+            {
+                case "00":
+                    console.RX2DSPMode = DSPMode.LSB;
+                    break;
+                case "01":
+                    console.RX2DSPMode = DSPMode.USB;
+                    break;
+                case "02":
+                    console.RX2DSPMode = DSPMode.DSB;
+                    break;
+                case "03":
+                    console.RX2DSPMode = DSPMode.CWL;
+                    break;
+                case "04":
+                    console.RX2DSPMode = DSPMode.CWU;
+                    break;
+                case "05":
+                    console.RX2DSPMode = DSPMode.FM;
+                    break;
+                case "06":
+                    console.RX2DSPMode = DSPMode.AM;
+                    break;
+                case "07":
+                    console.RX2DSPMode = DSPMode.DIGU;
+                    break;
+                case "08":
+                    console.RX2DSPMode = DSPMode.SPEC;
+                    break;
+                case "09":
+                    console.RX2DSPMode = DSPMode.DIGL;
+                    break;
+                case "10":
+                    console.RX2DSPMode = DSPMode.SAM;
+                    break;
+                case "11":
+                    console.RX2DSPMode = DSPMode.DRM;
+                    break;
+            }
+        } // String2ModeRX2
 
         public string Mode2String(DSPMode pMode)
         {
@@ -10389,7 +10449,50 @@ namespace PowerSDR
                     console.RX1DSPMode = DSPMode.USB;
                     break;
             }
-        }
+        } // KString2Mode
+
+        public void KString2ModeRX2(string pIndex) //.340 
+        {
+            string s = pIndex;
+
+            switch (s)
+            {
+                case "1":
+                    if (console.setupForm.DigUIsUSB)
+                        console.RX2DSPMode = DSPMode.DIGL;
+                    else
+                        console.RX2DSPMode = DSPMode.LSB;
+                    break;
+                case "2":
+                    if (console.setupForm.DigUIsUSB)
+                        console.RX2DSPMode = DSPMode.DIGU;
+                    else
+                        console.RX2DSPMode = DSPMode.USB;
+                    break;
+                case "3":
+                    console.RX2DSPMode = DSPMode.CWU;
+                    break;
+                case "4":
+                    console.RX2DSPMode = DSPMode.FM;
+                    break;
+                case "5":
+                    console.RX2DSPMode = DSPMode.AM;
+                    break;
+                case "6":
+                    console.RX2DSPMode = DSPMode.DIGL;
+                    break;
+                case "7":
+                    console.RX2DSPMode = DSPMode.CWL;
+                    break;
+                case "9":
+                    console.RX2DSPMode = DSPMode.DIGU;
+                    break;
+                default:
+                    console.RX2DSPMode = DSPMode.USB;
+                    break;
+            }
+        } // KString2ModeRX2
+
 
         // converts SDR mode to Kenwood single digit mode code
         public string Mode2KString(DSPMode pMode)
