@@ -27,6 +27,11 @@ namespace PowerSDR
             Application.EnableVisualStyles();
             using (var form = new CWX())
             {
+                // Reproduce the real KE9NS designer constraints, not a free-size Form.
+                form.FormBorderStyle = FormBorderStyle.Fixed3D;
+                form.ClientSize = new Size(725, 328);
+                form.MaximumSize = new Size(745, 371);
+                form.MinimumSize = new Size(745, 371);
                 form.InitializeNeuralCwPanel();
                 form.ShowInTaskbar = false;
                 form.Opacity = 0;

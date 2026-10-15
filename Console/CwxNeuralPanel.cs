@@ -17,6 +17,10 @@ namespace PowerSDR
 
         private void InitializeNeuralCwPanel()
         {
+            // The KE9NS designer locks BOTH bounds to 745x371. Clear those
+            // legacy bounds before enlarging the client area for the RX panel.
+            MaximumSize = Size.Empty;
+            MinimumSize = Size.Empty;
             label4.Visible = label5.Visible = label6.Visible = label7.Visible = false;
             // Keep KE9NS's existing transmit editor intact; append the same RX
             // controls used in Thetis CWX below it rather than replacing TX controls.
