@@ -16,6 +16,8 @@ namespace PowerSDR
         private ToolTip toolTip1 = new ToolTip();
         private TabControl tcSetup = new TabControl();
         private TabPage tpDSP = new TabPage("DSP");
+        private TabControl tcDSP = new TabControl();
+        private TabPage tpWdspNRs = new TabPage("NRs");
         static void Check(bool ok, string message) { if (!ok) throw new Exception(message); }
         static void CheckBounds(Control parent)
         {
@@ -38,14 +40,18 @@ namespace PowerSDR
                 f.tcSetup.Dock = DockStyle.Fill; f.Controls.Add(f.tcSetup);
                 foreach (string s in new[] { "General", "Audio", "Display" }) f.tcSetup.TabPages.Add(s);
                 f.tcSetup.TabPages.Add(f.tpDSP); f.tcSetup.TabPages.Add("Transmit"); f.tcSetup.TabPages.Add("PA"); f.tcSetup.TabPages.Add("Appearance");
+                f.tcDSP.Dock = DockStyle.Fill; f.tpDSP.Controls.Add(f.tcDSP);
+                foreach (string s in new[] { "Options", "Image Reject", "Keyer", "AGC/ALC" }) f.tcDSP.TabPages.Add(s);
+                f.tcDSP.TabPages.Add(f.tpWdspNRs);
                 f.InitializeNnrTab();
                 f.ShowInTaskbar = false; f.Opacity = 0; f.Show(); Application.DoEvents();
-                Check(f.tcSetup.TabPages[4].Text == "NR5/NR6", "New tab order");
+                Check(f.tcSetup.TabPages.Count == 7, "No extra top-level tab");
+                Check(f.tcDSP.TabPages[4].Text == "NRs" && f.tcDSP.TabPages[5].Text == "NNR", "New DSP tab order");
                 f.SelectLegacySetupTab(4); Check(f.tcSetup.SelectedTab.Text == "Transmit", "Transmit shortcut");
                 f.SelectLegacySetupTab(6); Check(f.tcSetup.SelectedTab.Text == "Appearance", "Appearance shortcut");
                 f.SetNnrPreset(0, new decimal[] { -18,6,.75m,12,3,20,120 });
                 Check(DspBackend.Parameters[0][0] == -18 && DspBackend.Parameters[1][0] == -25, "Independent settings");
-                f.tcSetup.SelectedIndex = 4;
+                f.tcSetup.SelectedTab = f.tpDSP; f.tcDSP.SelectedIndex = 5;
                 f.ShowInTaskbar = false; f.Opacity = 0; f.Show(); Application.DoEvents();
                 CheckBounds(f);
                 using (var b = new Bitmap(f.tcSetup.Width, f.tcSetup.Height))

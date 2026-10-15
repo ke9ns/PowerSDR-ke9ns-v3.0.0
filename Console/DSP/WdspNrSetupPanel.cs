@@ -46,7 +46,7 @@ namespace PowerSDR
         {
             tpWdspNRs = new TabPage();
             tpWdspNRs.Name = "tpWdspNRs";
-            tpWdspNRs.Text = "NRs (WDSP)";
+            tpWdspNRs.Text = "NRs";
             tpWdspNRs.UseVisualStyleBackColor = true;
             tpWdspNRs.AutoScroll = true;
 

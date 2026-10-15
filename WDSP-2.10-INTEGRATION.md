@@ -11,7 +11,7 @@ PowerSDR's post-AGC RNNoise scaling fix is explicitly retained.
 
 - NR button cycles OFF and NR1 through NR6, independently for RX1 and RX2.
 - NR5 selects NNR model 0 (Standard); NR6 selects model 1 (Premium).
-- Setup > NR5/NR6 is immediately after DSP. Seven parameters and two presets
+- Setup > DSP > NNR is immediately after NRs. Seven parameters and two presets
   are available separately for RX1/RX-S and RX2. Settings use Options persistence.
 - Pre/Post-AGC position remains shared with the existing DSP > NRs page.
 - TX still uses the existing DttSP path; this is not a TX engine migration.

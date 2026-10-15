@@ -4135,7 +4135,7 @@ namespace PowerSDR
             else
             {
                 if (!tcSetup.TabPages.Contains(tpExtCtrl))
-                    Common.TabControlInsert(tcSetup, tpExtCtrl, 7);
+                    Common.TabControlInsert(tcSetup, tpExtCtrl, 6);
             }
             grpImpulseTest.Visible = !b;
             ckEnableSigGen.Visible = b;
@@ -4417,7 +4417,7 @@ namespace PowerSDR
                 else
                 {
                     if (!tcSetup.TabPages.Contains(tpExtCtrl))
-                        Common.TabControlInsert(tcSetup, tpExtCtrl, 7);
+                        Common.TabControlInsert(tcSetup, tpExtCtrl, 6);
                 }
 
                 grpImpulseTest.Visible = !b;
