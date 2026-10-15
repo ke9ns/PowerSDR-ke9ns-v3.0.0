@@ -58132,7 +58132,7 @@ namespace PowerSDR
                 // setupForm.Focus();
                 //  setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                //  setupForm.tcSetup.SelectedIndex = 1; // select audio tab;
+                //  setupForm.SelectLegacySetupTab(1); // select audio tab;
                 //  setupForm.tcAudio.SelectedIndex = 1; // select vac1 tab
                 //  setupForm.chkAudioIQtoVAC.Focus();
 
@@ -70637,7 +70637,7 @@ namespace PowerSDR
         #region DSP Button Events
 
         // Experimental WDSP RX1 selector. Matches Thetis left-click cycling:
-        // OFF -> NR1 (ANR) -> NR2 (EMNR) -> NR3 (RNNoise) -> NR4 (SpecBleach).
+        // OFF -> NR1 (ANR) -> NR2 (EMNR) -> NR3 (RNNoise) -> NR4 (SpecBleach) -> NR5/6 (NNR).
         //v3
         private int experimental_rx1_nr_mode = 0;
         private bool experimental_rx1_nr_updating = false;
@@ -70645,7 +70645,7 @@ namespace PowerSDR
         private void ApplyExperimentalRX1NRMode(int nrMode)
         {
             if (nrMode < 0) nrMode = 0;
-            if (nrMode > 4) nrMode = 4;
+            if (nrMode > 6) nrMode = 6;
 
             experimental_rx1_nr_mode = nrMode;
             bool enabled = nrMode != 0;
@@ -70657,7 +70657,7 @@ namespace PowerSDR
                 chkNR.Text = enabled ? "NR" + nrMode.ToString() : "NR";
                 chkNR.BackColor = enabled ? button_selected_color : SystemColors.Control;
                 toolTip1.SetToolTip(chkNR,
-                    "Click: OFF / NR1 / NR2 / NR3 / NR4. Right-click: DSP settings.");
+                    "Click: OFF / NR1 / NR2 / NR3 / NR4 / NR5 / NR6. Right-click: DSP settings.");
 
                 // Keep legacy NR1 as the safe DttSP fallback. The selected modern
                 // algorithm is applied to the active WDSP RX1 output below.
@@ -70675,14 +70675,14 @@ namespace PowerSDR
 
         private void chkNR_Click(object sender, System.EventArgs e)
         {
-            ApplyExperimentalRX1NRMode((experimental_rx1_nr_mode + 1) % 5);
+            ApplyExperimentalRX1NRMode((experimental_rx1_nr_mode + 1) % 7);
         }
 
         private void chkNR_CheckedChanged(object sender, System.EventArgs e)
         {
             if (experimental_rx1_nr_updating) return;
             // Programmatic/CAT changes retain their old on/off semantics and map
-            // ON to NR1. Mouse clicks use chkNR_Click and cycle all five states.
+            // ON to NR1. Mouse clicks use chkNR_Click and cycle all seven states.
             ApplyExperimentalRX1NRMode(chkNR.Checked ? 1 : 0);
         }
 
@@ -74049,7 +74049,7 @@ namespace PowerSDR
 
         private void ApplyExperimentalRX2NRMode(int mode)
         {
-            mode = Math.Max(0, Math.Min(4, mode));
+            mode = Math.Max(0, Math.Min(6, mode));
             experimental_rx2_nr_mode = mode;
             experimental_rx2_nr_updating = true;
             try
@@ -74058,7 +74058,7 @@ namespace PowerSDR
                 chkRX2NR.Text = mode == 0 ? "NR" : "NR" + mode.ToString();
                 chkRX2NR.BackColor = mode != 0 ? button_selected_color : SystemColors.Control;
                 toolTip1.SetToolTip(chkRX2NR,
-                    "RX2: OFF / NR1 / NR2 / NR3 / NR4. Right-click: shared DSP settings.");
+                    "RX2: OFF / NR1 / NR2 / NR3 / NR4 / NR5 / NR6. Right-click: DSP settings.");
                 dsp.GetDSPRX(1, 0).NoiseReduction = mode == 1;
                 dsp.GetDSPRX(1, 1).NoiseReduction = mode == 1;
                 DspBackend.SetRx2NoiseReductionMode(mode);
@@ -74069,7 +74069,7 @@ namespace PowerSDR
         private void chkRX2NR_Click(object sender, System.EventArgs e)
         {
             if (!FWCEEPROM.RX2OK) return;
-            ApplyExperimentalRX2NRMode((experimental_rx2_nr_mode + 1) % 5);
+            ApplyExperimentalRX2NRMode((experimental_rx2_nr_mode + 1) % 7);
         }
 
         private void chkRX2NR_CheckedChanged(object sender, System.EventArgs e)
@@ -78024,7 +78024,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 6; // select appearance tab;
+                setupForm.SelectLegacySetupTab(6); // select appearance tab;
                 setupForm.tcAppearance.SelectedIndex = 2; // select  tab meter
 
 
@@ -78083,7 +78083,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 6; // select appearance tab;
+                setupForm.SelectLegacySetupTab(6); // select appearance tab;
                 setupForm.tcAppearance.SelectedIndex = 2; // select  tab meter
 
 
@@ -80987,7 +80987,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 1; // select audio tab;
+                setupForm.SelectLegacySetupTab(1); // select audio tab;
                 setupForm.tcAudio.SelectedIndex = 1; // select vac1 tab
                 setupForm.chkAudioIQtoVAC.Focus();
 
@@ -81009,7 +81009,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 1; // select audio tab;
+                setupForm.SelectLegacySetupTab(1); // select audio tab;
                 setupForm.tcAudio.SelectedIndex = 2; // select vac2 tab
                 setupForm.chkVAC2DirectIQ.Focus();
 
@@ -81034,7 +81034,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 4; // select audio tab;
+                setupForm.SelectLegacySetupTab(4); // select audio tab;
 
                 //   setupForm.tcAudio.SelectedIndex = 1; // select vac1 tab
                 //    setupForm.chkAudioIQtoVAC.Focus();
@@ -81166,7 +81166,7 @@ namespace PowerSDR
                 eqForm.Show();
                 eqForm.Focus();
                 eqForm.WindowState = FormWindowState.Normal; // ke9ns add
-                                                             //   setupForm.tcSetup.SelectedIndex = 4; // select audio tab;
+                                                             //   setupForm.SelectLegacySetupTab(4); // select audio tab;
 
                 //   setupForm.tcAudio.SelectedIndex = 1; // select vac1 tab
                 //    setupForm.chkAudioIQtoVAC.Focus();
@@ -81190,7 +81190,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 1; // select audio tab;
+                setupForm.SelectLegacySetupTab(1); // select audio tab;
                 setupForm.tcAudio.SelectedIndex = 1; // select vac1 tab
                 setupForm.chkAudioIQtoVAC.Focus();
 
@@ -81213,7 +81213,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 4; // select audio tab;
+                setupForm.SelectLegacySetupTab(4); // select audio tab;
 
                 //   setupForm.tcAudio.SelectedIndex = 1; // select vac1 tab
                 //    setupForm.chkAudioIQtoVAC.Focus();
@@ -81310,7 +81310,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 3; // select dsp tab;
+                setupForm.SelectLegacySetupTab(3); // select dsp tab;
                 setupForm.tcDSP.SelectedIndex = 0; // select Options tab
 
             } // right click
@@ -81331,7 +81331,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 3; // select dsp tab;
+                setupForm.SelectLegacySetupTab(3); // select dsp tab;
                 setupForm.tcDSP.SelectedIndex = 0; // select Options tab
 
             } // right click
@@ -81353,7 +81353,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 3; // select dsp tab;
+                setupForm.SelectLegacySetupTab(3); // select dsp tab;
                 setupForm.tcDSP.SelectedIndex = 0; // select Options tab
 
             } // right click
@@ -81375,7 +81375,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 3; // select dsp tab;
+                setupForm.SelectLegacySetupTab(3); // select dsp tab;
                 setupForm.tcDSP.SelectedIndex = 0; // select Options tab
 
             } // right click
@@ -81397,7 +81397,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 3; // select dsp tab;
+                setupForm.SelectLegacySetupTab(3); // select dsp tab;
                 setupForm.tcDSP.SelectedIndex = 0; // select Options tab
 
             } // right click
@@ -81418,7 +81418,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 3; // select dsp tab;
+                setupForm.SelectLegacySetupTab(3); // select dsp tab;
                 setupForm.tcDSP.SelectedIndex = 0; // select Options tab
 
             } // right click
@@ -81439,7 +81439,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 3; // select dsp tab;
+                setupForm.SelectLegacySetupTab(3); // select dsp tab;
                 setupForm.tcDSP.SelectedIndex = 0; // select Options tab
 
             } // right click
@@ -81460,7 +81460,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 3; // select dsp tab;
+                setupForm.SelectLegacySetupTab(3); // select dsp tab;
                 setupForm.tcDSP.SelectedIndex = 0; // select Options tab
 
             } // right click
@@ -81481,7 +81481,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 3; // select dsp tab;
+                setupForm.SelectLegacySetupTab(3); // select dsp tab;
                 setupForm.tcDSP.SelectedIndex = 0; // select Options tab
 
             } // right click
@@ -81502,7 +81502,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 3; // select dsp tab;
+                setupForm.SelectLegacySetupTab(3); // select dsp tab;
                 setupForm.tcDSP.SelectedIndex = 0; // select Options tab
 
             } // right click
@@ -81581,7 +81581,7 @@ namespace PowerSDR
                     setupForm.Focus();
                     setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                    setupForm.tcSetup.SelectedIndex = 6; // select appearance tab;
+                    setupForm.SelectLegacySetupTab(6); // select appearance tab;
                     setupForm.tcAppearance.SelectedIndex = 1; // select  tab
                 }
             } // right click
@@ -81595,7 +81595,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 6; // select appearance tab;
+                setupForm.SelectLegacySetupTab(6); // select appearance tab;
                 setupForm.tcAppearance.SelectedIndex = 1; // select  tab
             }
 
@@ -81635,7 +81635,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 4; // select transmit tab;
+                setupForm.SelectLegacySetupTab(4); // select transmit tab;
 
 
             }
@@ -81769,7 +81769,7 @@ namespace PowerSDR
                    setupForm.Focus();
                    setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                   setupForm.tcSetup.SelectedIndex = 2; // select Display tab;
+                   setupForm.SelectLegacySetupTab(2); // select Display tab;
                  */
 
             } // right click
@@ -86793,7 +86793,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 4; // select audio tab;
+                setupForm.SelectLegacySetupTab(4); // select audio tab;
 
                 //   setupForm.tcAudio.SelectedIndex = 1; // select vac1 tab
                 //    setupForm.chkAudioIQtoVAC.Focus();
@@ -86816,7 +86816,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 4; // select audio tab;
+                setupForm.SelectLegacySetupTab(4); // select audio tab;
 
                 //   setupForm.tcAudio.SelectedIndex = 1; // select vac1 tab
                 //    setupForm.chkAudioIQtoVAC.Focus();
@@ -87895,7 +87895,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 4; // select transmit tab;
+                setupForm.SelectLegacySetupTab(4); // select transmit tab;
 
 
 
@@ -87926,7 +87926,7 @@ namespace PowerSDR
                 //  setupForm.Focus();
                 //  setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                //   setupForm.tcSetup.SelectedIndex = 4; // select audio tab;
+                //   setupForm.SelectLegacySetupTab(4); // select audio tab;
 
 
             } // right click
@@ -87954,7 +87954,7 @@ namespace PowerSDR
                 //  setupForm.Focus();
                 //  setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                //   setupForm.tcSetup.SelectedIndex = 4; // select audio tab;
+                //   setupForm.SelectLegacySetupTab(4); // select audio tab;
 
 
             } // right click
@@ -88359,7 +88359,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 6; // select appearance tab;
+                setupForm.SelectLegacySetupTab(6); // select appearance tab;
                 setupForm.tcAppearance.SelectedIndex = 1; // select  tab
 
             }
@@ -88530,7 +88530,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 6; // select appearance tab;
+                setupForm.SelectLegacySetupTab(6); // select appearance tab;
                 setupForm.tcAppearance.SelectedIndex = 0; // select  tab
 
             } // right click
@@ -88543,7 +88543,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 6; // select appearance tab;
+                setupForm.SelectLegacySetupTab(6); // select appearance tab;
                 setupForm.tcAppearance.SelectedIndex = 0; // select  tab
             }
         } //  labelPowerSDR_MouseDown
@@ -88825,7 +88825,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 0; // select general tab;
+                setupForm.SelectLegacySetupTab(0); // select general tab;
                 setupForm.tcGeneral.SelectedIndex = 3; // select  filter tab
 
             }
@@ -88845,7 +88845,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 0; // select general tab;
+                setupForm.SelectLegacySetupTab(0); // select general tab;
                 setupForm.tcGeneral.SelectedIndex = 3; // select  filter tab
 
             }
@@ -88865,7 +88865,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 0; // select general tab;
+                setupForm.SelectLegacySetupTab(0); // select general tab;
                 setupForm.tcGeneral.SelectedIndex = 3; // select  filter tab
 
             }
@@ -88885,7 +88885,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 0; // select general tab;
+                setupForm.SelectLegacySetupTab(0); // select general tab;
                 setupForm.tcGeneral.SelectedIndex = 3; // select  filter tab
 
             }
@@ -88905,7 +88905,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 0; // select general tab;
+                setupForm.SelectLegacySetupTab(0); // select general tab;
                 setupForm.tcGeneral.SelectedIndex = 3; // select  filter tab
 
             }
@@ -88925,7 +88925,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 0; // select general tab;
+                setupForm.SelectLegacySetupTab(0); // select general tab;
                 setupForm.tcGeneral.SelectedIndex = 3; // select  filter tab
 
             }
@@ -88945,7 +88945,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 0; // select general tab;
+                setupForm.SelectLegacySetupTab(0); // select general tab;
                 setupForm.tcGeneral.SelectedIndex = 3; // select  filter tab
 
             }
@@ -88965,7 +88965,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 0; // select general tab;
+                setupForm.SelectLegacySetupTab(0); // select general tab;
                 setupForm.tcGeneral.SelectedIndex = 3; // select  filter tab
 
             }
@@ -88986,7 +88986,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 0; // select general tab;
+                setupForm.SelectLegacySetupTab(0); // select general tab;
                 setupForm.tcGeneral.SelectedIndex = 3; // select  filter tab
 
             }
@@ -89007,7 +89007,7 @@ namespace PowerSDR
                 setupForm.Focus();
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
-                setupForm.tcSetup.SelectedIndex = 0; // select general tab;
+                setupForm.SelectLegacySetupTab(0); // select general tab;
                 setupForm.tcGeneral.SelectedIndex = 3; // select  filter tab
 
             }

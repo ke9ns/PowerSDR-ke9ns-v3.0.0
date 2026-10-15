@@ -76,12 +76,15 @@ namespace PowerSDR
                 DspBackend.Register(dsp);
                 foreach(int rate in new[]{48000,96000,192000})
                 {
-                    double baseline=Run(rate,0), processed=Run(rate,3);
-                    double ratio=processed/baseline;
-                    Console.WriteLine("NR3 speech level relative to off: {0:F2} dB",20*Math.Log10(ratio));
-                    if(ratio<0.03 || ratio>2) throw new Exception("NR3 voice excessively suppressed/amplified");
+                    double baseline=Run(rate,0);
+                    foreach(int nr in new[]{3,5,6})
+                    {
+                        double processed=Run(rate,nr), ratio=processed/baseline;
+                        Console.WriteLine("NR{0} speech level relative to off: {1:F2} dB",nr,20*Math.Log10(ratio));
+                        if(ratio<0.03 || ratio>2) throw new Exception("NR"+nr+" voice excessively suppressed/amplified");
+                    }
                 }
-                Console.WriteLine("PASS: synthesized speech survives NR3 at 48/96/192 kHz; no native fallback.");
+                Console.WriteLine("PASS: synthesized speech survives NR3/5/6 at 48/96/192 kHz; no native fallback.");
                 return 0;
             }
             catch(Exception ex) { Console.WriteLine(ex); return 1; }

@@ -9,7 +9,7 @@ namespace PowerSDR
         static void Check(bool ok) { if (!ok) throw new Exception("NR state regression"); }
         static int Main()
         {
-            for (int mode = 0; mode <= 4; mode++)
+            for (int mode = 0; mode <= 6; mode++)
             {
                 // Round-trip the same Key/Value XML representation used by State.
                 var data = new DataSet();
@@ -27,7 +27,7 @@ namespace PowerSDR
                 Check(NrModeState.Restore(entries, true) == mode);
                 Check(NrModeState.Restore(entries, false) == mode);
             }
-            foreach (string value in new[] { "bad", "", "-1", "5", "999999999999" })
+            foreach (string value in new[] { "bad", "", "-1", "7", "999999999999" })
             {
                 var invalid = new ArrayList { "WdspRX1NRMode/" + value };
                 Check(NrModeState.Restore(invalid, true) == 1);
@@ -35,16 +35,16 @@ namespace PowerSDR
             }
             Check(NrModeState.Restore(new ArrayList(), true) == 1);
             Check(NrModeState.Restore(new ArrayList(), false) == 0);
-            for (int rx1 = 0; rx1 <= 4; rx1++)
-                for (int rx2 = 0; rx2 <= 4; rx2++)
+            for (int rx1 = 0; rx1 <= 6; rx1++)
+                for (int rx2 = 0; rx2 <= 6; rx2++)
                 {
                     var entries = new ArrayList { NrModeState.Serialize(rx1), NrModeState.Serialize(rx2, true) };
                     Check(NrModeState.Restore(entries, false) == rx1);
                     Check(NrModeState.Restore(entries, false, true) == rx2);
                 }
             Check(NrModeState.Restore(new ArrayList { "WdspRX1NRMode/4" }, true, true) == 1);
-            Check(NrModeState.Restore(new ArrayList { "WdspRX2NRMode/5" }, false, true) == 0);
-            Console.WriteLine("PASS: OFF/NR1/NR2/NR3/NR4 XML round-trip, legacy profiles and invalid values.");
+            Check(NrModeState.Restore(new ArrayList { "WdspRX2NRMode/7" }, false, true) == 0);
+            Console.WriteLine("PASS: OFF/NR1..NR6 XML round-trip, legacy profiles and invalid values.");
             return 0;
         }
     }

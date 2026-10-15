@@ -90,6 +90,7 @@ namespace PowerSDR
 
             InitializeComponent();
             InitializeWdspNrTab();
+            InitializeNnrTab();
             InitializeWdspNbOptions();
 
             console = c;
@@ -325,6 +326,7 @@ namespace PowerSDR
 
             initializing = false;
             ApplyWdspNrSettings();
+            ApplyNnrSettings();
             ApplyWdspNbSettings();
             ApplyWdspNrModel();
             udDisplayScopeTime_ValueChanged(this, EventArgs.Empty);
@@ -4133,7 +4135,7 @@ namespace PowerSDR
             else
             {
                 if (!tcSetup.TabPages.Contains(tpExtCtrl))
-                    Common.TabControlInsert(tcSetup, tpExtCtrl, 6);
+                    Common.TabControlInsert(tcSetup, tpExtCtrl, 7);
             }
             grpImpulseTest.Visible = !b;
             ckEnableSigGen.Visible = b;
@@ -4415,7 +4417,7 @@ namespace PowerSDR
                 else
                 {
                     if (!tcSetup.TabPages.Contains(tpExtCtrl))
-                        Common.TabControlInsert(tcSetup, tpExtCtrl, 6);
+                        Common.TabControlInsert(tcSetup, tpExtCtrl, 7);
                 }
 
                 grpImpulseTest.Visible = !b;

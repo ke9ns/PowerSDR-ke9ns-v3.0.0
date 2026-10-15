@@ -74,7 +74,7 @@ namespace PowerSDR
                 double[] eq=Run("RX2 EQ"); Check(eq[4]<baseline[4]*0.5,"RX2 EQ"); dsp.Rx2.SetRXEQ(3,false,0,0,-15,0);
                 dsp.Rx2.RXAGCMode=AGCMode.FAST; dsp.Rx2.RXAGCMaxGain=10; double[] low=Run("RX2 AGC 10");
                 dsp.Rx2.RXAGCMaxGain=40; double[] high=Run("RX2 AGC 40"); Check(high[4]>low[4]*10,"RX2 AGC"); dsp.Rx2.RXAGCMode=AGCMode.FIXD;
-                for(int nr=1;nr<=4;nr++)
+                for(int nr=1;nr<=6;nr++)
                 {
                     DspBackend.SetRx2NoiseReductionMode(nr); double[] result=Run("RX2 NR"+nr);
                     Check(result[0]>baseline[0]*0.8,"RX2 NR affects RX1");
@@ -91,7 +91,7 @@ namespace PowerSDR
                 Audio.RX2AutoMuteTX=true; Run("RX2 auto mute TX preserves legacy path"); receiving=true;
                 dsp.Rx2.Active=false; Run("RX2 disabled"); dsp.Rx2.Active=true;
                 foreach(int rate in new[]{96000,192000}) { Audio.SampleRate1=rate; double[] r=Run("sample rate "+rate); Check(r[4]>1e-6,"sample rate silence"); }
-                Console.WriteLine("PASS: physical RX2 routing, controls, NR1-4, NB1/2, diversity and TX isolation.");
+                Console.WriteLine("PASS: physical RX2 routing, controls, NR1-6, NB1/2, diversity and TX isolation.");
                 Environment.Exit(0); return 0;
             }
             catch(Exception ex) { Console.WriteLine(ex); Environment.Exit(1); return 1; }

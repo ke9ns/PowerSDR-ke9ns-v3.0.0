@@ -47,7 +47,7 @@ namespace PowerSDR
                 FieldInfo open=typeof(WdspReceiver).GetField("channelOpen",BindingFlags.Instance|BindingFlags.NonPublic);
                 FieldInfo settings=typeof(WdspReceiver).GetField("settingsApplied",BindingFlags.Instance|BindingFlags.NonPublic);
                 FieldInfo applied=typeof(WdspReceiver).GetField("appliedNoiseReductionMode",BindingFlags.Instance|BindingFlags.NonPublic);
-                for(int nr=0;nr<=4;nr++)
+                for(int nr=0;nr<=6;nr++)
                 {
                     DspBackend.SetRx1NoiseReductionMode(nr);
                     double pre=0;
@@ -73,7 +73,7 @@ namespace PowerSDR
                     }
                     Console.WriteLine("NR{0}: pre={1:G6}, first 107ms={2:G6}, late={3:G6}, first/pre={4:F3}",nr,pre,first,late,first/pre);
                 }
-                Console.WriteLine("PASS: NR0-4 pause/resume at 192 kHz: channels/settings retained; no fallback or invalid audio.");
+                Console.WriteLine("PASS: NR0-6 pause/resume at 192 kHz: channels/settings retained; no fallback or invalid audio.");
                 Environment.Exit(0); return 0;
             }
             catch(Exception ex) { Console.WriteLine(ex); Environment.Exit(1); return 1; }

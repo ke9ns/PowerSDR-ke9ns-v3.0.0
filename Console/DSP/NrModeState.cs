@@ -12,7 +12,7 @@ namespace PowerSDR
 
         internal static string Serialize(int mode, bool rx2)
         {
-            if (mode < 0 || mode > 4) throw new ArgumentOutOfRangeException("mode");
+            if (mode < 0 || mode > 6) throw new ArgumentOutOfRangeException("mode");
             return (rx2 ? "WdspRX2NRMode/" : Prefix) + mode.ToString(CultureInfo.InvariantCulture);
         }
 
@@ -28,7 +28,7 @@ namespace PowerSDR
                 int mode;
                 if (entry != null && entry.StartsWith(prefix, StringComparison.Ordinal) &&
                     Int32.TryParse(entry.Substring(prefix.Length), NumberStyles.Integer,
-                        CultureInfo.InvariantCulture, out mode) && mode >= 0 && mode <= 4)
+                        CultureInfo.InvariantCulture, out mode) && mode >= 0 && mode <= 6)
                     return mode;
             }
             return legacyEnabled ? 1 : 0;

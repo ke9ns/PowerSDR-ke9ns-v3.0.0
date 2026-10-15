@@ -47,7 +47,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.0.0.5</ApplicationVersion>
+    <ApplicationVersion>3.0.0.6</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -635,6 +635,7 @@
     </Compile>
     <Compile Include="Direct2DDisplay.cs" />
     <Compile Include="DSP\NrModeState.cs" />
+    <Compile Include="DSP\WdspNnrSetupPanel.cs" />
     <Compile Include="DisplayStartupGate.cs" />
     <Compile Include="MapWorkerLifetime.cs" />
     <Compile Include="MapShutdown.cs" />

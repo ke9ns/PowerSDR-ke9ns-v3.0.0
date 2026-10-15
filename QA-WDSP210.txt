@@ -1,0 +1,25 @@
+PowerSDR 3.0.0.6 - WDSP 2.10 / NR5 / NR6 - experimental QA
+
+Extraia o ZIP COMPLETO em uma pasta nova. Nao substitua apenas o executavel:
+esta versao precisa da nova wdsp.dll de 32 bits. Os modelos NR5/NR6 estao
+embutidos na DLL. Nao abra duas versoes do PowerSDR ao mesmo tempo.
+Faca backup do perfil/banco de dados antes de testar.
+
+A branch aprovada 3.0.0.5 (CW neural) permanece intacta.
+Nova branch: codex/powersdr-wdsp-2.10-nr5-nr6. Sem publicacao no GitHub.
+
+O botao NR percorre OFF, NR1, NR2, NR3, NR4, NR5 e NR6.
+NR5 = NNR Standard. NR6 = NNR Premium (maior consumo de CPU).
+Setup > NR5/NR6 fica imediatamente a direita de DSP.
+Ajustes independentes para RX1/RX-S e RX2; presets Default e Voice smooth.
+A posicao Pre/Post-AGC continua em DSP > NRs (WDSP), compartilhada pelos NRs.
+
+A primeira preparacao FFTW pode demorar. No teste local sem cache levou
+cerca de 82 segundos; com o cache pronto, 181 ms. Aguarde a conclusao.
+Mudancas de taxa ou buffer podem exigir nova preparacao.
+
+Validar no FLEX: partida, NR1-6, retorno do PTT, RX2, diversidade, CW neural,
+squelch, EQ, notch, 48/96/192 kHz e estabilidade com FPS elevado.
+Comece com volume baixo. Se NR6 ficar pesado, compare com NR5.
+Os testes locais usam sinais sinteticos; a aprovacao de RF/audio real depende
+do QA com o radio. Guardar o ZIP anterior para retorno, se necessario.

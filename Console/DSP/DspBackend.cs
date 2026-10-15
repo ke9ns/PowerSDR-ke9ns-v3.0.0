@@ -120,6 +120,11 @@ namespace PowerSDR
         internal static void SetRx2Anf(bool value) { rx2.SetRx1Anf(value); }
         internal static void SetRx2NoiseReductionMode(int value) { rx2.SetRx1NoiseReductionMode(value); }
         internal static bool LoadRnnrModel(string path) { return main.LoadRnnrModel(path); }
+        internal static void SetNnrParameters(int receiver, double[] values)
+        {
+            if (receiver == 0) { main.SetNnrParameters(values); sub.SetNnrParameters(values); }
+            else rx2.SetNnrParameters(values);
+        }
 
         internal static void SetRx1NrParameters(int position,
             int taps, int delay, int gain, int leak, int gainMethod, int npe, bool ae,
