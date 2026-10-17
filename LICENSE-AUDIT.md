@@ -1,6 +1,8 @@
 # Distribution and license audit - candidate 3.0.0.5
 
-Date: 2026-10-17. Status: NOT CLEARED FOR PUBLIC DISTRIBUTION.
+Date: 2026-10-17. Status: SOURCE REVIEW HANDOFF; BINARY RELEASE REVIEW INCOMPLETE.
+This is not a finding that distribution is prohibited. The checks below remain
+open for the final installer. See MAINTAINER-HANDOFF-3.0.0.5.md.
 This is a technical compliance inventory, not a legal opinion or a guarantee.
 No license is changed by this report. Missing evidence is not proof that a
 component is prohibited, but must be resolved before claiming compliance.
@@ -16,7 +18,7 @@ component is prohibited, but must be resolved before claiming compliance.
 | FFTW double and float | Official FFTW FAQ identifies GPL licensing | Identify exact prebuilt versions and matching source, include notices and source. Current local binary directory does not establish complete compliance. |
 | DeepFist CW | THIRD-PARTY-NEURAL-CW.txt and upstream Lyra NOTICE identify Brent Crier N9BC, MIT | Preserve MIT notice. Confirm the exact shipped model artifact is covered by that grant; no matching model artifact was found in the inspected upstream tree. |
 | ONNX Runtime 1.20.1 | Official package LICENSE and ThirdPartyNotices.txt | Both already copied to output. Keep all bundled third-party notices and verify shipped architecture/version. |
-| SharpDX 4.2 | Local binaries | Obtain and archive the exact release license/notices and binary provenance before release. |
+| SharpDX 4.2 | Official v4.2.0 License.txt, commit 8e5df9f17b1d328c595a9df5851dbb2537b55621 | MIT text archived in lib/SharpDX and copied by build. Final binary provenance mapping remains to be recorded. |
 | NuGet packages | release-audit/nuget-license-metadata.json, 37 official nuspec records | Metadata is not a complete SBOM or approval. Resolve missing declarations/file licenses and all transitive/native components. |
 | Legacy radio/runtime libraries and assets | Historical QA payload | Maintainer must supply origin, versions and redistribution terms. An existing installer is not itself a license grant. |
 
