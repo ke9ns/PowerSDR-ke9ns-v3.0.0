@@ -1,4 +1,4 @@
-# PowerSDR 3.0.0.6 - WDSP 2.10 / NR5 and NR6
+# PowerSDR 3.0.0.5 - WDSP 2.10 / NR5 and NR6
 
 Based on the approved neural CW branch at 8a539bb2d41994bfd435ac2ad1eea833d20a9423.
 That branch is retained without changes. No remote publication is implied.
