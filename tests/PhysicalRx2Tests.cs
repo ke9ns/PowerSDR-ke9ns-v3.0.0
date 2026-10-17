@@ -76,11 +76,15 @@ namespace PowerSDR
                 dsp.Rx2.RXAGCMaxGain=40; double[] high=Run("RX2 AGC 40"); Check(high[4]>low[4]*10,"RX2 AGC"); dsp.Rx2.RXAGCMode=AGCMode.FIXD;
                 for(int nr=1;nr<=6;nr++)
                 {
+                    dsp.Rx2.BinOn = nr >= 5; // Simulate a stale/programmatic BIN request.
                     DspBackend.SetRx2NoiseReductionMode(nr); double[] result=Run("RX2 NR"+nr);
+                    if(nr >= 5) Check(result[4]>1e-9 && Math.Abs(result[4]-result[5])<result[4]*0.001,
+                        "RX2 NNR rejects BIN and preserves both output channels");
                     Check(result[0]>baseline[0]*0.8,"RX2 NR affects RX1");
                     object rx2=typeof(DspBackend).GetField("rx2",BindingFlags.NonPublic|BindingFlags.Static).GetValue(null);
                     Check((int)typeof(WdspReceiver).GetField("appliedNoiseReductionMode",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(rx2)==nr,"NR not applied");
                 }
+                dsp.Rx2.BinOn = false;
                 DspBackend.SetRx2NoiseReductionMode(0);
                 dsp.Rx2.NBOn=true; Run("RX2 NB1"); dsp.Rx2.NBOn=false; dsp.Rx2.SDROM=true; Run("RX2 NB2"); dsp.Rx2.SDROM=false;
                 DspBackend.SetDiversityScalar(-1,0); DspBackend.SetDiversity(true);

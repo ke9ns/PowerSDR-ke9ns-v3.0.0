@@ -57508,6 +57508,11 @@ namespace PowerSDR
 
         private void chkBIN_CheckedChanged(object sender, System.EventArgs e)
         {
+            if (experimental_rx1_nr_mode >= 5 && chkBIN.Checked)
+            {
+                chkBIN.Checked = false;
+                return;
+            }
             if (chkBIN.Checked) chkBIN.BackColor = button_selected_color;
             else chkBIN.BackColor = SystemColors.Control;
             dsp.GetDSPRX(0, 0).BinOn = chkBIN.Checked;
@@ -67682,7 +67687,7 @@ namespace PowerSDR
                         if ((new_mode != DSPMode.AM) && (new_mode != DSPMode.SAM) && (new_mode != DSPMode.FM))
                         {
                             chkMON.Enabled = true;
-                            chkBIN.Enabled = true;
+                            chkBIN.Enabled = experimental_rx1_nr_mode < 5;
                         }
 
                         ptbMic_Scroll(this, EventArgs.Empty);
@@ -67713,7 +67718,7 @@ namespace PowerSDR
                         if (new_mode != DSPMode.AM && new_mode != DSPMode.SAM && new_mode != DSPMode.FM)
                         {
                             chkMON.Enabled = true;
-                            chkBIN.Enabled = true;
+                            chkBIN.Enabled = experimental_rx1_nr_mode < 5;
                         }
                     }
                     break;
@@ -67728,7 +67733,7 @@ namespace PowerSDR
                         if (new_mode != DSPMode.AM && new_mode != DSPMode.SAM && new_mode != DSPMode.FM)
                         {
                             chkMON.Enabled = true;
-                            chkBIN.Enabled = true;
+                            chkBIN.Enabled = experimental_rx1_nr_mode < 5;
                         }
                     }
                     break;
@@ -70642,12 +70647,35 @@ namespace PowerSDR
         private int experimental_rx1_nr_mode = 0;
         private bool experimental_rx1_nr_updating = false;
 
+        private void UpdateNnrBinauralLock(bool secondReceiver, bool wasLocked)
+        {
+            int nr = secondReceiver ? experimental_rx2_nr_mode : experimental_rx1_nr_mode;
+            var button = secondReceiver ? chkRX2BIN : chkBIN;
+            DSPMode mode = secondReceiver ? RX2DSPMode : RX1DSPMode;
+            bool locked = nr >= 5;
+            if (locked)
+            {
+                button.Checked = false;
+                button.Enabled = false;
+                int receiver = secondReceiver ? 1 : 0;
+                dsp.GetDSPRX(receiver, 0).BinOn = false;
+                dsp.GetDSPRX(receiver, 1).BinOn = false;
+            }
+            else if (wasLocked)
+                button.Enabled = mode != DSPMode.AM && mode != DSPMode.SAM && mode != DSPMode.FM;
+            toolTip1.SetToolTip(button, locked
+                ? "Binaural is unavailable while NR5 or NR6 is active."
+                : "Binaural - Outputs I and Q on the Left and Right audio channels.");
+        }
+
         private void ApplyExperimentalRX1NRMode(int nrMode)
         {
             if (nrMode < 0) nrMode = 0;
             if (nrMode > 6) nrMode = 6;
 
+            bool binauralWasLocked = experimental_rx1_nr_mode >= 5;
             experimental_rx1_nr_mode = nrMode;
+            UpdateNnrBinauralLock(false, binauralWasLocked);
             bool enabled = nrMode != 0;
 
             experimental_rx1_nr_updating = true;
@@ -73313,7 +73341,7 @@ namespace PowerSDR
                         {
                             if (chkVFOBTX.Checked) chkMON.Enabled = true;
 
-                            chkRX2BIN.Enabled = true;
+                            chkRX2BIN.Enabled = experimental_rx2_nr_mode < 5;
                         }
 
                         if (chkVFOBTX.Checked)
@@ -73342,7 +73370,7 @@ namespace PowerSDR
                             if (chkVFOBTX.Checked)
                                 chkMON.Enabled = true;
 
-                            chkRX2BIN.Enabled = true;
+                            chkRX2BIN.Enabled = experimental_rx2_nr_mode < 5;
                         }
                         if (chkVFOBTX.Checked)
                             ptbMic_Scroll(this, EventArgs.Empty);
@@ -73362,7 +73390,7 @@ namespace PowerSDR
                             if (chkVFOBTX.Checked)
                                 chkMON.Enabled = true;
 
-                            chkRX2BIN.Enabled = true;
+                            chkRX2BIN.Enabled = experimental_rx2_nr_mode < 5;
                         }
 
                         if (chkVFOBTX.Checked)
@@ -74050,7 +74078,9 @@ namespace PowerSDR
         private void ApplyExperimentalRX2NRMode(int mode)
         {
             mode = Math.Max(0, Math.Min(6, mode));
+            bool binauralWasLocked = experimental_rx2_nr_mode >= 5;
             experimental_rx2_nr_mode = mode;
+            UpdateNnrBinauralLock(true, binauralWasLocked);
             experimental_rx2_nr_updating = true;
             try
             {
@@ -74110,6 +74140,11 @@ namespace PowerSDR
 
         private void chkRX2BIN_CheckedChanged(object sender, System.EventArgs e)
         {
+            if (experimental_rx2_nr_mode >= 5 && chkRX2BIN.Checked)
+            {
+                chkRX2BIN.Checked = false;
+                return;
+            }
             if (!FWCEEPROM.RX2OK) return;
             if (chkRX2BIN.Checked) chkRX2BIN.BackColor = button_selected_color;
             else chkRX2BIN.BackColor = SystemColors.Control;

@@ -10,6 +10,8 @@ Nova branch: codex/powersdr-wdsp-2.10-nr5-nr6. Sem publicacao no GitHub.
 
 O botao NR percorre OFF, NR1, NR2, NR3, NR4, NR5 e NR6.
 NR5 = NNR Standard. NR6 = NNR Premium (maior consumo de CPU).
+NR5/NR6 desligam e bloqueiam BIN no receptor correspondente.
+Ao sair de NR5/NR6, BIN fica disponivel nos modos compativeis, mas nao liga sozinho.
 Setup > DSP > NNR fica imediatamente a direita de NRs, dentro de DSP.
 Ajustes independentes para RX1/RX-S e RX2; presets Default e Voice smooth.
 A posicao Pre/Post-AGC continua em DSP > NRs (WDSP), compartilhada pelos NRs.

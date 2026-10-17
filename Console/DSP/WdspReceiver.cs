@@ -297,9 +297,12 @@ namespace PowerSDR
                 rx.ANFGain != appliedAnfGain || rx.ANFLeak != appliedAnfLeak)
                 WdspNative.SetRXAANFVals(Rx1Channel, appliedAnfTaps = rx.ANFTaps,
                     appliedAnfDelay = rx.ANFDelay, appliedAnfGain = rx.ANFGain, appliedAnfLeak = rx.ANFLeak);
-            if (reset || rx.BinOn != appliedBinaural)
+            // Also enforce at the audio boundary for restored profiles and
+            // programmatic callers that do not pass through the UI checkbox.
+            bool binaural = rx.BinOn && noiseReductionMode < 5;
+            if (reset || binaural != appliedBinaural)
             {
-                appliedBinaural = rx.BinOn;
+                appliedBinaural = binaural;
                 WdspNative.SetRXAPanelBinaural(Rx1Channel, appliedBinaural ? 1 : 0);
             }
             bool modeChange = reset || rx.RXAGCMode != appliedAgc;
