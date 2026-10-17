@@ -6,7 +6,7 @@ embutidos na DLL. Nao abra duas versoes do PowerSDR ao mesmo tempo.
 Faca backup do perfil/banco de dados antes de testar.
 
 A branch de QA CW neural e a experimental 3.0.0.6 permanecem intactas.
-Branch candidata: codex/powersdr-v3.0.0.5-release. Sem publicacao no GitHub.
+Branch candidata: powersdr-v3.0.0.5-release. Sem publicacao no GitHub.
 Numeracao publica parte da ultima versao upstream 3.0.0.4.
 Consulte LICENSE-AUDIT.md antes de qualquer distribuicao publica.
 
