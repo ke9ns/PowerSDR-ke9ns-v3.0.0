@@ -50000,6 +50000,7 @@ namespace PowerSDR
         { get { return (long)(Stopwatch.GetTimestamp() * (1000.0 / Stopwatch.Frequency)); } }
         internal bool IsDspSpectrumFrozen(int source, double spectrumSum)
         {
+            if (wdspPreparing) return false;
             return dspRestartWatchdog.Observe(source, spectrumSum,
                 DspWatchdogMilliseconds, DspBackend.CompletedAudioBlocks);
         }
@@ -56660,8 +56661,12 @@ namespace PowerSDR
         //=======================================================================================================
         // chkPower
         private bool one_time = true;
+        private volatile bool wdspPreparing;
         private void chkPower_CheckedChanged(object sender, System.EventArgs e)
         {
+            // Modal preparation pumps messages; do not re-enter hardware start/stop.
+            // A stop request is handled after the native planner has finished.
+            if (wdspPreparing) return;
             dspRestartWatchdog.Reset(DspWatchdogMilliseconds, DspBackend.CompletedAudioBlocks);
 
             if (chkPower.Checked)
@@ -56763,7 +56768,32 @@ namespace PowerSDR
 
                 Thread.Sleep(100); // wait for hardware to settle before starting audio (possible sample rate change)
 
-                DspBackend.PrepareForAudio(block_size1, sample_rate1, app_data_path);
+                if (DspBackend.ExperimentalWdspRequested)
+                {
+                    int prepareCount = block_size1, prepareRate = sample_rate1;
+                    string prepareProfile = app_data_path;
+                    Exception preparationError = null;
+                    wdspPreparing = true;
+                    try
+                    {
+                        WdspPreparationDialog.Run(this, delegate(Action<string> progress)
+                        {
+                            DspBackend.PrepareForAudio(prepareCount, prepareRate, prepareProfile, progress);
+                        });
+                    }
+                    catch (Exception ex) { preparationError = ex; }
+                    finally { wdspPreparing = false; }
+                    if (preparationError != null || !chkPower.Checked)
+                    {
+                        // Complete the normal hardware shutdown only after planning ends.
+                        if (chkPower.Checked) chkPower.Checked = false;
+                        else chkPower_CheckedChanged(chkPower, EventArgs.Empty);
+                        if (preparationError != null)
+                            MessageBox.Show(this, preparationError.ToString(), "DSP preparation failed",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
                 dspRestartWatchdog.Reset(DspWatchdogMilliseconds, DspBackend.CompletedAudioBlocks);
 
                 switch (current_model)
@@ -57602,6 +57632,7 @@ namespace PowerSDR
         // ke9ns triggers FIRST
         public void Console_Closing1(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (wdspPreparing) { e.Cancel = true; return; }
             Debug.WriteLine("CONSOLE_CLOSING_Cancel");
 
 
@@ -57636,6 +57667,7 @@ namespace PowerSDR
         // ke9ns: actually runs Console_Closing1 just before this below
         public void Console_Closing(object sender, FormClosingEventArgs e)
         {
+            if (wdspPreparing) { e.Cancel = true; return; }
             if (DeferCloseForMap(e)) return;
             Direct2DDisplay.Shutdown();  //v3
 
@@ -60004,6 +60036,11 @@ namespace PowerSDR
         private bool mox = false;
         private void chkMOX_CheckedChanged2(object sender, System.EventArgs e)
         {
+            if (wdspPreparing)
+            {
+                if (chkMOX.Checked) chkMOX.Checked = false;
+                return;
+            }
             Debug.WriteLine("chkMOX checkedchanged2");
 
             //   Display.PON = false; // reset buffer on TX/RX changeover
@@ -60766,6 +60803,11 @@ namespace PowerSDR
 
         private void chkTUN_CheckedChanged(object sender, System.EventArgs e)
         {
+            if (wdspPreparing)
+            {
+                if (chkTUN.Checked) chkTUN.Checked = false;
+                return;
+            }
 
             if (chkTUN.Checked)
             {

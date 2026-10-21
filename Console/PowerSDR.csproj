@@ -687,6 +687,7 @@
     </Compile>
     <Compile Include="dttsp.cs" />
     <Compile Include="DSP\DspBackend.cs" />
+    <Compile Include="DSP\WdspPreparationDialog.cs" />
     <Compile Include="DSP\WdspReceiver.cs" />
     <Compile Include="DSP\WdspImpulseBlankers.cs" />
     <Compile Include="DSP\WdspNbSetupPanel.cs">

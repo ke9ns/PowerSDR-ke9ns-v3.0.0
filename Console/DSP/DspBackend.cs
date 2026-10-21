@@ -65,6 +65,9 @@ namespace PowerSDR
         private static readonly object preparationLock = new object();
         private static bool wisdomLoaded;
         internal static void PrepareForAudio(int count, int rate, string profileDirectory)
+        { PrepareForAudio(count, rate, profileDirectory, delegate(string stage) { }); }
+
+        internal static void PrepareForAudio(int count, int rate, string profileDirectory, Action<string> progress)
         {
             DSP dsp = receivers;
             if (!requested || dsp == null || count <= 0 || rate <= 0) return;
@@ -77,6 +80,7 @@ namespace PowerSDR
                     Path.Combine(profileDirectory, "wdsp-fftw-x86.wisdom");
                 if (!wisdomLoaded)
                 {
+                    progress("Loading saved FFT plans...");
                     wisdomLoaded = true;
                     try
                     {
@@ -86,12 +90,22 @@ namespace PowerSDR
                     catch (Exception ex)
                     { System.Diagnostics.Debug.WriteLine("WDSP cache ignored: " + ex.Message); }
                 }
+                progress("Preparing RX1 FFT plans and DSP...");
                 main.Prepare(dsp.GetDSPRX(0, 0), count, rate);
-                if (dsp.GetDSPRX(0, 1).Active) sub.Prepare(dsp.GetDSPRX(0, 1), count, rate);
-                if (dsp.GetDSPRX(1, 0).Active) rx2.Prepare(dsp.GetDSPRX(1, 0), count, rate);
+                if (dsp.GetDSPRX(0, 1).Active)
+                {
+                    progress("Preparing RX-S FFT plans and DSP...");
+                    sub.Prepare(dsp.GetDSPRX(0, 1), count, rate);
+                }
+                if (dsp.GetDSPRX(1, 0).Active)
+                {
+                    progress("Preparing RX2 FFT plans and DSP...");
+                    rx2.Prepare(dsp.GetDSPRX(1, 0), count, rate);
+                }
                 if (cache == null) return;
                 try
                 {
+                    progress("Saving FFT plans for the next start...");
                     string text = WdspNative.ExportWisdom();
                     Directory.CreateDirectory(profileDirectory);
                     string temporary = cache + "." + Guid.NewGuid().ToString("N") + ".tmp";
