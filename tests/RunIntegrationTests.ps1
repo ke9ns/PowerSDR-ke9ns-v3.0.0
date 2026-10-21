@@ -37,6 +37,7 @@ if ($Suite -in @('All','CwTap')) { Run-Test 'CwAudioTapTests' ($dspSources + (Jo
 if ($Suite -in @('All','Map')) {
     Run-Test 'MapShutdownTests' @((Join-Path $repo 'tests\MapShutdownTests.cs'),(Join-Path $repo 'Console\MapWorkerLifetime.cs'),(Join-Path $repo 'Console\MapShutdown.cs')) @('System.Drawing.dll','System.Windows.Forms.dll') @($OutputPath)
     Run-Test 'DatabaseCheckpointTests' @((Join-Path $repo 'tests\DatabaseCheckpointTests.cs')) @('System.Data.dll') @((Join-Path $RuntimePath 'PowerSDR.exe'), $OutputPath)
+    Run-Test 'RegionalBandStackTests' @((Join-Path $repo 'tests\RegionalBandStackTests.cs')) @('System.Data.dll') @((Join-Path $RuntimePath 'PowerSDR.exe'), $OutputPath)
 }
 if ($Suite -in @('All','IQ')) { Run-Test 'IqImageTests' ($dspSources + (Join-Path $repo 'tests\IqImageTests.cs')) }
 if ($Suite -in @('All','Resume')) {

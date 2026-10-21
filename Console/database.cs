@@ -3320,11 +3320,12 @@ namespace PowerSDR
 
         private static void AddBand2TextTable()  // IARU2 ham bandtext (because 60m is like IARU1)
         {
-            if (bandtextrefresh == false) ds.Tables.Add("BandText");
+            bool createTable = !ds.Tables.Contains("BandText");
+            if (createTable) ds.Tables.Add("BandText");
 
             DataTable t = ds.Tables["BandText"];
 
-            if (bandtextrefresh == false)
+            if (createTable)
             {
                 t.Columns.Add("Low", typeof(double));
                 t.Columns.Add("High", typeof(double));
@@ -3947,11 +3948,12 @@ namespace PowerSDR
 
         private static void AddBandAusTextTable()  // ke9ns add Australia
         {
-            if (bandtextrefresh == false) ds.Tables.Add("BandText");
+            bool createTable = !ds.Tables.Contains("BandText");
+            if (createTable) ds.Tables.Add("BandText");
 
             DataTable t = ds.Tables["BandText"];
 
-            if (bandtextrefresh == false)
+            if (createTable)
             {
                 t.Columns.Add("Low", typeof(double));
                 t.Columns.Add("High", typeof(double));
@@ -5626,15 +5628,26 @@ namespace PowerSDR
         } //addbandstacktable
 
 
+        // Called only for initial regional defaults or an explicitly requested
+        // BandStack refresh. Keep the table/schema; never add a duplicate table.
+        private static DataTable PrepareRegionalBandStack()
+        {
+            DataTable table = ds.Tables["BandStack"];
+            if (table == null)
+            {
+                table = ds.Tables.Add("BandStack");
+                table.Columns.Add("BandName", typeof(string));
+                table.Columns.Add("Mode", typeof(string));
+                table.Columns.Add("Filter", typeof(string));
+                table.Columns.Add("Freq", typeof(double));
+            }
+            else table.Clear();
+            return table;
+        }
+
         private static void AddBand2StackTable() // ke9ns add IARU2 same as US plan except 60m is same as IARU1
         {
-            ds.Tables.Add("BandStack");
-            DataTable t = ds.Tables["BandStack"];
-
-            t.Columns.Add("BandName", typeof(string));
-            t.Columns.Add("Mode", typeof(string));
-            t.Columns.Add("Filter", typeof(string));
-            t.Columns.Add("Freq", typeof(double));
+            DataTable t = PrepareRegionalBandStack();
 
             object[] data = {
                                 "160M", "CWL", "F5", 1.810000,
@@ -5711,13 +5724,7 @@ namespace PowerSDR
 
         private static void AddBandAusStackTable() // ke9ns add Australia (bandstack is like IARU1)
         {
-            ds.Tables.Add("BandStack");
-            DataTable t = ds.Tables["BandStack"];
-
-            t.Columns.Add("BandName", typeof(string));
-            t.Columns.Add("Mode", typeof(string));
-            t.Columns.Add("Filter", typeof(string));
-            t.Columns.Add("Freq", typeof(double));
+            DataTable t = PrepareRegionalBandStack();
 
             object[] data = {
                                 "160M", "CWL", "F5", 1.810000,
