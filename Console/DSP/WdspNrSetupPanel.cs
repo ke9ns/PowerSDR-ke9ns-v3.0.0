@@ -46,7 +46,7 @@ namespace PowerSDR
         {
             tpWdspNRs = new TabPage();
             tpWdspNRs.Name = "tpWdspNRs";
-            tpWdspNRs.Text = "NRs (WDSP)";
+            tpWdspNRs.Text = "NRs";
             tpWdspNRs.UseVisualStyleBackColor = true;
             tpWdspNRs.AutoScroll = true;
 
@@ -58,7 +58,7 @@ namespace PowerSDR
             comboWdspNrPosition = NewCombo("comboWdspNrPosition", 225, 6, 92,
                 new string[] { "Pre-AGC", "Post-AGC" }, 1);
             toolTip1.SetToolTip(comboWdspNrPosition,
-                "Select whether all four noise reducers run before or after AGC.");
+                "Select whether all six noise reducers run before or after AGC.");
             tpWdspNRs.Controls.Add(comboWdspNrPosition);
 
             LabelTS live = NewLabel("Settings apply in real time", 345, 10, 220);

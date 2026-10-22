@@ -837,6 +837,7 @@ namespace PowerSDR
 
             //RestoreSettings();
             Common.RestoreForm(this, "CWX", true);
+            InitializeNeuralCwPanel();
 
             //		cwxwpm = 20;
             //		udWPM.Value = cwxwpm;
@@ -896,6 +897,7 @@ namespace PowerSDR
         /// </summary>
         protected override void Dispose(bool disposing)
         {
+            if (disposing) DisposeNeuralCwPanel();
 #if (CWX_DEBUG)
 			Debug.WriteLine("dispose cwx");
 #endif
@@ -927,8 +929,7 @@ namespace PowerSDR
             }
             else
             {
-                this.Width = 704;
-                this.Height = 304;
+                this.ClientSize = new System.Drawing.Size(725, 462);
                 expandButton.Left = 680;
                 expandButton.Top = 264;
                 toolTip1.SetToolTip(expandButton, "Compress Form");
@@ -1108,6 +1109,7 @@ namespace PowerSDR
         // ke9ns this event is called (event manually added to initialization at top of this code) but now turned off
         private void CWX_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            StopNeuralCw();
 
             stopPoll = false; // ke9ns kill cw poll thread
 

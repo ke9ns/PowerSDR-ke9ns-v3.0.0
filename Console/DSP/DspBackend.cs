@@ -120,6 +120,11 @@ namespace PowerSDR
         internal static void SetRx2Anf(bool value) { rx2.SetRx1Anf(value); }
         internal static void SetRx2NoiseReductionMode(int value) { rx2.SetRx1NoiseReductionMode(value); }
         internal static bool LoadRnnrModel(string path) { return main.LoadRnnrModel(path); }
+        internal static void SetNnrParameters(int receiver, double[] values)
+        {
+            if (receiver == 0) { main.SetNnrParameters(values); sub.SetNnrParameters(values); }
+            else rx2.SetNnrParameters(values);
+        }
 
         internal static void SetRx1NrParameters(int position,
             int taps, int delay, int gain, int leak, int gainMethod, int npe, bool ae,
@@ -198,6 +203,8 @@ namespace PowerSDR
             rx2Transition.Apply(ol, oright, count);
         }
 
+        internal static Action<IntPtr, IntPtr, int, int> CwAudioSink;
+
         private static void ProcessPair(float* il, float* ir, float* ol, float* oright, int count)
         {
             DSP dsp = receivers;
@@ -210,6 +217,9 @@ namespace PowerSDR
             // Both consume original IQ before either overwrites the output.
             if (ma && !main.Process(m, il, ir, count)) return;
             if (sa && !sub.Process(s, il, ir, count)) return;
+            var cwSink = CwAudioSink;
+            if (cwSink != null && ma && (m.DSPMode == DSPMode.CWL || m.DSPMode == DSPMode.CWU))
+                main.DeliverCwAudio(cwSink, count, Audio.SampleRate1);
             if (ma) main.Mix(m, ol, oright, count, false, sa);
             if (sa) sub.Mix(s, ol, oright, count, ma, ma);
             if (!ma && !sa)

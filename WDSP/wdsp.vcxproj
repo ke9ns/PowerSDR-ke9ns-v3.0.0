@@ -274,6 +274,19 @@
     <ClInclude Include="zetaHat.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="extrapolate.c" />
+    <ClCompile Include="nnet.c" />
+    <ClCompile Include="nnio.c" />
+    <ClCompile Include="nnr.c" />
+    <ClCompile Include="nnr_model_0.c" />
+    <ClCompile Include="nnr_model_1.c" />
+    <ClCompile Include="nurbs.c" />
+    <ClCompile Include="nurbs_fit.c" />
+    <ClCompile Include="nurbs_spline.c" />
+    <ClCompile Include="phrot.c" />
+    <ClCompile Include="reshb.c" />
+    <ClCompile Include="snoop.c" />
+    <ClCompile Include="wbfm.c" />
     <ClCompile Include="amd.c" />
     <ClCompile Include="ammod.c" />
     <ClCompile Include="amsq.c" />

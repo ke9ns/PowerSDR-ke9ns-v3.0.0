@@ -90,6 +90,7 @@ namespace PowerSDR
 
             InitializeComponent();
             InitializeWdspNrTab();
+            InitializeNnrTab();
             InitializeWdspNbOptions();
 
             console = c;
@@ -325,6 +326,7 @@ namespace PowerSDR
 
             initializing = false;
             ApplyWdspNrSettings();
+            ApplyNnrSettings();
             ApplyWdspNbSettings();
             ApplyWdspNrModel();
             udDisplayScopeTime_ValueChanged(this, EventArgs.Empty);

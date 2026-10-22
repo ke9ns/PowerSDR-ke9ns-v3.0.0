@@ -14,7 +14,7 @@ namespace PowerSDR
     internal sealed unsafe class WdspReceiver
     {
         private readonly int Rx1Channel;
-        private const int MinimumWdspVersion = 129;
+        private const int MinimumWdspVersion = 210;
         private readonly object channelLock = new object();
         private readonly bool requested = true;
         private readonly WdspImpulseBlankers blankers;
@@ -49,7 +49,7 @@ namespace PowerSDR
         private volatile AGCMode agcMode = AGCMode.MED;
         private volatile int filterLow = 150;
         private volatile int filterHigh = 2850;
-        // 0=off, 1=ANR, 2=EMNR, 3=RNNoise, 4=SpecBleach.
+        // 0=off, 1=ANR, 2=EMNR, 3=RNNoise, 4=SpecBleach, 5/6=NNR.
         private volatile int noiseReductionMode;
         private volatile bool anf;
 
@@ -77,6 +77,14 @@ namespace PowerSDR
         private volatile int nr4RescaleTenths = 20;
         private volatile int nr4ThresholdTenths = -100;
         private volatile int nr4Algorithm;
+        // Immutable snapshot: UI changes never publish a partly updated configuration.
+        private volatile double[] nnrParameters = { -25, 12, 1, 10, 2, 0, 0 };
+        internal void SetNnrParameters(double[] values)
+        {
+            if (values == null || values.Length != 7) throw new ArgumentException("NNR parameters");
+            nnrParameters = (double[])values.Clone();
+            Interlocked.Increment(ref nrConfigurationVersion);
+        }
         private int nrConfigurationVersion;
         private int appliedNrConfigurationVersion = -1;
 
@@ -96,7 +104,7 @@ namespace PowerSDR
         internal void SetRx1NoiseReductionMode(int value)
         {
             if (value < 0) value = 0;
-            if (value > 4) value = 4;
+            if (value > 6) value = 6;
             noiseReductionMode = value;
         }
         internal void SetRx1Anf(bool value) { anf = value; }
@@ -256,6 +264,12 @@ namespace PowerSDR
             }
         }
 
+        internal void DeliverCwAudio(Action<IntPtr, IntPtr, int, int> sink, int count, int rate)
+        {
+            // Decoder failures must not propagate into the radio audio callback.
+            try { sink(scratchLeft, scratchRight, count, rate); } catch { }
+        }
+
         private void ApplyReceiverControls(DSPRX rx)
         {
             bool reset = !settingsApplied;
@@ -283,9 +297,12 @@ namespace PowerSDR
                 rx.ANFGain != appliedAnfGain || rx.ANFLeak != appliedAnfLeak)
                 WdspNative.SetRXAANFVals(Rx1Channel, appliedAnfTaps = rx.ANFTaps,
                     appliedAnfDelay = rx.ANFDelay, appliedAnfGain = rx.ANFGain, appliedAnfLeak = rx.ANFLeak);
-            if (reset || rx.BinOn != appliedBinaural)
+            // Also enforce at the audio boundary for restored profiles and
+            // programmatic callers that do not pass through the UI checkbox.
+            bool binaural = rx.BinOn && noiseReductionMode < 5;
+            if (reset || binaural != appliedBinaural)
             {
-                appliedBinaural = rx.BinOn;
+                appliedBinaural = binaural;
                 WdspNative.SetRXAPanelBinaural(Rx1Channel, appliedBinaural ? 1 : 0);
             }
             bool modeChange = reset || rx.RXAGCMode != appliedAgc;
@@ -427,6 +444,14 @@ namespace PowerSDR
             if (nrParametersChanged)
             {
                 int position = nrPosition;
+                double[] nnr = nnrParameters;
+                WdspNative.SetRXANNRPosition(Rx1Channel, position);
+                WdspNative.SetRXANNRMaskFloor(Rx1Channel, nnr[0]);
+                WdspNative.SetRXANNRMaxGain(Rx1Channel, nnr[1]);
+                WdspNative.SetRXANNRAlpha(Rx1Channel, nnr[2]);
+                WdspNative.SetRXANNRAlphaKnee(Rx1Channel, nnr[3]);
+                WdspNative.SetRXANNRTau(Rx1Channel, nnr[4]);
+                WdspNative.SetRXANNRSmooth(Rx1Channel, nnr[5], nnr[6]);
                 WdspNative.SetRXAANRPosition(Rx1Channel, position);
                 WdspNative.SetRXAANRVals(Rx1Channel, nr1Taps, nr1Delay,
                     nr1Gain * 1.0e-6, nr1Leakage * 1.0e-3);
@@ -468,6 +493,7 @@ namespace PowerSDR
                 WdspNative.SetRXAEMNRRun(Rx1Channel, 0);
                 WdspNative.SetRXARNNRRun(Rx1Channel, 0);
                 WdspNative.SetRXASBNRRun(Rx1Channel, 0);
+                WdspNative.SetRXANNRRun(Rx1Channel, 0);
 
                 switch (wantedNoiseReductionMode)
                 {
@@ -475,6 +501,13 @@ namespace PowerSDR
                     case 2: WdspNative.SetRXAEMNRRun(Rx1Channel, 1); break;
                     case 3: WdspNative.SetRXARNNRRun(Rx1Channel, 1); break;
                     case 4: WdspNative.SetRXASBNRRun(Rx1Channel, 1); break;
+                    case 5:
+                    case 6:
+                        int model = wantedNoiseReductionMode - 5;
+                        if (WdspNative.SetRXANNRModel(Rx1Channel, model) != model)
+                            throw new InvalidOperationException("WDSP NNR model unavailable.");
+                        WdspNative.SetRXANNRRun(Rx1Channel, 1);
+                        break;
                 }
             }
             if (anfChanged)

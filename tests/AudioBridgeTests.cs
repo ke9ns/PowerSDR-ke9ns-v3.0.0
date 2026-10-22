@@ -174,7 +174,16 @@ namespace PowerSDR
             dsp.Main.NBOn=false; dsp.Main.SDROM=true;
             double[] nb2=Run("NB2 clean tone"); Check(nb2[0]>baseline[0]*0.8,"NB2 passes clean signal");
             dsp.Main.NBOn=true;
-            for(int nr=1;nr<=4;nr++) { DspBackend.SetRx1NoiseReductionMode(nr); Run("NR"+nr+" + NB1/NB2"); }
+            for(int nr=1;nr<=6;nr++) { DspBackend.SetRx1NoiseReductionMode(nr); Run("NR"+nr+" + NB1/NB2"); }
+            dsp.Main.BinOn = true; // Bypass UI: audio boundary must still protect both channels.
+            foreach(int nr in new[]{5,6})
+            {
+                DspBackend.SetRx1NoiseReductionMode(nr);
+                double[] stereo = Run("NR"+nr+" rejects binaural");
+                Check(stereo[0]>1e-9 && Math.Abs(stereo[0]-stereo[1])<stereo[0]*0.001,
+                    "NNR must play equally on both sides even if BIN was requested");
+            }
+            dsp.Main.BinOn = false;
             Console.WriteLine("PASS: RX EQ, manual/automatic notches, sideband signs, RX-S, routing, AGC, diversity, NBs/NRs, and preserved RX2/TX buffers.");
         }
     }

@@ -125,6 +125,25 @@ namespace PowerSDR
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void SetRXAANRRun(int channel, int run);
 
+        [DllImport("wdsp.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void SetRXANNRRun(int channel, int run);
+        [DllImport("wdsp.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void SetRXANNRPosition(int channel, int position);
+        [DllImport("wdsp.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int SetRXANNRModel(int channel, int model);
+        [DllImport("wdsp.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void SetRXANNRMaskFloor(int channel, double value);
+        [DllImport("wdsp.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void SetRXANNRMaxGain(int channel, double value);
+        [DllImport("wdsp.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void SetRXANNRAlpha(int channel, double value);
+        [DllImport("wdsp.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void SetRXANNRAlphaKnee(int channel, double value);
+        [DllImport("wdsp.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void SetRXANNRTau(int channel, double value);
+        [DllImport("wdsp.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void SetRXANNRSmooth(int channel, double attack, double release);
+
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void SetRXAANRPosition(int channel, int position);
 

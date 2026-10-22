@@ -10,6 +10,13 @@
 
 # PowerSDR_KE9NS_v3.0.0
 
+Release candidate 3.0.0.5: see [build instructions](BUILDING-v3.0.0.5.md)
+and [distribution/license audit](LICENSE-AUDIT.md) before packaging or publishing.
+The historical QA runtime folder is not an approved public installer payload.
+For Darrin's source review and MSI preparation, see
+[maintainer handoff](MAINTAINER-HANDOFF-3.0.0.5.md) and
+[third-party notices](THIRD-PARTY-NOTICES.md).
+
 Based PowerSDR ke9ns v2.8.0.338
 
 Ke9ns V2.8 is a highly modified version of that PowerSDR software

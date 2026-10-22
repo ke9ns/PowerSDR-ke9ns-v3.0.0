@@ -1,0 +1,29 @@
+PowerSDR 3.0.0.5 - WDSP 2.10 / NR5 / NR6 - release candidate QA
+
+Extraia o ZIP COMPLETO em uma pasta nova. Nao substitua apenas o executavel:
+esta versao precisa da nova wdsp.dll de 32 bits. Os modelos NR5/NR6 estao
+embutidos na DLL. Nao abra duas versoes do PowerSDR ao mesmo tempo.
+Faca backup do perfil/banco de dados antes de testar.
+
+A branch de QA CW neural e a experimental 3.0.0.6 permanecem intactas.
+Branch candidata: powersdr-v3.0.0.5-release. Sem publicacao no GitHub.
+Numeracao publica parte da ultima versao upstream 3.0.0.4.
+Consulte LICENSE-AUDIT.md antes de qualquer distribuicao publica.
+
+O botao NR percorre OFF, NR1, NR2, NR3, NR4, NR5 e NR6.
+NR5 = NNR Standard. NR6 = NNR Premium (maior consumo de CPU).
+NR5/NR6 desligam e bloqueiam BIN no receptor correspondente.
+Ao sair de NR5/NR6, BIN fica disponivel nos modos compativeis, mas nao liga sozinho.
+Setup > DSP > NNR fica imediatamente a direita de NRs, dentro de DSP.
+Ajustes independentes para RX1/RX-S e RX2; presets Default e Voice smooth.
+A posicao Pre/Post-AGC continua em DSP > NRs, compartilhada pelos NRs.
+
+A primeira preparacao FFTW pode demorar. No teste local sem cache levou
+cerca de 82 segundos; com o cache pronto, 181 ms. Aguarde a conclusao.
+Mudancas de taxa ou buffer podem exigir nova preparacao.
+
+Validar no FLEX: partida, NR1-6, retorno do PTT, RX2, diversidade, CW neural,
+squelch, EQ, notch, 48/96/192 kHz e estabilidade com FPS elevado.
+Comece com volume baixo. Se NR6 ficar pesado, compare com NR5.
+Os testes locais usam sinais sinteticos; a aprovacao de RF/audio real depende
+do QA com o radio. Guardar o ZIP anterior para retorno, se necessario.

@@ -61,7 +61,7 @@ static inline float lin_to_db(float lin) { return 20.0f * log10f(fmaxf(lin, 1e-1
 #define AGC_RMS_FLOOR   (1e-6f)
 #define SAFETY_CEIL     (30000.0f)
 #define VU3RDD_DEFAULT_GAIN (500000.0f)
-// Post-AGC audio is normalized; RNNoise expects signed 16-bit PCM scale.
+// Preserve PowerSDR's normalized post-AGC audio scaling.
 #define RNNR_POST_AGC_GAIN (32768.0f)
 
 static float agc_alpha_ms(float ms, float frame_hz) {
@@ -167,8 +167,9 @@ void SetRXARNNRRun (int channel, int run)
 	if (a->run != run)
 	{
 		RXAbp1Check (channel, rxa[channel].amd.p->run, rxa[channel].snba.p->run, 
-                             rxa[channel].emnr.p->run, rxa[channel].anf.p->run, rxa[channel].anr.p->run,
-                             run, rxa[channel].sbnr.p->run); // NR3 + NR4 support
+							 rxa[channel].emnr.p->run, getRun_nnr(rxa[channel].nnr.p),
+							 rxa[channel].anf.p->run, rxa[channel].anr.p->run,
+							 run, rxa[channel].sbnr.p->run); // NR3 + NR4 support
 
 		EnterCriticalSection (&ch[channel].csDSP);
 		a->run = run;
