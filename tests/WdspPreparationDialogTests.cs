@@ -29,7 +29,7 @@ namespace PowerSDR
                     bool shown = WdspPreparationDialog.Run(null, delegate(Action<string> progress) {
                         workerId = Thread.CurrentThread.ManagedThreadId;
                         progress("Synthetic cold planning test");
-                        Thread.Sleep(1000);
+                        Thread.Sleep(WdspPreparationDialog.DisplayDelayMilliseconds + 700);
                     });
                     if (!shown) throw new Exception("Slow preparation must show progress.");
                 }
@@ -46,7 +46,7 @@ namespace PowerSDR
                 }
                 bool delayedFailure = false;
                 try { WdspPreparationDialog.Run(null, delegate(Action<string> p) {
-                    Thread.Sleep(600); throw new Exception("delayed failure");
+                    Thread.Sleep(WdspPreparationDialog.DisplayDelayMilliseconds + 300); throw new Exception("delayed failure");
                 }); }
                 catch (InvalidOperationException ex) { delayedFailure = ex.InnerException.Message == "delayed failure"; }
                 if (!delayedFailure) throw new Exception("Delayed failure was not propagated.");

@@ -10,7 +10,7 @@ namespace PowerSDR
     // that worker or dispose its channels while FFTW owns them.
     internal sealed class WdspPreparationDialog : Form
     {
-        internal const int DisplayDelayMilliseconds = 300;
+        internal const int DisplayDelayMilliseconds = 1000;
         private readonly Action<Action<string>> prepare;
         private readonly Label status = new Label();
         private readonly System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
