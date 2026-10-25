@@ -6,6 +6,10 @@ the application appear hung. This patch retains FFTW planning quality and the
 existing cache, but performs preparation on a dedicated worker before Audio.Start.
 
 A modal English dialog shows the stage, elapsed time and marquee animation.
+The worker starts before the dialog is displayed. A bounded wait of at most
+300 ms suppresses the window for fast cached restarts (including Setup OK).
+If preparation takes longer, the modal message loop remains responsive until
+completion. This does not skip preparation or assume that a cache is valid.
 There is no fabricated percentage or fixed timeout. Native planning is not
 aborted. The dialog closes automatically when preparation finishes. Closing
 the console, MOX/Tune and reentrant hardware start/stop are guarded during this

@@ -10,6 +10,7 @@ namespace PowerSDR
     // that worker or dispose its channels while FFTW owns them.
     internal sealed class WdspPreparationDialog : Form
     {
+        internal const int DisplayDelayMilliseconds = 300;
         private readonly Action<Action<string>> prepare;
         private readonly Label status = new Label();
         private readonly System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
@@ -44,8 +45,12 @@ namespace PowerSDR
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
-            elapsed.Start();
             timer.Start();
+        }
+
+        private Thread StartPreparation()
+        {
+            elapsed.Start();
             var worker = new Thread(delegate() {
                 try { prepare(delegate(string text) { stage = text; }); }
                 catch (Exception ex) { failure = ex; }
@@ -54,6 +59,7 @@ namespace PowerSDR
             worker.IsBackground = true;
             worker.Name = "WDSP FFT preparation";
             worker.Start();
+            return worker;
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -68,13 +74,19 @@ namespace PowerSDR
             base.Dispose(disposing);
         }
 
-        internal static void Run(IWin32Window owner, Action<Action<string>> prepare)
+        internal static bool Run(IWin32Window owner, Action<Action<string>> prepare)
         {
             using (var dialog = new WdspPreparationDialog(prepare))
             {
-                dialog.ShowDialog(owner);
+                // Setup can restart audio with already prepared channels. Give
+                // that fast path a short, bounded interval without showing a
+                // window. Only real waits enter the responsive modal loop.
+                Thread worker = dialog.StartPreparation();
+                bool shown = !worker.Join(DisplayDelayMilliseconds);
+                if (shown) dialog.ShowDialog(owner);
                 if (dialog.failure != null)
                     throw new InvalidOperationException("WDSP preparation failed.", dialog.failure);
+                return shown;
             }
         }
     }
