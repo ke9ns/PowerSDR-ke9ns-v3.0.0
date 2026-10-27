@@ -579,8 +579,11 @@ namespace PowerSDR
 
             //  checkBoxMUF.Checked = false; // turn voacap mapping off
 
-            // This form is hidden, not disposed. Do not spin on the UI thread.
-            // Console shutdown separately waits for every registered map worker.
+            do
+            {
+                Debug.WriteLine("Waiting for VOACAP thread to finish");
+
+            } while (VOATHREAD == true);
 
 
             if (timerID != 0)
@@ -615,7 +618,7 @@ namespace PowerSDR
         public void BeamMap()
         {
 
-             string downloadPath1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
+            string downloadPath1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
             string fullPath = Path.Combine(downloadPath1, "AzimuthalMap.pdf");
             string BMPFile = Path.Combine(downloadPath1, "AzimuthalMap.bmp");
 
@@ -790,7 +793,7 @@ namespace PowerSDR
 
                     textBox1.Text = textBox1.Text + "Lat and Long: " + latlong + "\r\n";
 
-                   string downloadPath1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),@"FlexRadio Systems\PowerSDR v2.8.0\");
+                    string downloadPath1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),@"FlexRadio Systems\PowerSDR v2.8.0\");
                     string originalFile = Path.Combine(downloadPath1, "AzimuthalMap.pdf");
                     string BMPFile = Path.Combine(downloadPath1, "AzimuthalMap.bmp");
 
@@ -885,7 +888,7 @@ namespace PowerSDR
                                     udDisplayLong.BackColor = Color.LightGreen;
 
                                     // need to expand %userprofile% before creating the actual path
-                                     string pdfPath = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.pdf");
+                                    string pdfPath = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.pdf");
                                     string jpgFile = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.jpg");
                                     string bmpFile = Environment.ExpandEnvironmentVariables(@"%userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v2.8.0\AzimuthalMap.bmp");
 
@@ -8266,7 +8269,15 @@ namespace PowerSDR
 
                 if (chkISS.Checked == true)
                 {
-                    StartMapWorker("ISS Orbit Plot Thread", ISSOrbit, ThreadPriority.BelowNormal);
+                    Thread t1 = new Thread(new ThreadStart(ISSOrbit));                                // turn on track map (sun, grayline, voacap, or beacon)
+
+                    t1.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+                    t1.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+
+                    t1.Name = "ISS Orbit Plot Thread";
+                    t1.IsBackground = true;
+                    t1.Priority = ThreadPriority.BelowNormal;
+                    t1.Start();
 
                 } //  if (chkISS.Checked == true)
 
@@ -8276,8 +8287,17 @@ namespace PowerSDR
 
                 VOATHREAD1 = false;
 
+                Thread t = new Thread(new ThreadStart(TrackSun));  // turn on track map (sun, grayline, voacap, or beacon)
+
+                t.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+                t.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+
                 textBox1.Text = "Clicked to Turn ON GrayLine Sun Tracker\r\n";
-                StartMapWorker("Track Thread", RunTrackSun, ThreadPriority.Normal);
+
+                t.Name = "Track Thread";
+                t.IsBackground = true;
+                t.Priority = ThreadPriority.Normal;
+                t.Start();
 
 
                 if (SP5_Active == 0) textBox1.Text += "ON but just turned OFF1";
@@ -8464,7 +8484,7 @@ namespace PowerSDR
 
             ISSCount = 0;
 
-            while (ISSCount < 20 && !mapWorkers.Stopping) // was 360 for 90min orbit period
+            while (ISSCount < 20) // was 360 for 90min orbit period 
             {
 
                 Thread.Sleep(50);
@@ -8532,9 +8552,7 @@ namespace PowerSDR
                             ISS_YY[ISSCount] = ISS_Y = (int)(((180 - (ISSLATMap + 90)) / 180.0) * Sun_WidthY1) + Sun_Top1;  //latitude 90N to -90S
                             ISS_XX[ISSCount] = ISS_X = (int)(((ISSLONMap + 180.0) / 360.0) * Sun_Width) + Sun_Left;  // longitude -180W to +180E
 
-                            // TrackSun draws these stored points on its next frame.
-                            // Never share its Graphics instance with this worker.
-                            Map_Last |= 2;
+                            if (g != null) g.DrawLine(OrgPen, ISS_X, ISS_Y, ISS_X + 1, ISS_Y + 1);
 
 
                         } //get next data point
@@ -8613,6 +8631,7 @@ namespace PowerSDR
         public int hpos = 0; // horizontal pos of day of week indicator .100
 
         public int lastholdY = 0; // ke9ns add .193
+        Graphics g;
 
         public bool TrackOFF = false; // ke9ns add .197
 
@@ -8680,12 +8699,12 @@ namespace PowerSDR
 
             //--------------------------------------------------------------------------------------------
             // stay in this thread loop until you turn off tracking
-            for (; SP5_Active == 1 && !mapWorkers.Stopping;) // map tracking
+            for (; SP5_Active == 1;) // turn on track map (sun, grayline, voacap, or beacon)
             {
 
                 Thread.Sleep(100);
 
-                if (SP5_Active == 0 || mapWorkers.Stopping)
+                if (SP5_Active == 0)
                 {
                     UTCLAST2 = 0;
                     continue; // tracking turned OFF
@@ -9283,9 +9302,7 @@ namespace PowerSDR
                         //   else MAP = new Bitmap(Map_image2); // load up Map image
 
 
-                        System.Drawing.Image completedMap = MAP;
-                        using (Graphics g = Graphics.FromImage(completedMap))
-                        {
+                        g = Graphics.FromImage(MAP); //  MAP = Lighten(new Bitmap(Map_image), MB);  darken or light world map first
 
 
                         g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -10888,8 +10905,8 @@ namespace PowerSDR
 
                         //  Darken();
 
-                        } // release Graphics before publishing the completed map
-                        PublishTrackedMap(completedMap);
+                        console.picDisplay.SizeMode = PictureBoxSizeMode.StretchImage;           // put image back onto picDisplay background image
+                        console.picDisplay.BackgroundImage = MAP;                                  // MAP.Save("test.bmp");  save modified map_image to actual file on hard drive
 
 
                         beacon4 = false; // reset the beacon scanner flag (you just updated the map)
@@ -11852,7 +11869,15 @@ namespace PowerSDR
 
                     if (chkISS.Checked == true)
                     {
-                        StartMapWorker("ISS Orbit Plot Thread", ISSOrbit, ThreadPriority.BelowNormal);
+                        Thread t1 = new Thread(new ThreadStart(ISSOrbit));                                // turn on track map (sun, grayline, voacap, or beacon)
+
+                        t1.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+                        t1.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+
+                        t1.Name = "ISS Orbit Plot Thread";
+                        t1.IsBackground = true;
+                        t1.Priority = ThreadPriority.BelowNormal;
+                        t1.Start();
 
                     } //  if (chkISS.Checked == true)
 
@@ -11862,8 +11887,18 @@ namespace PowerSDR
                     UTCLAST2 = 0;
                     VOATHREAD1 = false;
 
+                    Thread t = new Thread(new ThreadStart(TrackSun)); // turn on track map (sun, grayline, voacap, or beacon)
+
+                    t.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+                    t.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+
                     UTCLAST2 = 0;
-                    StartMapWorker("Track Thread", RunTrackSun, ThreadPriority.Normal);
+
+
+                    t.Name = "Track Thread";
+                    t.IsBackground = true;
+                    t.Priority = ThreadPriority.Normal;
+                    t.Start();
 
 
 
@@ -14199,7 +14234,7 @@ namespace PowerSDR
             Debug.WriteLine("VOA_CHECK: " + VOARUN);
 
 
-            if (VOARUN == true || VOATHREAD1 == true || mapWorkers.Stopping)
+            if (VOARUN == true || VOATHREAD1 == true)
             {
                 return; // dont do a VOACAP update if your aleady doing one.
             }
@@ -14309,8 +14344,15 @@ namespace PowerSDR
 
                 if (VOATHREAD1 == false) // if true, then form must be closing
                 {
-                    if (!StartMapWorker("VOACAP Thread", RunVoacap, ThreadPriority.Normal)
-                        && mapWorkers.Stopping) VOARUN = false;
+                    Thread t = new Thread(new ThreadStart(VOACAP)); // generate the VOA data on the MAP
+
+                    t.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+                    t.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+
+                    t.Name = "VOACAP Thread";
+                    t.IsBackground = true;
+                    t.Priority = ThreadPriority.Normal;
+                    t.Start();
                 }
 
             }
@@ -16536,6 +16578,11 @@ namespace PowerSDR
             // need to re-scale to fit 1000 x 507
             // water temp map of world
 
+            //.340
+            //https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/imergert_composite.now.png
+            // 3600 x 1800
+            // need to re-scale to fit 1000 x 507
+
             // .241
             // IR Cloud map of mid-latitudes   University of Wisconsin-Madison  http://tropic.ssec.wisc.edu/tropic.php
 
@@ -16551,6 +16598,7 @@ namespace PowerSDR
                 chkLightningMap.Checked = false; //.240
                 chkCloudOn.Checked = false; //.241
                 chkWaterTempMap.Checked = false; //.316
+                chkPrecipOn.Checked = false; //.340
 
                 var CSR = System.Windows.Forms.Cursor.Current; //.242
 
@@ -16593,6 +16641,7 @@ namespace PowerSDR
                         g.CompositingQuality = CompositingQuality.HighQuality;
                         g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                         g.SmoothingMode = SmoothingMode.HighQuality;
+                        g.PixelOffsetMode = PixelOffsetMode.HighQuality; //.340
 
                         g.DrawImage(img8, r1);  // draw F layer
 
@@ -16664,6 +16713,7 @@ namespace PowerSDR
                 chkLightningMap.Checked = false;
                 chkCloudOn.Checked = false; //.241
                 chkWaterTempMap.Checked = false; //.316 
+                chkPrecipOn.Checked = false; //.340
 
                 int x = 17;
                 int x1 = 27;
@@ -16674,8 +16724,6 @@ namespace PowerSDR
                 {
 
                     System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor; // .242 change cursor when to wait cursor when loading new image
-
-
 
                     System.Drawing.Image imag = System.Drawing.Image.FromFile(console.AppDataPath + "DRAP.png"); // bring in D-layer full image
                     Bitmap img7 = new Bitmap(imag);                 // ke9ns: To avoid indexed pixel format PNG issues
@@ -16692,6 +16740,7 @@ namespace PowerSDR
                         g.CompositingQuality = CompositingQuality.HighQuality;
                         g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                         g.SmoothingMode = SmoothingMode.HighQuality;
+                        g.PixelOffsetMode = PixelOffsetMode.HighQuality; //.340
 
                         g.DrawImage(img8, r1);  // draw D layer
 
@@ -16736,6 +16785,7 @@ namespace PowerSDR
                 chkFLayerON.Checked = false; //.240
                 chkCloudOn.Checked = false; //.241
                 chkWaterTempMap.Checked = false; //.316
+                chkPrecipOn.Checked = false; //.340
 
                 Bitmap result = new Bitmap(1000, 507);          // this is the size we really want so it matches the built in world map
                 int x = 55;
@@ -16791,6 +16841,7 @@ namespace PowerSDR
                             g.CompositingQuality = CompositingQuality.HighQuality;
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                             g.SmoothingMode = SmoothingMode.HighQuality;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality; //.340
 
                             g.DrawImage(img8, r1);  // draw lightning map
 
@@ -16837,6 +16888,7 @@ namespace PowerSDR
                             g.CompositingQuality = CompositingQuality.HighQuality;
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                             g.SmoothingMode = SmoothingMode.HighQuality;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;// .340
 
                             g.DrawImage(img8, r1);  // draw lightning map
 
@@ -16866,6 +16918,7 @@ namespace PowerSDR
                 chkFLayerON.Checked = false; //.240
                 chkCloudOn.Checked = false; //.241
                 chkLightningMap.Checked = false; //.316
+                chkPrecipOn.Checked = false; //.340
 
                 Bitmap result = new Bitmap(1000, 507);          // this is the size we really want so it matches the built in world map
                 int x = 55;
@@ -16923,6 +16976,7 @@ namespace PowerSDR
                             g.CompositingQuality = CompositingQuality.HighQuality;
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                             g.SmoothingMode = SmoothingMode.HighQuality;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
                             g.DrawImage(img8, r1);  // draw lightning map
 
@@ -16949,6 +17003,7 @@ namespace PowerSDR
                             g.CompositingQuality = CompositingQuality.HighQuality;
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                             g.SmoothingMode = SmoothingMode.HighQuality;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
                             g.DrawImage(img9, r2);  // draw lightning map
 
@@ -17002,6 +17057,7 @@ namespace PowerSDR
                             g.CompositingQuality = CompositingQuality.HighQuality;
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                             g.SmoothingMode = SmoothingMode.HighQuality;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
                             // darken this map as it starts out too bright for the panadapter display 
                             float[][] colorMatrixElements =
@@ -17038,6 +17094,7 @@ namespace PowerSDR
                             g.CompositingQuality = CompositingQuality.HighQuality;
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                             g.SmoothingMode = SmoothingMode.HighQuality;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
 
                             float[][] colorMatrixElements =
@@ -17084,6 +17141,137 @@ namespace PowerSDR
                     }
                 }
             } // chkWaterTempMap
+            // This is a cloud cover map: https://wvs.earthdata.nasa.gov/api/v1/snapshot?REQUEST=GetSnapshot&TIME=2026-10-11T18:00:00Z&BBOX=-90,-180,90,180&CRS=EPSG:4326&LAYERS=MODIS_Terra_CorrectedReflectance_TrueColor&FORMAT=image/png&WIDTH=4096&HEIGHT=2048
+            else if (chkPrecipOn.Checked) //.340 https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/imergert_composite.now.png  3600 x 1800
+            {
+                chkDLayerON.Checked = false;
+                chkFLayerON.Checked = false; //.240
+                chkCloudOn.Checked = false; //.241
+                chkLightningMap.Checked = false; //.316
+                chkWaterTempMap.Checked = false; //.316
+
+                Bitmap result = new Bitmap(1000, 507);          // this is the size we really want so it matches the built in world map
+              
+                var CSR = System.Windows.Forms.Cursor.Current; //.242
+
+                if (console.ZoomOn) //.242 
+                {
+
+                    try
+                    {
+                        System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor; // .242 change cursor when to wait cursor when loading new image
+
+                      //  System.Drawing.Image imag = System.Drawing.Image.FromFile(console.AppDataPath + "imergert_composite.now.png"); //.340
+                        System.Drawing.Image imag = System.Drawing.Image.FromFile(console.AppDataPath + "imergert_1080p.now.png"); //.340
+
+                        Bitmap img7 = new Bitmap(imag); // 3600x1800image      ke9ns: To avoid indexed pixel format PNG issues
+
+                        Rectangle r1 = new Rectangle(64, 19, 875, 450); // 55, 0, 887, 457 this is where to place the smaller lightning world map into the big result bitmap
+
+                        int xZ = console.ZoomX;     // =  mouse X location on a 1000 wide bitmap
+                        int yZ = console.ZoomY;     // = mouse Y location on a 507 tall bitmap
+                      //  float fZ = console.ZoomFactor; //= 2.0
+           
+                     //   int xW = (int)(((float)xZ -100) * 3.80); //starting position on 3600x1800 map to get zoomed area to fit into 300x230 zoom window on panadapter display 
+                      //  int yW = (int)(((float)yZ - 100) * 3.55); // 3.55 and 3.8 are the scaling factors to go from 1000x507 to 3600x1800 original image size
+
+                        int xW = (int)(((float)xZ - 100) * 1.92); //starting position on 3600x1800 map to get zoomed area to fit into 300x230 zoom window on panadapter display 
+                        int yW = (int)(((float)yZ - 100) * 2.13); // 3.55 and 3.8 are the scaling factors to go from 1000x507 to 3600x1800 original image size
+
+                        int xF1 = (int)(300.0 * 1.5); // how many pixels to grab from the 3600x1800 original image to fill the 300x230 zoom window on the panadapter display
+                        int yF1 = (int)(230.0 * 1.5); //
+                                        
+                        Rectangle SZoom = new Rectangle(xW, yW, xF1, yF1); // zoomed area of Precip map based on 3600x1800 original image
+
+                        Rectangle DZoom = new Rectangle(xZ, yZ, 300, 230); // this is the zoom window that will be drawn on the panadapter display where you clicked
+
+                        if (xZ > 700)
+                        {
+                            if (yZ > 300)
+                            {
+                                DZoom = new Rectangle(xZ - 150, yZ - 110, 300, 230); // zoomed image goes in here
+                            }
+                            else DZoom = new Rectangle(xZ - 150, yZ, 300, 230); // zoomed image goes in here
+                        }
+                        else if (yZ > 300)
+                        {
+                            DZoom = new Rectangle(xZ, yZ - 110, 300, 230); // zoomed image goes in here
+                        }
+
+
+                        using (Graphics g = Graphics.FromImage(result))
+                        {
+                            g.CompositingQuality = CompositingQuality.HighQuality;
+                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            g.SmoothingMode = SmoothingMode.HighQuality;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                            g.DrawImage(img7, r1);  // draw 3600x1800 precip map reduced to 875x450 (1000x507 size of panadapter) 
+                            g.DrawString("Nasa", font2, new SolidBrush(Color.White), 10, 15);
+                            g.DrawString("Precipitation Map", font2, new SolidBrush(Color.White), 80, 30);
+
+                            g.DrawImage(img7, DZoom, SZoom, GraphicsUnit.Pixel);  // draw Precip map zoom closeup
+                            g.DrawRectangle(new Pen(Color.Red, 5.0f), DZoom); // draw red rectangle around zoomed area                 
+
+                        } // using
+
+                      
+                        System.Windows.Forms.Cursor.Current = CSR; //.242
+                        MAP = Lighten(result, MBG, MB);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        console.MapNOAA = true; //.243 update map
+
+                        // MessageBox.Show(ex.Message);
+                        MAP = Lighten(new Bitmap(Map_image), MBG, MB);
+                        System.Windows.Forms.Cursor.Current = CSR; //.242
+                    }
+
+
+                } // ZoomOn == true
+                else // ZoomOn == false
+                {
+                    Debug.WriteLine("Precipitation map imergert_composite.now.png display now");
+
+                    try
+                    {
+                        System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor; // .242 change cursor when to wait cursor when loading new image
+
+                      //  System.Drawing.Image imag = System.Drawing.Image.FromFile(console.AppDataPath + "imergert_composite.now.png"); //.340
+                        System.Drawing.Image imag = System.Drawing.Image.FromFile(console.AppDataPath + "imergert_1080p.now.png"); //.340
+
+                        Bitmap img7 = new Bitmap(imag);                 // ke9ns: To avoid indexed pixel format PNG issues
+
+                         Rectangle r1 = new Rectangle(64, 19, 875, 450); // portal inside console panadapter display
+
+                        using (Graphics g = Graphics.FromImage(result))
+                        {
+                            g.CompositingQuality = CompositingQuality.HighQuality;
+                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            g.SmoothingMode = SmoothingMode.HighQuality;
+                            g. PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                            g.DrawImage(img7, r1);  // draw Precipitation map at 875x450 (1000x507) reduces from 3600 x 1800
+                            g.DrawString("NASA", font2, new SolidBrush(Color.White), 10, 15);
+                            g.DrawString("Precipitation Map", font2, new SolidBrush(Color.White), 10, 30);
+
+                        } // using
+                     
+                        MAP = Lighten(result, MBG, MB); // allow for darkening of the map to make it more visible on the panadapter display
+                        System.Windows.Forms.Cursor.Current = CSR; //.242
+                    }
+                    catch (Exception e)
+                    {
+                        console.MapNOAA = true; //.243 update map
+
+                        // MessageBox.Show(ex.Message);
+                        MAP = Lighten(new Bitmap(Map_image), MBG, MB);
+                        System.Windows.Forms.Cursor.Current = CSR; //.242
+                    }
+                }
+            } // chkPrecipON
 
             else if (chkCloudOn.Checked) // IRCloudE.jpg, IRCloudW.jpg, IRCloudS.jpg
             {
@@ -17091,6 +17279,7 @@ namespace PowerSDR
                 chkFLayerON.Checked = false; //.240
                 chkLightningMap.Checked = false; //.241
                 chkWaterTempMap.Checked = false; //.316 
+                chkPrecipOn.Checked = false; //.340
 
                 Debug.WriteLine("IR Cloud map DRAW");
 
@@ -17099,12 +17288,9 @@ namespace PowerSDR
 
                 if (console.ZoomOn)
                 {
-
-
                     try
                     {
                         System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor; // .242 change cursor when to wait cursor when loading new image
-
 
                         System.Drawing.Image imag = System.Drawing.Image.FromFile(console.AppDataPath + "IRCloudE.jpg"); //.241
                         System.Drawing.Image imag3 = System.Drawing.Image.FromFile(console.AppDataPath + "IRCloudW.jpg"); //.241
@@ -17179,6 +17365,7 @@ namespace PowerSDR
                             g.CompositingQuality = CompositingQuality.HighQuality;
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                             g.SmoothingMode = SmoothingMode.HighQuality;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
                             g.DrawImage(img111, r1);  // this results in a 
                             g.DrawImage(img222, r2);  // this results in a
@@ -17196,6 +17383,7 @@ namespace PowerSDR
                             g.CompositingQuality = CompositingQuality.HighQuality;
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                             g.SmoothingMode = SmoothingMode.HighQuality;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
 
                             g.DrawImage(result, 0, 0);
@@ -17305,6 +17493,7 @@ namespace PowerSDR
                             g.CompositingQuality = CompositingQuality.HighQuality;
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                             g.SmoothingMode = SmoothingMode.HighQuality;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
 
                             g.DrawImage(img111, r1);  // this results in a 
@@ -18355,30 +18544,30 @@ namespace PowerSDR
                 SP_SPOTSTART = false; //.279b
                 SP_SHOWDX = false;
 
-               
-                    try
-                    {
-                        SP_writer.Close();
-                        SP_reader.Close();
-                    }
-                    catch (Exception)
-                    {
-                        Debug.Write("writer/reader was not open to close");
-                    }
 
-                    try
-                    {
+                try
+                {
+                    SP_writer.Close();
+                    SP_reader.Close();
+                }
+                catch (Exception)
+                {
+                    Debug.Write("writer/reader was not open to close");
+                }
 
-                        networkStream.Close();
-                        client.Close();
-                    }
-                    catch (Exception)
-                    {
-                        Debug.Write("networkstream was never open to close");
-                    }
+                try
+                {
 
-                    SP_Active = 0; // turn off DX Spotter
-                    SP2_Active = 0; // turn off DX Spotter
+                    networkStream.Close();
+                    client.Close();
+                }
+                catch (Exception)
+                {
+                    Debug.Write("networkstream was never open to close");
+                }
+
+                SP_Active = 0; // turn off DX Spotter
+                SP2_Active = 0; // turn off DX Spotter
 
 
 
@@ -18408,7 +18597,7 @@ namespace PowerSDR
                 lotwon = false;
                 chkLoTWOn.Checked = false;
 
-                button4.BackColor = Color.Ivory; 
+                button4.BackColor = Color.Ivory;
 
                 // download the latest FCC l_amat.zip file from the FCC website and extract it to the Database folder
                 Thread t = new Thread(new ThreadStart(FCC_l_amat)); //.337
@@ -18674,13 +18863,14 @@ namespace PowerSDR
                 btnTrack_Click(this, EventArgs.Empty); // turn on Map first
 
 
-            if (chkFLayerON.Checked && (chkDLayerON.Checked || chkLightningMap.Checked || chkCloudOn.Checked || chkWaterTempMap.Checked))
+            if (chkFLayerON.Checked && (chkDLayerON.Checked || chkLightningMap.Checked || chkCloudOn.Checked || chkWaterTempMap.Checked || chkPrecipOn.Checked))
             {
 
                 chkDLayerON.Checked = false;
                 chkLightningMap.Checked = false;
                 chkCloudOn.Checked = false;
                 chkWaterTempMap.Checked = false; //.316
+                chkPrecipOn.Checked = false; //.340
 
             }
 
@@ -18863,12 +19053,13 @@ namespace PowerSDR
                 btnTrack_Click(this, EventArgs.Empty); // turn on Map first
 
 
-            if (chkDLayerON.Checked && (chkFLayerON.Checked || chkLightningMap.Checked || chkCloudOn.Checked || chkWaterTempMap.Checked))
+            if (chkDLayerON.Checked && (chkFLayerON.Checked || chkLightningMap.Checked || chkCloudOn.Checked || chkWaterTempMap.Checked || chkPrecipOn.Checked))
             {
                 chkFLayerON.Checked = false;
                 chkLightningMap.Checked = false;
                 chkCloudOn.Checked = false;
                 chkWaterTempMap.Checked = false; //.316
+                chkPrecipOn.Checked = false; //.340
             }
 
             chkSUN_CheckedChanged(this, EventArgs.Empty);
@@ -19046,12 +19237,13 @@ namespace PowerSDR
                 btnTrack_Click(this, EventArgs.Empty); // turn on Map first
 
 
-            if (chkLightningMap.Checked && (chkFLayerON.Checked || chkDLayerON.Checked || chkCloudOn.Checked || chkWaterTempMap.Checked))
+            if (chkLightningMap.Checked && (chkFLayerON.Checked || chkDLayerON.Checked || chkCloudOn.Checked || chkWaterTempMap.Checked || chkPrecipOn.Checked))
             {
                 chkFLayerON.Checked = false;
                 chkDLayerON.Checked = false;
                 chkCloudOn.Checked = false;
                 chkWaterTempMap.Checked = false; //.316
+                chkPrecipOn.Checked = false; //.340
             }
 
             chkSUN_CheckedChanged(this, EventArgs.Empty);
@@ -19230,23 +19422,20 @@ namespace PowerSDR
                 btnTrack_Click(this, EventArgs.Empty); // turn on Map first
 
 
-            if (chkCloudOn.Checked && (chkFLayerON.Checked || chkDLayerON.Checked || chkLightningMap.Checked || chkWaterTempMap.Checked))
+            if (chkCloudOn.Checked && (chkFLayerON.Checked || chkDLayerON.Checked || chkLightningMap.Checked || chkWaterTempMap.Checked || chkPrecipOn.Checked))
             {
                 chkFLayerON.Checked = false;
                 chkDLayerON.Checked = false;
                 chkLightningMap.Checked = false;
                 chkWaterTempMap.Checked = false; //.316
+                chkPrecipOn.Checked = false; //.340
             }
 
             chkSUN_CheckedChanged(this, EventArgs.Empty);
 
-
             if (chkCloudOn.Checked == true) //.241
             {
-
                 console.MapNOAA = true; //.243 update map
-
-
 
                 MoonLast = chkMoon.Checked;   // turn off Moon
                 chkMoon.Checked = false;
@@ -19259,8 +19448,6 @@ namespace PowerSDR
 
                 //   GrayLineLast = chkGrayLine.Checked;   // turn off Grayline on the d-layer
                 //   chkGrayLine.Checked = false;
-
-
 
                 MapJustBandLast = chkMapBand.Checked;  // turn off spots on d-layer
                 chkMapBand.Checked = false;
@@ -19541,12 +19728,13 @@ namespace PowerSDR
                 btnTrack_Click(this, EventArgs.Empty); // turn on Map first+
 
 
-            if (chkWaterTempMap.Checked && (chkFLayerON.Checked || chkDLayerON.Checked || chkCloudOn.Checked || chkLightningMap.Checked))
+            if (chkWaterTempMap.Checked && (chkFLayerON.Checked || chkDLayerON.Checked || chkCloudOn.Checked || chkLightningMap.Checked || chkPrecipOn.Checked))
             {
                 chkFLayerON.Checked = false;
                 chkDLayerON.Checked = false;
                 chkCloudOn.Checked = false;
                 chkLightningMap.Checked = false;
+                chkPrecipOn.Checked = false; //.340
 
             }
 
@@ -19718,6 +19906,190 @@ namespace PowerSDR
 
         } // chkWaterTempMap
 
+        private void chkPrecipOn_CheckedChanged(object sender, EventArgs e) //.340
+        {
+
+            if (SP5_Active == 0)  // .239 if map was off when you turned on watertempmap
+                btnTrack_Click(this, EventArgs.Empty); // turn on Map first+
+
+
+            if (chkPrecipOn.Checked && (chkFLayerON.Checked || chkDLayerON.Checked || chkCloudOn.Checked || chkLightningMap.Checked || chkWaterTempMap.Checked))
+            {
+                chkFLayerON.Checked = false;
+                chkDLayerON.Checked = false;
+                chkCloudOn.Checked = false;
+                chkLightningMap.Checked = false;
+                chkWaterTempMap.Checked = false; //
+
+            }
+
+            chkSUN_CheckedChanged(this, EventArgs.Empty);
+
+
+            if (chkPrecipOn.Checked == true) //
+            {
+                console.MapNOAA = true; //.243 update map
+
+                MoonLast = chkMoon.Checked;   // turn off Moon
+                chkMoon.Checked = false;
+
+                SunLast = chkSUN.Checked;   // turn off Sun
+                chkSUN.Checked = false;
+
+                ISSLast = chkISS.Checked;   // turn off ISS
+                chkISS.Checked = false;
+
+                //   GrayLineLast = chkGrayLine.Checked;   // turn off Grayline on the d-layer
+                //   chkGrayLine.Checked = false;
+
+                MapJustBandLast = chkMapBand.Checked;  // turn off spots on d-layer
+                chkMapBand.Checked = false;
+
+                MapJustPanLast = chkBoxPan.Checked;
+                chkBoxPan.Checked = false;
+
+                MapBeamLast = chkBoxBeam.Checked;
+                chkBoxBeam.Checked = false;
+
+                MemoriesPanLast = chkBoxMem.Checked; // Turn off memories on d-layer
+                chkBoxMem.Checked = false;
+
+                VOACAPLast = checkBoxMUF.Checked;  // turn off VOACAP on d
+                                                   // -Layer
+                checkBoxMUF.Checked = false;
+
+                BandTextLast = chkBoxBandText.Checked;
+                chkBoxBandText.Checked = false;
+
+                MapCallLast = chkMapCall.Checked;
+                chkMapCall.Checked = false;
+
+                MapCountryLast = chkMapCountry.Checked;
+                chkMapCountry.Checked = false;
+
+                if (console.setupForm != null)
+                {
+                    if (Display.GridOff == 0)
+                    {
+                        GridBoxLast = !console.setupForm.gridBoxTS.Checked; // if GRID ON then = false so set GridBoxLast = true
+                        console.setupForm.gridBoxTS.Checked = true; // true = Grid OFF
+                    }
+
+                }
+
+                if (SP1_Active == 1) //.240
+                {
+                    SWLLast = true;
+                    SWLbutton_Click(this, EventArgs.Empty); // was on so turn off
+
+                }
+                else
+                {
+                    SWLLast = false;
+                }
+
+            }
+            else  // turn them back on if they were on before the F-layer map was turned on
+            {
+
+                if (MoonLast)
+                {
+                    MoonLast = false;
+                    chkMoon.Checked = true;
+                }
+
+                if (SunLast)
+                {
+                    SunLast = false;
+                    chkSUN.Checked = true;
+                }
+
+                if (ISSLast)
+                {
+                    ISSLast = false;
+                    chkISS.Checked = true;
+                }
+
+                //   if (GrayLineLast)
+                //   {
+                //     GrayLineLast = false;
+                //     chkGrayLine.Checked = true;
+                //  }
+
+                if (MapJustBandLast)
+                {
+                    MapJustBandLast = false;
+                    chkMapBand.Checked = true;
+                }
+
+                if (MapJustPanLast)
+                {
+                    MapJustPanLast = false;
+                    chkBoxPan.Checked = true;
+                }
+
+                if (MapBeamLast)
+                {
+                    MapBeamLast = false;
+                    chkBoxBeam.Checked = true;
+                }
+
+                if (MemoriesPanLast)
+                {
+                    MemoriesPanLast = false;
+                    chkBoxMem.Checked = true;
+                }
+
+                if (VOACAPLast)
+                {
+                    VOACAPLast = false;
+                    checkBoxMUF.Checked = true;
+                }
+
+                if (BandTextLast)
+                {
+                    BandTextLast = false;
+                    chkBoxBandText.Checked = true;
+                }
+
+                if (MapCallLast)
+                {
+                    MapCallLast = false;
+                    chkMapCall.Checked = true;
+                }
+
+                if (MapCountryLast)
+                {
+                    MapCountryLast = false;
+                    chkMapCountry.Checked = true;
+                }
+
+
+                if (console.setupForm != null)
+                {
+                    if (Display.GridOff == 0)
+                    {
+                        if (GridBoxLast) // grid was on before
+                        {
+                            GridBoxLast = false;
+                            console.setupForm.gridBoxTS.Checked = false; // true = Grid OFF
+                        }
+                    }
+
+                }
+
+                if (SWLLast) //.240
+                {
+                    SWLLast = false;
+                    SWLbutton_Click(this, EventArgs.Empty); // was on so turn back on again
+                }
+
+            } //  if (chkPrecipOn.Checked == true) //
+
+
+        } // chkPrecipOn_CheckedChanged
+
+
         private void SWLbutton2_MouseUp(object sender, MouseEventArgs e) //.337 mod
         {
             MouseEventArgs me = (MouseEventArgs)e;
@@ -19764,8 +20136,8 @@ namespace PowerSDR
             string url = "http://eibispace.de/dx/sked-a26.csv";
 
 
-             string targetDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
-           string destinationFile = Path.Combine(targetDirectory, "SWL.csv");
+            string targetDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
+            string destinationFile = Path.Combine(targetDirectory, "SWL.csv");
             string backupFile = Path.Combine(targetDirectory, "swl_old.csv");
 
             try
@@ -19823,8 +20195,8 @@ namespace PowerSDR
         {
             string url = "https://data.fcc.gov/download/pub/uls/complete/l_amat.zip";
 
-             string targetDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
-           string destinationFile = Path.Combine(targetDirectory, "l_amat.zip");
+            string targetDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\");
+            string destinationFile = Path.Combine(targetDirectory, "l_amat.zip");
             string backupFile = Path.Combine(targetDirectory, "l_amat_old.zip");
             string destinationFile1 = Path.Combine(targetDirectory, "FCCDATA.dat");
             string backupFile1 = Path.Combine(targetDirectory, "FCCDATA_old.dat");
@@ -19852,7 +20224,7 @@ namespace PowerSDR
                     File.WriteAllBytes(destinationFile, fileBytes);
                 }
 
-                 string zipPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\l_amat.zip");
+                string zipPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\l_amat.zip");
 
                 string destinationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"FlexRadio Systems\PowerSDR v2.8.0\EN.dat");
 
