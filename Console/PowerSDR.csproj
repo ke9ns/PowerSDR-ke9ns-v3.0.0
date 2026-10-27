@@ -635,12 +635,16 @@
     </Compile>
     <Compile Include="Direct2DDisplay.cs" />
     <Compile Include="DSP\NrModeState.cs" />
-    <Compile Include="DSP\WdspNnrSetupPanel.cs" />
+    <Compile Include="DSP\WdspNnrSetupPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DisplayStartupGate.cs" />
     <Compile Include="MapWorkerLifetime.cs" />
     <Compile Include="MapShutdown.cs" />
     <Compile Include="NeuralCwDecoder.cs" />
-    <Compile Include="CwxNeuralPanel.cs" />
+    <Compile Include="CwxNeuralPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Setup.RenderDiagnostics.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1599,18 +1603,52 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Content Include="models\deepfist.onnx"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="models\deepfist.onnx.json"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="..\THIRD-PARTY-NEURAL-CW.txt"><Link>THIRD-PARTY-NEURAL-CW.txt</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="..\LICENSE.txt"><Link>licenses\PowerSDR-GPL-2.0.txt</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="..\THIRD-PARTY-NOTICES.md"><Link>THIRD-PARTY-NOTICES.md</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="..\lib\SharpDX\LICENSE.txt"><Link>licenses\SharpDX-MIT.txt</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="..\lib\NR_Algorithms_x86\src\rnnoise\COPYING"><Link>licenses\RNNoise-COPYING.txt</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="..\lib\NR_Algorithms_x86\src\libspecbleach\LICENSE"><Link>licenses\SpecBleach-LGPL-2.1.txt</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="..\packages\Microsoft.ML.OnnxRuntime.1.20.1\runtimes\win-x86\native\onnxruntime.dll"><Link>onnxruntime.dll</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="..\packages\Microsoft.ML.OnnxRuntime.1.20.1\runtimes\win-x86\native\onnxruntime_providers_shared.dll"><Link>onnxruntime_providers_shared.dll</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="..\packages\Microsoft.ML.OnnxRuntime.1.20.1\LICENSE"><Link>ONNX-Runtime-LICENSE.txt</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
-    <Content Include="..\packages\Microsoft.ML.OnnxRuntime.1.20.1\ThirdPartyNotices.txt"><Link>ONNX-Runtime-ThirdPartyNotices.txt</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Content Include="models\deepfist.onnx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="models\deepfist.onnx.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\THIRD-PARTY-NEURAL-CW.txt">
+      <Link>THIRD-PARTY-NEURAL-CW.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LICENSE.txt">
+      <Link>licenses\PowerSDR-GPL-2.0.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\THIRD-PARTY-NOTICES.md">
+      <Link>THIRD-PARTY-NOTICES.md</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\lib\SharpDX\LICENSE.txt">
+      <Link>licenses\SharpDX-MIT.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\lib\NR_Algorithms_x86\src\rnnoise\COPYING">
+      <Link>licenses\RNNoise-COPYING.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\lib\NR_Algorithms_x86\src\libspecbleach\LICENSE">
+      <Link>licenses\SpecBleach-LGPL-2.1.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.ML.OnnxRuntime.1.20.1\runtimes\win-x86\native\onnxruntime.dll">
+      <Link>onnxruntime.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.ML.OnnxRuntime.1.20.1\runtimes\win-x86\native\onnxruntime_providers_shared.dll">
+      <Link>onnxruntime_providers_shared.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.ML.OnnxRuntime.1.20.1\LICENSE">
+      <Link>ONNX-Runtime-LICENSE.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.ML.OnnxRuntime.1.20.1\ThirdPartyNotices.txt">
+      <Link>ONNX-Runtime-ThirdPartyNotices.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>
