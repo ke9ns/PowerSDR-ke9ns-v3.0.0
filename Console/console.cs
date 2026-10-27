@@ -80881,6 +80881,10 @@ namespace PowerSDR
             {
                 SpotForm.chkCloudOn.Checked = false;
             }
+            else if (SpotForm.chkPrecipOn.Checked) //.340 
+            {
+                 SpotForm.chkPrecipOn.Checked = false;
+            }
             else if (SpotForm.chkWaterTempMap.Checked) //.316
             {
                 SpotForm.chkWaterTempMap.Checked = false;
@@ -80928,6 +80932,7 @@ namespace PowerSDR
                     SpotForm.chkFLayerON.Checked = false;
                     SpotForm.chkLightningMap.Checked = false;
                     SpotForm.chkWaterTempMap.Checked = false; //.316
+					SpotForm.chkPrecipOn.Checked = false; //.340
                     SpotForm.chkDLayerON.Checked = true;
                     MapMenuItem.Text = "D-Layer map"; //.243
                     MapMenuItem.BackColor = Color.DarkGreen;
@@ -80939,6 +80944,7 @@ namespace PowerSDR
                     SpotForm.chkDLayerON.Checked = false;
                     SpotForm.chkFLayerON.Checked = false;
                     SpotForm.chkWaterTempMap.Checked = false; //.316
+					SpotForm.chkPrecipOn.Checked = false; //.340
                     SpotForm.chkLightningMap.Checked = true;
                     MapMenuItem.Text = "Lightning map"; //.243
                     MapMenuItem.BackColor = Color.DarkRed;
@@ -80950,18 +80956,32 @@ namespace PowerSDR
                     SpotForm.chkFLayerON.Checked = false;
                     SpotForm.chkDLayerON.Checked = false;
                     SpotForm.chkWaterTempMap.Checked = false; //.316
+					SpotForm.chkPrecipOn.Checked = false; //.340
                     SpotForm.chkCloudOn.Checked = true;
                     MapMenuItem.Text = "Cloud map";  //.243
                     MapMenuItem.BackColor = Color.DarkGray;
                 }
-                else if (SpotForm.chkCloudOn.Checked == true)
+                 else if (SpotForm.chkCloudOn.Checked == true)
                 {
                     SpotForm.chkCloudOn.Checked = false;
                     SpotForm.chkLightningMap.Checked = false;
                     SpotForm.chkDLayerON.Checked = false;
                     SpotForm.chkFLayerON.Checked = false;
-                    SpotForm.chkWaterTempMap.Checked = true; //.316
-                    MapMenuItem.Text = "Water-T map"; //.316
+                    SpotForm.chkPrecipOn.Checked = true; //.340
+                    SpotForm.chkWaterTempMap.Checked = false; //.316
+                    MapMenuItem.Text = "Precip Map"; //.340
+                    MapMenuItem.BackColor = Color.DarkBlue;
+
+                }
+                else if (SpotForm.chkPrecipOn.Checked == true) //.340
+                {
+                    SpotForm.chkCloudOn.Checked = false;
+                    SpotForm.chkLightningMap.Checked = false;
+                    SpotForm.chkDLayerON.Checked = false;
+                    SpotForm.chkFLayerON.Checked = false;
+                    SpotForm.chkPrecipOn.Checked = false; 
+                    SpotForm.chkWaterTempMap.Checked = true; 
+                    MapMenuItem.Text = "Water-T map"; 
                     MapMenuItem.BackColor = Color.DarkBlue;
 
                 }
@@ -83484,6 +83504,24 @@ namespace PowerSDR
 
             }
 
+            Debug.WriteLine("-Precipitation Map from NASA-"); //.340
+            // https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/imergert_1080p.now.png 1920 x 1080
+            // https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/imergert_composite.now.png
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    client.DownloadFileAsync(new Uri("https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/imergert_composite.now.png"), AppDataPath + "imergert_composite.now.png");
+                    client.DownloadFileAsync(new Uri("https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/imergert_1080p.now.png"), AppDataPath + "imergert_1080p.now.png");
+                    Debug.WriteLine("+Precipitation Map from NASA+"); //.340 3600 x 1800 
+                }
+
+            }
+            catch (Exception g)
+            {
+                Debug.WriteLine("Unable to get Precipitation Map from NASA: " + g);
+
+            }
 
 
 

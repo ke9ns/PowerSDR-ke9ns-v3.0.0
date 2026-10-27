@@ -149,14 +149,6 @@ This is the password that you use to login to: https://lotw.arrl.org/lotw/login
 
 Then Right Click again to close the password box (it will be permanently saved)</value>
   </data>
-  <data name="btnTrack.ToolTip" xml:space="preserve">
-    <value>HIT F2 to watch video showing how to use World map 
-
-
-Click to Turn on/off World Map, and/or  GrayLine (Earth Dark &amp; Light Areas),
-and/or Sun Tracking (position of Sun directly overhead a spot on Earth) on Panadapter.
-Sun Tracking Includes Space Weather (Requires Internet for Weather)"</value>
-  </data>
   <data name="dataGridView1.ToolTip" xml:space="preserve">
     <value>Enter DX address : port#
 Example:  wb8zrl.no-ip.org:7300
@@ -178,36 +170,6 @@ RIGHT CLICK:
 Download the latest SWL.csv file from EIBISPACE.de
 Reboot after Download complete to use the new SWL file</value>
   </data>
-  <data name="btnBeacon.ToolTip" xml:space="preserve">
-    <value>Click to View Beacons stations and optionally scan Beacon Frequencies for signal strength
-
-PowerSDR will scan through 14.1, 18.11, 21.15, 24.93, 28.2 mhz
-looking for 18 stations: 4U1UN, VE8AT, W6WX, KH6RS, ZL6B, VK6RBP, 
-JA1IGY, RR9O, VR2B, 4S7B, ZS6DN, 5Z4B, 4X6TU, OH2B, CS3B, LU4AA,
-OA4B, and YV5B in 10 second intervals. </value>
-  </data>
-  <data name="btnTime.ToolTip" xml:space="preserve">
-    <value>Hit F2 to watch video showing how to use Time Sync
-
-!!!!!Requires running PowerSDR in ADMIN mode!!!!
-!!!!!Requires Internet Connection!!!!!!
-!!!!!Your PC must be set to the correct Local Time Zone!!!!!
-!!!!! Your PC must be set to the correct Daylight Savings setting!!!!!
-Will connect with NIST (National Institute of Standards and Technology).
-Sync up your PC clock time to NIST.
-
-Use this feature before running a Beacon Scan,
-or before running WJST (JT65) or WSPR digital modes</value>
-  </data>
-  <data name="checkBoxTone.ToolTip" xml:space="preserve">
-    <value>This should pulse ON/OFF with th WWV seconds "Tick"
-If this is not pulsing along with the WWV Tick, then the signal is too low.
-
-Sub-Carrier Seconds "Tick" data:
-Long Tick = 1
-Short Tick = 0
-Long Pause = Start of Data Frame</value>
-  </data>
   <data name="DXPost.ToolTip" xml:space="preserve">
     <value>Posts your Contact to the DX Cluster
 
@@ -226,14 +188,6 @@ Left Click on "Callout" button to Post spot from VFOA Frequency
 Right Click on "Callout" button to Post spot from VFOB Frequency
 
 For Searching DX: Enter the Call Sign or partial Call Sign, then check the "Call Search" box below</value>
-  </data>
-  <data name="RotorHead.ToolTip" xml:space="preserve">
-    <value>When Connected to your Antenna Rotor Controller via DDUtil
-This shows the current Antenna Rotor Heading 0-359
-
-NA = you are not connected to your Rotor Control. 
-DDUtil may not be running, or configured correctly.
-</value>
   </data>
   <data name="button4.ToolTip" xml:space="preserve">
     <value>HIT F1 for HELPBOX
@@ -284,76 +238,108 @@ Green = Done. Your up to date.
 
 </value>
   </data>
-  <data name="chkWaterTempMap.ToolTip" xml:space="preserve">
-    <value>World Ocean water temperature based on Bouy Data.
-data from coolwx.com
-Real-Time but updated every 30 min
-HOLD CTRL+Z to Zoom an area next to the Mouse on the Map.
-CTRL+Z also updates the image (real-time)</value>
-  </data>
-  <data name="chkCloudOn.ToolTip" xml:space="preserve">
-    <value>CLOUD COVER Mosaic Map Provided by: University of Wisconsin-Madison
-Real-Time but updated every 30 min
-Mosaic IR Cloud cover for most of the Earth
-Note: No cloud data for lower center section of world map.
-HOLD CTRL+Z to Zoom an area next to the Mouse on the Map.
-CTRL+Z also updates the image (real-time)</value>
-  </data>
-  <data name="chkLightningMap.ToolTip" xml:space="preserve">
-    <value>LIGHTNING Map provided by: Blitzortung 
-Real-Time but updated every 30 min
-White = Recent Lighting strike (within 20 min)
-Yellow =  (within 40min)
-Red = Very Old (within 120min)
-HOLD CTRL+Z to Zoom an area next to the Mouse on the Map.
-CTRL+Z also updates the image (real-time)</value>
-  </data>
-  <data name="chkDLayerON.ToolTip" xml:space="preserve">
-    <value>D-LAYER Map provided by: NOAA XRAY D-Layer Absorption level world map.
-Absorbs Low Band RF in the D-Layer during daylight hours (and X-Ray events)
-Higher frequencies can pass through the D-Layer up to the E/F-Layers unless shown on this map.
+  <data name="btnTime.ToolTip" xml:space="preserve">
+    <value>Hit F2 to watch video showing how to use Time Sync
 
-Purple        (absorption to 5mhz)
-Blue            (absorption to 10mhz)
-Cyan          (absorption to 15mhz)
-Green         (absorption to 20mhz)
-Yellow        (absorption to 25 mhz)
-Orange      (absorption to  30 mhz)
-Red             (absorption to 35 mhz)
+!!!!!Requires running PowerSDR in ADMIN mode!!!!
+!!!!!Requires Internet Connection!!!!!!
+!!!!!Your PC must be set to the correct Local Time Zone!!!!!
+!!!!! Your PC must be set to the correct Daylight Savings setting!!!!!
+Will connect with NIST (National Institute of Standards and Technology).
+Sync up your PC clock time to NIST.
 
-CTRL+Z also updates the image (real-time)</value>
+Use this feature before running a Beacon Scan,
+or before running WJST (JT65) or WSPR digital modes</value>
   </data>
-  <data name="chkISS.ToolTip" xml:space="preserve">
-    <value>True (Zenith) position of the ISS will show on Panadapter screen (includes Elevation to you)
-When you Click on the TRACK/Map button to activate the World Map
+  <data name="checkBoxWWV.ToolTip" xml:space="preserve">
+    <value>Hit F2 to watch video showing how to use Time Sync
 
-NOTE: This is internet based ISS Location Data (not a PSDR calculation)
+Check this box, then Click  on "Time Sync"
 
-Left Click on the Moon and hit the CTRL key to Rotate your Antenna</value>
+Time Sync will listen to Radio WWV BCD time code 
+found on a 100hz sub-carrier.
+
+Will not work well in noisy conditions or low signal,
+Until I can use a PLL to detect weak signals.
+
+Reception will start on the WWV minute 1khz tone.
+</value>
   </data>
-  <data name="chkMoon.ToolTip" xml:space="preserve">
-    <value>True (Zenith) position of the Moon will show on Panadapter screen (including Elevation to you)
-When you Click on the TRACK/Map button to activate the World Map
+  <data name="udDisplayWWV.ToolTip" xml:space="preserve">
+    <value>If you check the "use WWV HF" Box:
+Hit F2 to watch video showing how to use Time Sync
 
+Select a WWV station with a stron non-fading signal.
+Usually 10mhz and 15mhz are the cleanest signals
+1=2.5mhz 
+2=5.0mhz
+3=10.0mhz
+4=15.0mhz
 
-Left Click on the Moon and hit the CTRL key to Rotate your Antenna</value>
+</value>
   </data>
-  <data name="chkBoxAnt.ToolTip" xml:space="preserve">
+  <data name="checkBoxTone.ToolTip" xml:space="preserve">
+    <value>This should pulse ON/OFF with th WWV seconds "Tick"
+If this is not pulsing along with the WWV Tick, then the signal is too low.
+
+Sub-Carrier Seconds "Tick" data:
+Long Tick = 1
+Short Tick = 0
+Long Pause = Start of Data Frame</value>
+  </data>
+  <data name="RotorHead.ToolTip" xml:space="preserve">
+    <value>When Connected to your Antenna Rotor Controller via DDUtil
+This shows the current Antenna Rotor Heading 0-359
+
+NA = you are not connected to your Rotor Control. 
+DDUtil may not be running, or configured correctly.
+</value>
+  </data>
+  <data name="btnTrack.ToolTip" xml:space="preserve">
+    <value>HIT F2 to watch video showing how to use World map 
+
+
+Click to Turn on/off World Map, and/or  GrayLine (Earth Dark &amp; Light Areas),
+and/or Sun Tracking (position of Sun directly overhead a spot on Earth) on Panadapter.
+Sun Tracking Includes Space Weather (Requires Internet for Weather)"</value>
+  </data>
+  <data name="chkFLayerON.ToolTip" xml:space="preserve">
+    <value>Map provided by: Australian gov space weather service critical foF2-Layer world map. (Updated every 30min)
+Colors denoting the highest frequency the f2 ionosphere will reflect vertical directed signals directly back towards earth (NVIS)
+Determined using ionosonde radar. The higher the reflect frequecies, the more open propogation will be in those areas.
+
+If your station is under a Blue (or better) area on the F2 map, 
+you may experience skip conditions on or close to 10m to other Blue (or better) areas of the F2 map.
+
+Red up to Blue usually indicates that the uppers bands are closed. 
+
+Red =      Reflect up to 1mhz
+Yellow = Reflect up to 2mhz
+Olive = Reflect up to 3mhz
+Green= Reflect up to 4mhz
+Lt GRN= Reflect up to 5mhz
+Lt BLU = Reflect up to 6mhz
+BL GRY= Reflect up to 7mhz
+Blue= Reflect up to 8mhz
+D Blue=Reflect up to 9mhz
+Maroon = Refect up to 10mhz
+Purple = Reflect up to 11mhz
+Violet = Reflect up to 12 mhz
+Gray = Reflect up to 13mhz
+
+CTRL+Z also updates the image (real-time)
+</value>
+  </data>
+  <data name="chkBoxContour.ToolTip" xml:space="preserve">
     <value>HIT F2 to watch video showing how to use VOACAP
 
-Check this box if your using a Beam Antenna instead of a Dipole
-
-Use VOACAP to map Signal Strength from your station, 
-based on your Lat &amp; Long
-
-View using TRACK button
+VOACAP: Check for Contour instead of dots
 
 Blue       Strongest Signal (AM)
 Green    Strong Signal  (AM/SSB)
 Yellow   Fair Signal (SSB, CW)
 Orange  Weak Signal  (CW, FT8)
 Gray       Weakest Signal (CW, FT8)
-
 
 </value>
   </data>
@@ -374,18 +360,71 @@ Gray       Weakest Signal (CW, FT8)
 
 </value>
   </data>
-  <data name="udDisplayWWV.ToolTip" xml:space="preserve">
-    <value>If you check the "use WWV HF" Box:
-Hit F2 to watch video showing how to use Time Sync
+  <data name="chkWaterTempMap.ToolTip" xml:space="preserve">
+    <value>World Ocean water temperature based on Bouy Data.
+data from coolwx.com
+Real-Time but updated every 30 min
+HOLD CTRL+Z to Zoom an area next to the Mouse on the Map.
+CTRL+Z also updates the image (real-time)</value>
+  </data>
+  <data name="chkBoxAnt.ToolTip" xml:space="preserve">
+    <value>HIT F2 to watch video showing how to use VOACAP
 
-Select a WWV station with a stron non-fading signal.
-Usually 10mhz and 15mhz are the cleanest signals
-1=2.5mhz 
-2=5.0mhz
-3=10.0mhz
-4=15.0mhz
+Check this box if your using a Beam Antenna instead of a Dipole
+
+Use VOACAP to map Signal Strength from your station, 
+based on your Lat &amp; Long
+
+View using TRACK button
+
+Blue       Strongest Signal (AM)
+Green    Strong Signal  (AM/SSB)
+Yellow   Fair Signal (SSB, CW)
+Orange  Weak Signal  (CW, FT8)
+Gray       Weakest Signal (CW, FT8)
+
 
 </value>
+  </data>
+  <data name="chkDLayerON.ToolTip" xml:space="preserve">
+    <value>D-LAYER Map provided by: NOAA XRAY D-Layer Absorption level world map.
+Absorbs Low Band RF in the D-Layer during daylight hours (and X-Ray events)
+Higher frequencies can pass through the D-Layer up to the E/F-Layers unless shown on this map.
+
+Purple        (absorption to 5mhz)
+Blue            (absorption to 10mhz)
+Cyan          (absorption to 15mhz)
+Green         (absorption to 20mhz)
+Yellow        (absorption to 25 mhz)
+Orange      (absorption to  30 mhz)
+Red             (absorption to 35 mhz)
+
+CTRL+Z also updates the image (real-time)</value>
+  </data>
+  <data name="chkLightningMap.ToolTip" xml:space="preserve">
+    <value>LIGHTNING Map provided by: Blitzortung 
+Real-Time but updated every 30 min
+White = Recent Lighting strike (within 20 min)
+Yellow =  (within 40min)
+Red = Very Old (within 120min)
+HOLD CTRL+Z to Zoom an area next to the Mouse on the Map.
+CTRL+Z also updates the image (real-time)</value>
+  </data>
+  <data name="chkCloudOn.ToolTip" xml:space="preserve">
+    <value>CLOUD COVER Mosaic Map Provided by: University of Wisconsin-Madison
+Real-Time but updated every 30 min
+Mosaic IR Cloud cover for most of the Earth
+Note: No cloud data for lower center section of world map.
+HOLD CTRL+Z to Zoom an area next to the Mouse on the Map.
+CTRL+Z also updates the image (real-time)</value>
+  </data>
+  <data name="btnBeacon.ToolTip" xml:space="preserve">
+    <value>Click to View Beacons stations and optionally scan Beacon Frequencies for signal strength
+
+PowerSDR will scan through 14.1, 18.11, 21.15, 24.93, 28.2 mhz
+looking for 18 stations: 4U1UN, VE8AT, W6WX, KH6RS, ZL6B, VK6RBP, 
+JA1IGY, RR9O, VR2B, 4S7B, ZS6DN, 5Z4B, 4X6TU, OH2B, CS3B, LU4AA,
+OA4B, and YV5B in 10 second intervals. </value>
   </data>
   <data name="BoxBFScan.ToolTip" xml:space="preserve">
     <value>Check to Scan all 18 Beacon Stations 5 Frequecies at each 10 second Interval
@@ -393,6 +432,21 @@ PowerSDR will listen on each Beacon Band for 3 minutes, then move the next
 higher band: 14.1 -&gt; 18.11 -&gt; 21.15 -&gt; 24.93 -&gt; 28.2
 
 This takes 15 minutes to fully complete</value>
+  </data>
+  <data name="chkISS.ToolTip" xml:space="preserve">
+    <value>True (Zenith) position of the ISS will show on Panadapter screen (includes Elevation to you)
+When you Click on the TRACK/Map button to activate the World Map
+
+NOTE: This is internet based ISS Location Data (not a PSDR calculation)
+
+Left Click on the Moon and hit the CTRL key to Rotate your Antenna</value>
+  </data>
+  <data name="chkMoon.ToolTip" xml:space="preserve">
+    <value>True (Zenith) position of the Moon will show on Panadapter screen (including Elevation to you)
+When you Click on the TRACK/Map button to activate the World Map
+
+
+Left Click on the Moon and hit the CTRL key to Rotate your Antenna</value>
   </data>
   <data name="udDisplayLong.ToolTip" xml:space="preserve">
     <value>Enter Longitude in deg (-180 to 180) for Beam Heading
@@ -424,60 +478,6 @@ Right Click on memory in Pan to open up Memory Comments URL internet address
 (Example: if you place http://ke9ns.com in the Comments field of a Memory)
 
 LEFT CLICK on PAN + ALT + M keys to save New Memory
-</value>
-  </data>
-  <data name="chkBoxContour.ToolTip" xml:space="preserve">
-    <value>HIT F2 to watch video showing how to use VOACAP
-
-VOACAP: Check for Contour instead of dots
-
-Blue       Strongest Signal (AM)
-Green    Strong Signal  (AM/SSB)
-Yellow   Fair Signal (SSB, CW)
-Orange  Weak Signal  (CW, FT8)
-Gray       Weakest Signal (CW, FT8)
-
-</value>
-  </data>
-  <data name="chkFLayerON.ToolTip" xml:space="preserve">
-    <value>Map provided by: Australian gov space weather service critical foF2-Layer world map. (Updated every 30min)
-Colors denoting the highest frequency the f2 ionosphere will reflect vertical directed signals directly back towards earth (NVIS)
-Determined using ionosonde radar. The higher the reflect frequecies, the more open propogation will be in those areas.
-
-If your station is under a Blue (or better) area on the F2 map, 
-you may experience skip conditions on or close to 10m to other Blue (or better) areas of the F2 map.
-
-Red up to Blue usually indicates that the uppers bands are closed. 
-
-Red =      Reflect up to 1mhz
-Yellow = Reflect up to 2mhz
-Olive = Reflect up to 3mhz
-Green= Reflect up to 4mhz
-Lt GRN= Reflect up to 5mhz
-Lt BLU = Reflect up to 6mhz
-BL GRY= Reflect up to 7mhz
-Blue= Reflect up to 8mhz
-D Blue=Reflect up to 9mhz
-Maroon = Refect up to 10mhz
-Purple = Reflect up to 11mhz
-Violet = Reflect up to 12 mhz
-Gray = Reflect up to 13mhz
-
-CTRL+Z also updates the image (real-time)
-</value>
-  </data>
-  <data name="checkBoxWWV.ToolTip" xml:space="preserve">
-    <value>Hit F2 to watch video showing how to use Time Sync
-
-Check this box, then Click  on "Time Sync"
-
-Time Sync will listen to Radio WWV BCD time code 
-found on a 100hz sub-carrier.
-
-Will not work well in noisy conditions or low signal,
-Until I can use a PLL to detect weak signals.
-
-Reception will start on the WWV minute 1khz tone.
 </value>
   </data>
   <metadata name="mainMenu1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
