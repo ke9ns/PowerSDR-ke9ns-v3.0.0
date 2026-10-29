@@ -83470,21 +83470,82 @@ namespace PowerSDR
 
             Debug.WriteLine("Lightning map from Blitzortung ");
 
-            try
+
+            //  using (WebClient client = new WebClient()) //.240
+            //  {
+            //  client.DownloadFileAsync(new Uri("https://www.blitzortung.org/en/canvas.png"), AppDataPath + "Canvas.png");
+            // client.DownloadFileAsync(new Uri("https://www.blitzortung.org/en/Images/image_b_earth.png"), AppDataPath + "Canvas.png");
+
+            // }
+
+            // .341 .8
+            // Step 1: Calculate the exact latest 5-minute UTC interval archive path
+            DateTime utcNow = DateTime.UtcNow;
+
+            // Round down the minutes to the nearest 5-minute block (e.g., 47 becomes 45)
+            int roundedMinute = (utcNow.Minute / 5) * 5;
+
+            // If rounding drops us, or if you want to lag slightly behind 
+            // to ensure the file has finished rendering on their server (e.g., minus 5-10 mins), adjust here:
+            DateTime targetTime = new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, utcNow.Hour, roundedMinute, 0).AddMinutes(-5);
+
+            string year = targetTime.ToString("yyyy");
+            string month = targetTime.ToString("MM");
+            string day = targetTime.ToString("dd");
+            string hour = targetTime.ToString("HH");
+            string minute = targetTime.ToString("mm");
+
+            // Construct the exact URL pattern you identified
+            string limapsOverlayUrl = $"https://www.limaps.org/Maps/History/{year}/{month}/{day}/{hour}/{minute}/image_b_earth.png";
+            string blitzortungBackgroundUrl = "https://www.blitzortung.org/en/Images/image_b_earth.png";
+
+            Debug.WriteLine("LIMAPS Overlay URL: " + limapsOverlayUrl);
+
+            using (WebClient client = new WebClient())
             {
-                using (WebClient client = new WebClient()) //.240
+                client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+
+                try
                 {
-                    //  client.DownloadFileAsync(new Uri("https://www.blitzortung.org/en/canvas.png"), AppDataPath + "Canvas.png");
-                    client.DownloadFileAsync(new Uri("https://www.blitzortung.org/en/Images/image_b_earth.png"), AppDataPath + "Canvas.png");
+                    // Step 2: Download both image bytes simultaneously
+                    byte[] bgBytes = client.DownloadData(blitzortungBackgroundUrl);
+                    byte[] fgBytes = client.DownloadData(limapsOverlayUrl);
 
+                    // Step 3: Composite onto an exact 925x678 canvas
+                    Bitmap finalMap = new Bitmap(925, 678);
+
+                    using (MemoryStream msBg = new MemoryStream(bgBytes))
+                    using (MemoryStream msFg = new MemoryStream(fgBytes))
+                    using (Bitmap bgImg = new Bitmap(msBg))
+                    using (Bitmap fgImg = new Bitmap(msFg))
+                    using (Graphics g = Graphics.FromImage(finalMap))
+                    {
+                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic; //.341
+                                                                                                             // g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                        g.InterpolationMode = InterpolationMode.Bilinear;  //was HighQualityBicubic;
+                        g.SmoothingMode = SmoothingMode.HighQuality;
+                        g.PixelOffsetMode = PixelOffsetMode.Half;  //was HighQuality;
+
+                        g.DrawImage(bgImg, 0, 0, 925, 678); // Draw background world map first
+                        g.DrawImage(fgImg, 0, 0, 925, 678); // Draw transparent lightning overlay directly on top
+                    }
+
+                    // Step 4: Save directly to a PNG file
+                    string saveDirectory = AppDataPath;
+                    string filePath = Path.Combine(saveDirectory, "Canvas.png");
+
+                    finalMap.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+                    finalMap.Dispose();
                 }
+                catch (WebException ex)
+                {
+                    // If a 404 happens because the exact 5-minute file isn't indexed yet, 
+                    // you can fallback by subtracting another 5 minutes and retrying.
+                    throw new Exception($"Failed to download map from URL. Check timestamp format: {ex.Message}");
+                }
+            } //using WebClient
 
-            }
-            catch (Exception g)
-            {
-                Debug.WriteLine("Unable to get Lightning from Blitzortung: " + g);
 
-            }
 
 
             Debug.WriteLine("-WatertempMap from coolwx-"); //.316
