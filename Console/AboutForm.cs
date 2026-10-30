@@ -201,7 +201,7 @@ namespace PowerSDR
 
             string downloadUrl = "";
             Version newVersion = null;
-            string xmlUrl = "https://ke9ns.com/update.xml";
+            string xmlUrl = "https://ke9ns.com/update3.xml";
             XmlTextReader reader = null;
 
             try

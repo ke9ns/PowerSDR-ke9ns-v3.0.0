@@ -287,9 +287,17 @@ NO WARRANTY
 12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</value>
   </data>
   <data name="richTextBox1.Text" xml:space="preserve">
-    <value>PowerSDR KE9NS v3.0.0 Revision History:
+    <value>PowerSDR KE9NS v3.0.0  (For Software Updates go to https://ke9ns.com/flexpage.html
 
-Complete list of v3.0 Revision history visit: https://ke9ns.com/flexpage.html#GPLREV
+This version uses a combination of both DttSP and WDSP DSP engines:
+WDSP is used for Receive only Noise Reduction routines.
+
+DttSP being the ORIGINAL DSP engine written by Frank Brickle AB2KT, and Bob McGwier N4HY (and various others contributing further)
+WDSP DSP engine (a updated and improved version of DttSP) written by Warren Pratt NR0V (and various others contributing further)
+Adding WDSP to PowerSDR ke9ns v3.0 by Eric PY2ECM, with code testing by Villas PY5VB
+Along with moving some video functions from GDI+ to DirectX
+
+Complete list of v3.0 Revision history visit: https://ke9ns.com/revision3.html
 
 For v3.0 Feature Videos: https://ke9ns.com/flexpage.html#videos
 
@@ -298,8 +306,6 @@ DX Cluster List (if you wish to add/change DX Clusters in the Spotter windows): 
 TX Waterfall ID PDF file:
 "file://%userprofile%\AppData\Roaming\FlexRadio%20Systems\PowerSDR%20v2.8.0\PowerSDR%20TX%20Waterfall%20ID.pdf"
 
-To download a new fcc database: https://data.fcc.gov/download/pub/uls/complete/l_amat.zip
-Extract the EN.dat file out and move it to the database folder: %userprofile%\AppData\Roaming\FlexRadio Systems\PowerSDR v3.0.0\
-Delete the old FCCDATA.dat file. Next time you Right Click on the LoTW button in the Spotter screen, a new FCCDATA.dat will be created from the EN.dat file.</value>
+FCC Callsign database updates can now be obtained directly from the Spotter screen by clicking our Mouse Wheel over the LoTW button.</value>
   </data>
 </root>

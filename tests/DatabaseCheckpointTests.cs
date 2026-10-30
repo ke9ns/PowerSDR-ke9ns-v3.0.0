@@ -13,7 +13,7 @@ namespace PowerSDR
             try
             {
                 Assembly app = Assembly.LoadFrom(Path.GetFullPath(args[0]));
-                Check(app.GetName().Version.ToString() == "3.0.0.5", "Expected tested version 3.0.0.5");
+                Check(app.GetName().Version.ToString() == "3.0.0.7", "Expected tested version 3.0.0.7");
                 Type db = app.GetType("PowerSDR.DB", true);
                 FieldInfo data = db.GetField("ds", BindingFlags.Static | BindingFlags.Public);
                 FieldInfo path = db.GetField("file_name", BindingFlags.Static | BindingFlags.NonPublic);

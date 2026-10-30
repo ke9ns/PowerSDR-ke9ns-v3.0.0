@@ -10,7 +10,8 @@
 
 # PowerSDR_KE9NS_v3.0.0
 
-Release candidate 3.0.0.5: see [build instructions](BUILDING-v3.0.0.5.md)
+Release candidate 3.0.0.7: see [release notes](RELEASE-3.0.0.7.md),
+[build instructions (still applicable)](BUILDING-v3.0.0.5.md)
 and [distribution/license audit](LICENSE-AUDIT.md) before packaging or publishing.
 The historical QA runtime folder is not an approved public installer payload.
 For Darrin's source review and MSI preparation, see
