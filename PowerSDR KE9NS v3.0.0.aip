@@ -9,10 +9,10 @@
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
     <ROW Property="ARPPRODUCTICON" Value="PowerSDR1.exe" Type="8"/>
     <ROW Property="Manufacturer" Value="KE9NS"/>
-    <ROW Property="ProductCode" Value="1033:{9F5904AA-449F-44F7-901C-0B64DF3FEFA7} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{7547FC4E-1E4B-4694-8092-7EA099BF649B} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="PowerSDR KE9NS v3.0.0.8"/>
-    <ROW Property="ProductVersion" Value="63.0.10" Type="32"/>
+    <ROW Property="ProductVersion" Value="63.0.12" Type="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{593A740B-D14F-4895-AA2F-1D6F331EE430}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
@@ -45,8 +45,9 @@
     <ROW Directory="KE9NS3_Spot_Dir" Directory_Parent="Skins_Dir" DefaultDir="KE9NS3~2|KE9NS3_Spot"/>
     <ROW Directory="KE9NS4_Plain_Dir" Directory_Parent="Skins_Dir" DefaultDir="KE9NS4~1|KE9NS4_Plain"/>
     <ROW Directory="KE9NS6_World_Dir" Directory_Parent="Skins_Dir" DefaultDir="KE9NS6~1|KE9NS6_World"/>
+    <ROW Directory="PowerSDR_Dir" Directory_Parent="FlexRadioSystems_Dir" DefaultDir="PowerSDR"/>
     <ROW Directory="PowerSDRv3.0.0_Dir" Directory_Parent="FlexRadioSystems_1_Dir" DefaultDir="POWERS~1.0|PowerSDR v3.0.0"/>
-    <ROW Directory="Skins_Dir" Directory_Parent="FlexRadioSystems_Dir" DefaultDir="Skins"/>
+    <ROW Directory="Skins_Dir" Directory_Parent="PowerSDR_Dir" DefaultDir="Skins"/>
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
     <ROW Directory="licenses_Dir" Directory_Parent="APPDIR" DefaultDir="licenses"/>
     <ROW Directory="models_Dir" Directory_Parent="APPDIR" DefaultDir="models"/>
@@ -93,7 +94,6 @@
     <ROW File="Console.png_61" Component_="btnBandHF0.png_30" FileName="Console.png" Attributes="0" SourcePath="..\..\..\..\..\ProgramData\FlexRadio Systems\PowerSDR\Skins\KE9NS4_Plain\Console\Console.png" SelfReg="false" NextFile="panelBandHF.png_30"/>
     <ROW File="Console.png_70" Component_="X20bttn0.png_35" FileName="Console.png" Attributes="0" SourcePath="..\..\..\..\..\ProgramData\FlexRadio Systems\PowerSDR\Skins\KE9NS6_World\Console\Base\Console.png" SelfReg="false" NextFile="longledbttn0.png_35"/>
     <ROW File="Console.png_71" Component_="btnBandHF0.png_34" FileName="Console.png" Attributes="0" SourcePath="..\..\..\..\..\ProgramData\FlexRadio Systems\PowerSDR\Skins\KE9NS6_World\Console\Console.png" SelfReg="false" NextFile="panelBandHF.png_35"/>
-    <ROW File="ConsoleCopy.png" Component_="btnBandHF0.png_30" FileName="CONSOL~1.PNG|Console - Copy.png" Attributes="0" SourcePath="..\..\..\..\..\ProgramData\FlexRadio Systems\PowerSDR\Skins\KE9NS4_Plain\Console\Console - Copy.png" SelfReg="false" NextFile="Console.png_61"/>
     <ROW File="DXLOC.txt" Component_="mic.bmp" FileName="DXLOC.txt" Attributes="0" SourcePath="..\..\..\AppData\Roaming\FlexRadio Systems\PowerSDR v3.0.0\DXLOC.txt" SelfReg="false" NextFile="PowerSDR_ke9ns_CAT_Commands.pdf_3"/>
     <ROW File="DttSP.dll" Component_="DttSP.dll" FileName="DttSP.dll" Attributes="0" SourcePath="bin\Release\DttSP.dll" SelfReg="false" NextFile="ADODB.dll"/>
     <ROW File="FCCDATA.dat" Component_="mic.bmp" FileName="FCCDATA.dat" Attributes="0" SourcePath="..\..\..\AppData\Roaming\FlexRadio Systems\PowerSDR v3.0.0\FCCDATA.dat" SelfReg="false" NextFile="FLEX5000_Owners_Manual_v2.8.pdf_3"/>
@@ -624,7 +624,7 @@
     <ROW File="ckQuickRec0.png_30" Component_="btnBandHF0.png_30" FileName="CKQUIC~3.PNG|ckQuickRec-0.png" Attributes="0" SourcePath="..\..\..\..\..\ProgramData\FlexRadio Systems\PowerSDR\Skins\KE9NS4_Plain\Console\ckQuickRec-0.png" SelfReg="false" NextFile="ckQuickRec1.png_30"/>
     <ROW File="ckQuickRec0.png_35" Component_="btnBandHF0.png_34" FileName="CKQUIC~3.PNG|ckQuickRec-0.png" Attributes="0" SourcePath="..\..\..\..\..\ProgramData\FlexRadio Systems\PowerSDR\Skins\KE9NS6_World\Console\ckQuickRec-0.png" SelfReg="false" NextFile="ckQuickRec1.png_35"/>
     <ROW File="ckQuickRec1.png_26" Component_="btnBandHF0.png_26" FileName="CKQUIC~4.PNG|ckQuickRec-1.png" Attributes="0" SourcePath="..\..\..\..\..\ProgramData\FlexRadio Systems\PowerSDR\Skins\KE9NS3_Spot\Console\ckQuickRec-1.png" SelfReg="false" NextFile="Console.png_53"/>
-    <ROW File="ckQuickRec1.png_30" Component_="btnBandHF0.png_30" FileName="CKQUIC~4.PNG|ckQuickRec-1.png" Attributes="0" SourcePath="..\..\..\..\..\ProgramData\FlexRadio Systems\PowerSDR\Skins\KE9NS4_Plain\Console\ckQuickRec-1.png" SelfReg="false" NextFile="ConsoleCopy.png"/>
+    <ROW File="ckQuickRec1.png_30" Component_="btnBandHF0.png_30" FileName="CKQUIC~4.PNG|ckQuickRec-1.png" Attributes="0" SourcePath="..\..\..\..\..\ProgramData\FlexRadio Systems\PowerSDR\Skins\KE9NS4_Plain\Console\ckQuickRec-1.png" SelfReg="false" NextFile="Console.png_61"/>
     <ROW File="ckQuickRec1.png_35" Component_="btnBandHF0.png_34" FileName="CKQUIC~4.PNG|ckQuickRec-1.png" Attributes="0" SourcePath="..\..\..\..\..\ProgramData\FlexRadio Systems\PowerSDR\Skins\KE9NS6_World\Console\ckQuickRec-1.png" SelfReg="false" NextFile="Console.png_71"/>
     <ROW File="deepfist.onnx" Component_="deepfist.onnx" FileName="DEEPFI~1.ONN|deepfist.onnx" Attributes="0" SourcePath="bin\Release\models\deepfist.onnx" SelfReg="false" NextFile="deepfist.onnx.json"/>
     <ROW File="deepfist.onnx.json" Component_="deepfist.onnx" FileName="DEEPFI~1.JSO|deepfist.onnx.json" Attributes="0" SourcePath="bin\Release\models\deepfist.onnx.json" SelfReg="false" NextFile="THIRDPARTYNOTICES.md"/>
