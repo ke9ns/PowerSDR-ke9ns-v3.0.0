@@ -2848,6 +2848,10 @@ namespace PowerSDR
         private static SizeF length;                                          // ke9ns add length of call sign so we can do usb/lsb and define a box to click into
         private static SizeF length1;                                          // ke9ns add length of call sign so we can do usb/lsb and define a box to click into
 
+        private static SizeF length2;                                          // ke9ns add length of beam heading so we can do usb/lsb and define a box to click into  .341 .8
+        private static SizeF length3;                                          // ke9ns add length of beam heading so we can do usb/lsb and define a box to click into
+
+
         private static bool low = false;                                     // ke9ns add true=LSB, false=USB
         private static int rx2 = 0;                                          // ke9ns add 0-49 spots for rx1 panadapter window for qrz callup  (50-100 for rx2)
         private static int rx3 = 0;                                          // ke9ns add 0-49 spots for rx1 panadapter window for qrz callup  (50-100 for rx2)
@@ -2922,6 +2926,7 @@ namespace PowerSDR
         static int top1; // ke9ns
         static int top3; // .295
 
+        static int beamDrop = 11; // .341 .8 how much to drop when display beam heading is on
 
         private static void DrawPanadapterGrid(ref Graphics g, int W, int H, int rx, bool bottom)
         {
@@ -13736,6 +13741,7 @@ namespace PowerSDR
                         } // USB side
 
                         iii = iii + 22; // 11
+
                         if (iii > 90) iii = 0;
 
 
@@ -13942,8 +13948,10 @@ namespace PowerSDR
                                         }
                                         else Debug.Write(" -SXK OVERLIMIT ");
 
+                                      //  if (SpotForm.SpotBeam) iii = iii + 22;
+                                      //  else 
+                                            iii = iii + 11; // stairstep spots
 
-                                        iii = iii + 11; // stairstep spots
                                         if (iii > 90) iii = 0;
 
                                     } // check time
@@ -13982,6 +13990,7 @@ namespace PowerSDR
                                     if (SpotForm != null && SpotForm.SpotNoVert == false) g.DrawLine(p2, VFO_SWLPos, 20, VFO_SWLPos, H1a);   // draw vertical line .269
 
                                     iii = iii + 11; // stairstep spots
+
                                     if (iii > 90) iii = 0;
 
                                 } // check time
@@ -14326,6 +14335,8 @@ namespace PowerSDR
                     int H1a = H / 2;            // length of vertical line (based on rx1 and rx2 display window configuration)
                     int H1b = 20;               // starting point of vertical line
 
+
+
                     // RX1/RX2 PanF/Pan = 5,2 (K9,K10)(short)  PanF/PanF = 5,5, (short) Pan/Pan 2,2 (long)
                     if (bottom)                 // if your drawing to the bottom 
                     {
@@ -14361,7 +14372,7 @@ namespace PowerSDR
 
                     //-------------------------------------------------------------------------------------------------
                     //-------------------------------------------------------------------------------------------------
-                    // draw DX spots
+                    // draw DX spots //.8
                     //-------------------------------------------------------------------------------------------------
                     //-------------------------------------------------------------------------------------------------
 
@@ -14407,7 +14418,7 @@ namespace PowerSDR
                         bb = Console.MMK3;
                     }
 
-
+                    // DX_Beam[ii].ToString().PadLeft(3) + "°"  .8 341
                     //--------------------------------------------------------------------------------------------
                     for (int ii = 0; ii < kk; ii++) // draw call signs to screen in order to draw over the vert lines
                     {
@@ -14420,6 +14431,8 @@ namespace PowerSDR
                             {
 
                                 length = g.MeasureString(SpotControl.DX_Station[holder[ii]], font1); //  temp used to determine the size of the string when in LSB and you need to reserve a certain space//  (cl.Width);
+                                if (SpotForm.SpotBeam) length2 = g.MeasureString(SpotControl.DX_Beam[holder[ii]].ToString().PadLeft(3) + "°", font1); //  temp used to determine the size of the string when in LSB and you need to reserve a certain space//  (cl.Width);  .341 .8
+
 
                                 if ((bb > 0) && (SpotControl.SP6_Active != 0))
                                 {
@@ -14510,10 +14523,13 @@ namespace PowerSDR
                                     if (SpotForm.SpotBackground == true) //.261
                                     {
                                         g.FillRectangle(new SolidBrush(DXColor), holder1[ii] - (int)length.Width - 2, H1b + iii + 2, (int)length.Width + 4, (int)length.Height - 2); //.261
+                                        if (SpotForm.SpotBeam) g.FillRectangle(new SolidBrush(DXColor), holder1[ii] - (int)length2.Width - 2, H1b + iii + 2 + beamDrop, (int)length2.Width + 4, (int)length2.Height - 2); //.341 .8
+
                                     }
 
 
                                     g.DrawString(SpotControl.DX_Station[holder[ii]], font1, new SolidBrush(DXColor1), holder1[ii] - (int)length.Width, H1b + iii); // DX call sign to panadapter
+                                   if (SpotForm.SpotBeam) g.DrawString(SpotControl.DX_Beam[holder[ii]].ToString().PadLeft(3) + "°", font1, new SolidBrush(DXColor1), holder1[ii] - (int)length2.Width, H1b + iii + beamDrop); //   .341 .8
 
 
                                 } //  if (SpotForm.SpotLoTWColor== true) //.262
@@ -14523,11 +14539,14 @@ namespace PowerSDR
                                     g.FillRectangle(new SolidBrush(Color.Black), holder1[ii] - (int)length.Width - 2, H1b + iii + 2, (int)length.Width + 4, (int)length.Height - 2); //.261
 
                                     g.DrawString(SpotControl.DX_Station[holder[ii]], font1, grid_text_brush, holder1[ii] - (int)length.Width, H1b + iii); // DX call sign to panadapter
+                                    if (SpotForm.SpotBeam) g.DrawString(SpotControl.DX_Beam[holder[ii]].ToString().PadLeft(3) + "°", font1, grid_text_brush, holder1[ii] - (int)length2.Width, H1b + iii + beamDrop); //   .341 .8
 
                                 }
                                 else
                                 {
                                     g.DrawString(SpotControl.DX_Station[holder[ii]], font1, grid_text_brush, holder1[ii] - (int)length.Width, H1b + iii); // DX call sign to panadapter
+                                    if (SpotForm.SpotBeam) g.DrawString(SpotControl.DX_Beam[holder[ii]].ToString().PadLeft(3) + "°", font1, grid_text_brush, holder1[ii] - (int)length2.Width, H1b + iii + beamDrop); //   .341 .8
+
                                 }
 
                             }
@@ -14624,6 +14643,7 @@ namespace PowerSDR
                                     if (SpotForm.SpotBackground == true) //.261
                                     {
                                         g.FillRectangle(new SolidBrush(DXColor), holder1[ii] - (int)length.Width - 2, H1b + iii + 2, (int)length.Width + 4, (int)length.Height - 2); //.261
+                                        
                                     }
                                     g.DrawString(SpotControl.DX_Spotter[holder[ii]], font1, new SolidBrush(DXColor1), holder1[ii] - (int)length.Width, H1b + iii); // .262  grid_text_brush
 
@@ -14655,13 +14675,12 @@ namespace PowerSDR
 
 
                         } // LSB side
-
-
                         else   // 0=usb so draw on right side of line (normal)
                         {
                             if (Console.DXR == 0) // spot
                             {
                                 length = g.MeasureString(SpotControl.DX_Station[holder[ii]], font1); //  not needed here but used for qrz hyperlinking
+                                if (SpotForm.SpotBeam) length2 = g.MeasureString(SpotControl.DX_Beam[holder[ii]].ToString().PadLeft(3) + "°", font1); //  temp used to determine the size of the string when in LSB and you need to reserve a certain space//  (cl.Width);  .341 .8
 
                                 if ((bb > 0) && (SpotControl.SP6_Active != 0))
                                 {
@@ -14676,6 +14695,7 @@ namespace PowerSDR
                                             if (((y2 + length.Height) >= Console.MMY[jj]) && (y2 < (Console.MMY[jj] + Console.MMH[jj])))
                                             {
                                                 iii = iii + 33;
+
                                                 break;
                                             }
                                         }
@@ -14751,19 +14771,24 @@ namespace PowerSDR
                                     if (SpotForm.SpotBackground == true) //.261
                                     {
                                         g.FillRectangle(new SolidBrush(DXColor), holder1[ii] - 2, H1b + iii + 2, (int)length.Width + 4, (int)length.Height - 2); //.261
+                                        if (SpotForm.SpotBeam) g.FillRectangle(new SolidBrush(DXColor), holder1[ii] - 2, H1b + iii + 2 + beamDrop, (int)length2.Width + 4, (int)length2.Height - 2); //.341 .8
                                     }
                                     g.DrawString(SpotControl.DX_Station[holder[ii]], font1, new SolidBrush(DXColor1), holder1[ii], H1b + iii); // DX station name
+                                    if (SpotForm.SpotBeam) g.DrawString(SpotControl.DX_Beam[holder[ii]].ToString().PadLeft(3) + "°", font1, new SolidBrush(DXColor1), holder1[ii], H1b + iii + beamDrop); //   .341 .8
 
                                 } //  if (SpotForm.SpotLoTWColor== true) //.262
                                 else if (SpotForm.SpotBackground == true) //.261
                                 {
                                     g.FillRectangle(new SolidBrush(Color.Black), holder1[ii] - 2, H1b + iii + 2, (int)length.Width + 4, (int)length.Height - 2); //.261
                                     g.DrawString(SpotControl.DX_Station[holder[ii]], font1, grid_text_brush, holder1[ii], H1b + iii); // DX station name
+                                    if (SpotForm.SpotBeam) g.DrawString(SpotControl.DX_Beam[holder[ii]].ToString().PadLeft(3) + "°", font1, grid_text_brush, holder1[ii], H1b + iii + beamDrop); //   .341 .8
 
                                 }
                                 else
+                                {
                                     g.DrawString(SpotControl.DX_Station[holder[ii]], font1, grid_text_brush, holder1[ii], H1b + iii); // DX station name
-
+                                    if (SpotForm.SpotBeam) g.DrawString(SpotControl.DX_Beam[holder[ii]].ToString().PadLeft(3) + "°", font1, grid_text_brush, holder1[ii], H1b + iii + beamDrop); //   .341 .8
+                                }
 
                             }
                             else // spotter
@@ -14783,6 +14808,7 @@ namespace PowerSDR
                                             if (((y2 + length.Height) >= Console.MMY[jj]) && (y2 < (Console.MMY[jj] + Console.MMH[jj])))
                                             {
                                                 iii = iii + 33;
+
                                                 break;
                                             }
                                         }
@@ -14901,7 +14927,10 @@ namespace PowerSDR
 
                         } // USB side
 
-                        iii = iii + 11;
+                          if (SpotForm.SpotBeam) iii = iii + 22; //.341 .8
+                          else   iii = iii + 11;
+
+
                         if (iii > 90) iii = 0;
 
                     }// for loop through DX_Index

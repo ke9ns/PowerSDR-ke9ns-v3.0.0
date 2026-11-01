@@ -622,7 +622,7 @@ namespace PowerSDR
             string fullPath = Path.Combine(downloadPath1, "AzimuthalMap.pdf");
             string BMPFile = Path.Combine(downloadPath1, "AzimuthalMap.bmp");
 
-            Debug.WriteLine("Download and modify Beam hading Map to path: " + downloadPath1);
+            Debug.WriteLine("Download and modify Beam heading Map to path: " + downloadPath1);
 
 
             string latlong = "42.01,-88.19";
@@ -6924,6 +6924,7 @@ namespace PowerSDR
         public bool SpotBackground = false; //.261
         public bool SpotLoTWColor = false; //.262
         public bool SpotNoVert = false; //.269 true = no vert lines for dx spots on pan
+        public bool SpotBeam = false; // .341 .8
 
         public string SpotWatchCall = "call sign"; // .269 call sign of DX spot your watching out for.
         public bool SpotWatchFoundDX = false; //.269 true = match for Spotwatchcall DX spot

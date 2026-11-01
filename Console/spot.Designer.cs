@@ -893,7 +893,7 @@ namespace PowerSDR
             0,
             0,
             0});
-            this.numericUpDownTS1.Location = new System.Drawing.Point(257, 17);
+            this.numericUpDownTS1.Location = new System.Drawing.Point(258, 17);
             this.numericUpDownTS1.Maximum = new decimal(new int[] {
             5,
             0,
@@ -907,6 +907,7 @@ namespace PowerSDR
             this.numericUpDownTS1.Name = "numericUpDownTS1";
             this.numericUpDownTS1.Size = new System.Drawing.Size(39, 20);
             this.numericUpDownTS1.TabIndex = 88;
+            this.numericUpDownTS1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.toolTip1.SetToolTip(this.numericUpDownTS1, "Which Band to Start Slow Beacaon Scan on:\r\n1=14.1mhz\r\n2=18.11mhz\r\n3=21.15mhz\r\n4=2" +
         "4.93mhz\r\n5=28.2mhz\r\n");
             this.numericUpDownTS1.Value = new decimal(new int[] {

@@ -45,6 +45,7 @@ namespace PowerSDR
         public CheckBoxTS chkPanSpotBlank;
         public CheckBoxTS chkPanLoTWColor;
         public CheckBoxTS chkPanNoVert;
+        public CheckBoxTS chkPanBeam;
         public static SpotControl SpotForm;                       // ke9ns add DX spotter function
 
         #endregion
@@ -95,6 +96,7 @@ namespace PowerSDR
             this.chkPanLoTWColor = new System.Windows.Forms.CheckBoxTS();
             this.chkPanNoVert = new System.Windows.Forms.CheckBoxTS();
             this.label5 = new System.Windows.Forms.Label();
+            this.chkPanBeam = new System.Windows.Forms.CheckBoxTS();
             ((System.ComponentModel.ISupportInitialize)(this.udSpotAge)).BeginInit();
             this.SuspendLayout();
             // 
@@ -163,7 +165,7 @@ namespace PowerSDR
             // 
             this.chkPanNoVert.AutoSize = true;
             this.chkPanNoVert.Image = null;
-            this.chkPanNoVert.Location = new System.Drawing.Point(15, 119);
+            this.chkPanNoVert.Location = new System.Drawing.Point(15, 110);
             this.chkPanNoVert.Name = "chkPanNoVert";
             this.chkPanNoVert.Size = new System.Drawing.Size(268, 17);
             this.chkPanNoVert.TabIndex = 89;
@@ -182,10 +184,24 @@ namespace PowerSDR
             this.label5.TabIndex = 85;
             this.label5.Text = "Maximum Spot Age (Minutes)";
             // 
+            // chkPanBeam
+            // 
+            this.chkPanBeam.AutoSize = true;
+            this.chkPanBeam.Image = null;
+            this.chkPanBeam.Location = new System.Drawing.Point(15, 148);
+            this.chkPanBeam.Name = "chkPanBeam";
+            this.chkPanBeam.Size = new System.Drawing.Size(277, 17);
+            this.chkPanBeam.TabIndex = 90;
+            this.chkPanBeam.Text = "Panadapter spot callsigns with Beam Heading display\r\n";
+            this.toolTip1.SetToolTip(this.chkPanBeam, "Check to include Beam heading just below callsign");
+            this.chkPanBeam.UseVisualStyleBackColor = true;
+            this.chkPanBeam.CheckedChanged += new System.EventHandler(this.chkPanBeam_CheckedChanged);
+            // 
             // SpotAge
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(367, 204);
+            this.Controls.Add(this.chkPanBeam);
             this.Controls.Add(this.chkPanNoVert);
             this.Controls.Add(this.chkPanLoTWColor);
             this.Controls.Add(this.chkPanSpotBlank);
@@ -303,8 +319,11 @@ namespace PowerSDR
             else SpotForm.SpotNoVert = false;
         }
 
-
-
+        private void chkPanBeam_CheckedChanged(object sender, EventArgs e) //.341 .8
+        {
+            if (chkPanBeam.Checked) SpotForm.SpotBeam = true;
+            else SpotForm.SpotBeam = false;
+        }
     } // SpotAge
 
 } // PowerSDR

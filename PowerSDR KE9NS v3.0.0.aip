@@ -9,10 +9,10 @@
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
     <ROW Property="ARPPRODUCTICON" Value="PowerSDR1.exe" Type="8"/>
     <ROW Property="Manufacturer" Value="KE9NS"/>
-    <ROW Property="ProductCode" Value="1033:{7547FC4E-1E4B-4694-8092-7EA099BF649B} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{DB1A1A85-8792-47A5-9D75-4EFD28C09532} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="PowerSDR KE9NS v3.0.0.8"/>
-    <ROW Property="ProductVersion" Value="63.0.12" Type="32"/>
+    <ROW Property="ProductVersion" Value="63.0.13" Type="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{593A740B-D14F-4895-AA2F-1D6F331EE430}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
