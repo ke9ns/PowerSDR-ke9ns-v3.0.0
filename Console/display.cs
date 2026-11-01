@@ -14781,7 +14781,7 @@ namespace PowerSDR
                                 {
                                     g.FillRectangle(new SolidBrush(Color.Black), holder1[ii] - 2, H1b + iii + 2, (int)length.Width + 4, (int)length.Height - 2); //.261
                                     g.DrawString(SpotControl.DX_Station[holder[ii]], font1, grid_text_brush, holder1[ii], H1b + iii); // DX station name
-                                    if (SpotForm.SpotBeam) g.DrawString(SpotControl.DX_Beam[holder[ii]].ToString().PadLeft(3) + "°", font1, grid_text_brush, holder1[ii], H1b + iii + beamDrop); //   .341 .8
+                                     if (SpotForm.SpotBeam) g.DrawString(SpotControl.DX_Beam[holder[ii]].ToString().PadLeft(3) + "°", font1, grid_text_brush, holder1[ii], H1b + iii + beamDrop); //   .341 .8
 
                                 }
                                 else
