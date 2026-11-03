@@ -21,7 +21,7 @@ wrong/missing characters. Check SSB and NR3 separately for regressions.
 
 Build the solution Release/x86 using the existing maintainer build guide;
 deploy the matching PowerSDR.exe and Win32 wdsp.dll together. The application
-checks for native version 211. Earlier binary release/QA notes describe 2.10.
+checks for native version 211. Use the current integration and QA notes for this branch.
 This branch is unrelated to and does not clear the earlier Defender detection.
 
 Local validation: Release/x86 compiled; CwTap exercised native slots 2/0/1/3

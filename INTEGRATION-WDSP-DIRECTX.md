@@ -17,8 +17,8 @@ notch and EQ bridge fixes; complex-IQ diversity before RX1 processing;
 Direct2D traces/fills/waterfall with GDI+ compatibility and fallback;
 display diagnostics, pacing and audio-progress-based startup FPS guard.
 
-This remains x86, with WDSP reporting version 129. It is not a conversion to
-x64 or an update to WDSP 2.10. DttSP remains required for TX, legacy spectrum
+The current branch remains x86, with WDSP 2.11 reporting version 211.
+DttSP remains required for TX, legacy spectrum
 data and fallback. Direct2D is a hybrid renderer, not a complete GPU rewrite.
 
 ## Conflict decisions

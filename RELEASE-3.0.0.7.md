@@ -26,7 +26,7 @@ been implemented. Existing Apply persistence behavior is unchanged.
 ## Build / QA / release precautions
 
 Use BUILDING-v3.0.0.5.md and the existing maintainer handoff for Release/x86,
-WDSP 2.10 and pinned ONNX Runtime 1.20.1 requirements. Those documents describe
+WDSP 2.11 and pinned ONNX Runtime 1.20.1 requirements. Those documents describe
 the prior integration; their runtime/build requirements remain applicable.
 Villas PY5VB/user feedback approved the previous candidate's functional fixes.
 The combined 3.0.0.7 with Darrin's map changes still requires hardware QA.

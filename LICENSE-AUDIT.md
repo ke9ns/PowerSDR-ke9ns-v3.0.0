@@ -12,7 +12,7 @@ component is prohibited, but must be resolved before claiming compliance.
 | Component | Evidence inspected | Required action / status |
 | --- | --- | --- |
 | PowerSDR / WDSP | Root GPL v2 text; source headers commonly GPL-2.0-or-later | Preserve copyright, modifications, license and complete corresponding source/build inputs. Audit exceptions; do not assume every file permits relicensing. |
-| WDSP 2.10 NNR models 0/1 | Embedded source headers credit Warren Pratt NR0V, GPL-2.0-or-later | Retain headers and distribute matching source including model arrays. Imported source reference: 52b927c87e55e8c3f88b25dad2bf9e22626cea9f in the local WDSP210 Thetis tree. |
+| WDSP 2.11 NNR models 0-3 | Embedded source headers credit Warren Pratt NR0V, GPL-2.0-or-later | Retain headers and distribute matching source including model arrays. Source provenance: Thetis snapshot 62f15413; model arrays match TAPR release e69de50. See WDSP-2.11-CW.md. |
 | RNNoise | lib/NR_Algorithms_x86/src/rnnoise/COPYING, BSD 3-clause | Notice now copied by project. Exact embedded weights provenance and prebuilt DLL-to-source mapping still need confirmation. |
 | SpecBleach | lib/NR_Algorithms_x86/src/libspecbleach/LICENSE; LGPL-2.1-or-later headers | License now copied. Provide matching source/build instructions and satisfy applicable LGPL replacement/relinking requirements; verify binary provenance. |
 | FFTW double and float | Official FFTW FAQ identifies GPL licensing | Identify exact prebuilt versions and matching source, include notices and source. Current local binary directory does not establish complete compliance. |

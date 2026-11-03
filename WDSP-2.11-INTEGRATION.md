@@ -1,16 +1,16 @@
-# PowerSDR 3.0.0.5 - WDSP 2.10 / NR5 and NR6
+# PowerSDR 3.0.0.5 - WDSP 2.11 / NR5 and NR6
 
 Based on the approved neural CW branch at 8a539bb2d41994bfd435ac2ad1eea833d20a9423.
 That branch is retained without changes. No remote publication is implied.
 
-WDSP C/H sources imported from the local Thetis WDSP210 tree at
-52b927c87e55e8c3f88b25dad2bf9e22626cea9f. The embedded NNR model sources
+WDSP C/H sources updated from the local Thetis WDSP 2.11 snapshot at
+62f15413. The embedded NNR model sources
 and engine retain Warren Pratt's GPL-2.0-or-later notices. Build uses the
 existing PowerSDR Win32 project, FFTW and RNNoise/SpecBleach dependencies.
 PowerSDR's post-AGC RNNoise scaling fix is explicitly retained.
 
 - NR button cycles OFF and NR1 through NR6, independently for RX1 and RX2.
-- NR5 selects NNR model 0 (Standard); NR6 selects model 1 (Premium).
+- NR5 selects model 0 (voice) or 2 (CW); NR6 selects model 1 (voice) or 3 (CW).
 - NR5/NR6 clear and disable BIN independently on RX1/RX2. Leaving NNR
   restores availability in compatible modes, without re-enabling BIN itself.
   Programmatic checkbox changes and stale audio-side BIN requests are guarded.

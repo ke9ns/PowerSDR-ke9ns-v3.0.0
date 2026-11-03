@@ -6,7 +6,7 @@ No master change, forced push or automatic merge is intended.
 
 ## What changed
 
-- WDSP 2.10, NR5/NR6 and embedded NNR models; separate DSP > NNR settings.
+- WDSP 2.11, NR5/NR6 and embedded NNR models; separate DSP > NNR settings.
 - NR5/NR6 disable BIN for the affected receiver to avoid one-sided audio.
 - Optional neural CW decoder integrated into CWX.
 - Existing upstream fixes retained. See the feature-specific documents.

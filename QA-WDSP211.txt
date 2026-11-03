@@ -1,4 +1,4 @@
-PowerSDR 3.0.0.5 - WDSP 2.10 / NR5 / NR6 - release candidate QA
+PowerSDR 3.0.0.5 - WDSP 2.11 / NR5 / NR6 - release candidate QA
 
 Extraia o ZIP COMPLETO em uma pasta nova. Nao substitua apenas o executavel:
 esta versao precisa da nova wdsp.dll de 32 bits. Os modelos NR5/NR6 estao
