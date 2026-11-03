@@ -13,7 +13,7 @@ namespace PowerSDR
         {
             var page = new TabPage { Name = "tpWdspNNR", Text = "NNR", AutoScroll = true,
                 UseVisualStyleBackColor = true };
-            page.Controls.Add(new LabelTS { Text = "WDSP 2.10 - NR5 Standard / NR6 Premium (higher CPU usage)",
+            page.Controls.Add(new LabelTS { Text = "WDSP 2.11 - NR5 Standard / NR6 Premium (voice or CW model by mode)",
                 Location = new Point(10, 8), Size = new Size(560, 22) });
             for (int receiver = 0; receiver < 2; receiver++)
                 page.Controls.Add(CreateNnrGroup(receiver));
