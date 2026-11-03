@@ -691,6 +691,7 @@
     </Compile>
     <Compile Include="dttsp.cs" />
     <Compile Include="DSP\DspBackend.cs" />
+    <Compile Include="CatNrSelection.cs" />
     <Compile Include="DSP\WdspPreparationDialog.cs">
       <SubType>Form</SubType>
     </Compile>
