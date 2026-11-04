@@ -1,6 +1,6 @@
-# Building PowerSDR 3.0.0.5
+# Building PowerSDR 3.0.0.9
 
-This candidate includes upstream master 1e6abdb (3.0.0.4), neural CW,
+This candidate includes upstream master d1149ae (3.0.0.8), neural CW,
 WDSP 2.11 with NR5/NR6, the nested DSP > NNR page and the NR5/NR6 BIN lock.
 The earlier private QA label 3.0.0.6 is not the public release sequence.
 The experimental and CW-only branches are preserved separately.
