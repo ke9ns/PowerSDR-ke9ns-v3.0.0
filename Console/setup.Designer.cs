@@ -12725,7 +12725,7 @@ namespace PowerSDR
             0});
             this.number3DZ.Location = new System.Drawing.Point(77, 270);
             this.number3DZ.Maximum = new decimal(new int[] {
-            40,
+            58,
             0,
             0,
             0});
@@ -12739,7 +12739,7 @@ namespace PowerSDR
             this.number3DZ.TabIndex = 91;
             this.toolTip1.SetToolTip(this.number3DZ, "3D z offset (depth):\r\n\r\n16 = Panafall mode\r\n21 - 40 = Panadapter only mode ");
             this.number3DZ.Value = new decimal(new int[] {
-            16,
+            25,
             0,
             0,
             0});
@@ -12799,6 +12799,7 @@ namespace PowerSDR
             0,
             0,
             0});
+            this.number3DY.ValueChanged += new System.EventHandler(this.number3DY_ValueChanged);
             // 
             // number3DX
             // 
@@ -12827,6 +12828,7 @@ namespace PowerSDR
             0,
             0,
             0});
+            this.number3DX.ValueChanged += new System.EventHandler(this.number3DX_ValueChanged);
             // 
             // groupBoxTS3
             // 
@@ -13632,7 +13634,7 @@ namespace PowerSDR
             // clrbtn3DDataLine
             // 
             this.clrbtn3DDataLine.Automatic = "Automatic";
-            this.clrbtn3DDataLine.Color = System.Drawing.Color.Aquamarine;
+            this.clrbtn3DDataLine.Color = System.Drawing.Color.DeepSkyBlue;
             this.clrbtn3DDataLine.Image = null;
             this.clrbtn3DDataLine.Location = new System.Drawing.Point(204, 12);
             this.clrbtn3DDataLine.MoreColors = "More Colors...";
