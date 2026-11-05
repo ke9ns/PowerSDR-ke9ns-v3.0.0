@@ -1018,55 +1018,13 @@ namespace PowerSDR
         private static Pen data_line_pen = new Pen(new SolidBrush(Color.White), display_line_width);
 
         private static Color temp = Color.Aquamarine;
-        public static float Pan3DSteps = 39f; // .245 was 29
-                                              //  public static int Pan3DAlphaStep = (int)((255f / (float)Pan3DSteps)); //+ .5f);
+        public static float Pan3DSteps = 60f; // .245 was 39f
+                                             
         public static float Pan3DAlphaStep = ((255f / (float)Pan3DSteps)); //+ .5f);
-
         // designed to fade into the background, so alpha gets lower as you go backwards
 
-        private static Pen data_3dline_pen40 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 38f)), temp), display_line_width); //.245
-        private static Pen data_3dline_pen39 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 37f)), temp), display_line_width);
-        private static Pen data_3dline_pen38 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 36f)), temp), display_line_width);
-        private static Pen data_3dline_pen37 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 35f)), temp), display_line_width);
-        private static Pen data_3dline_pen36 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 34f)), temp), display_line_width);
-        private static Pen data_3dline_pen35 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 33f)), temp), display_line_width);
-        private static Pen data_3dline_pen34 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 32f)), temp), display_line_width);
-        private static Pen data_3dline_pen33 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 31f)), temp), display_line_width);
-        private static Pen data_3dline_pen32 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 30f)), temp), display_line_width);
-        private static Pen data_3dline_pen31 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 29f)), temp), display_line_width); //.245
-
-
-        private static Pen data_3dline_pen30 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 28f)), temp), display_line_width);
-        private static Pen data_3dline_pen29 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 27f)), temp), display_line_width);
-        private static Pen data_3dline_pen28 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 26f)), temp), display_line_width);
-        private static Pen data_3dline_pen27 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 25f)), temp), display_line_width);
-        private static Pen data_3dline_pen26 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 24f)), temp), display_line_width);
-        private static Pen data_3dline_pen25 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 23f)), temp), display_line_width);
-        private static Pen data_3dline_pen24 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 22f)), temp), display_line_width);
-        private static Pen data_3dline_pen23 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 21f)), temp), display_line_width);
-        private static Pen data_3dline_pen22 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 20f)), temp), display_line_width);
-        private static Pen data_3dline_pen21 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 19f)), temp), display_line_width);
-        private static Pen data_3dline_pen20 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 18f)), temp), display_line_width);
-
-        private static Pen data_3dline_pen19 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 17f)), temp), display_line_width);
-        private static Pen data_3dline_pen18 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 16f)), temp), display_line_width);
-        private static Pen data_3dline_pen17 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 15f)), temp), display_line_width);
-        private static Pen data_3dline_pen16 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 14f)), temp), display_line_width);
-        private static Pen data_3dline_pen15 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 13f)), temp), display_line_width);
-        private static Pen data_3dline_pen14 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 12f)), temp), display_line_width);
-        private static Pen data_3dline_pen13 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 11f)), temp), display_line_width);
-        private static Pen data_3dline_pen12 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 10f)), temp), display_line_width);
-        private static Pen data_3dline_pen11 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 9f)), temp), display_line_width);
-        private static Pen data_3dline_pen10 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 8f)), temp), display_line_width);
-        private static Pen data_3dline_pen9 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 7f)), temp), display_line_width);
-        private static Pen data_3dline_pen8 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 6f)), temp), display_line_width);
-        private static Pen data_3dline_pen7 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 5f)), temp), display_line_width);
-        private static Pen data_3dline_pen6 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 4f)), temp), display_line_width);
-        private static Pen data_3dline_pen5 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 3f)), temp), display_line_width);
-        private static Pen data_3dline_pen4 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 2f)), temp), display_line_width);
-        private static Pen data_3dline_pen3 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps - 1f)), temp), display_line_width);
-        private static Pen data_3dline_pen2 = new Pen(Color.FromArgb((int)(Pan3DAlphaStep * (Pan3DSteps)), temp), display_line_width);
-
+        private static Pen[] data_3dline_pen = new Pen[61]; //.9
+   
 
         private static Pen IDENT_pen = new Pen(new SolidBrush(Color.PaleGreen), 1); // ke9ns add
         private static Pen IDENT_pen2 = new Pen(new SolidBrush(Color.PaleGoldenrod), 1); // ke9ns add
@@ -1090,79 +1048,44 @@ namespace PowerSDR
             }
         } // Data3DLineAlpha
 
-        static int[] Alpha3D = new int[50];
+        static int[] Alpha3D = new int[70];
 
         public static Color Data3DLineColor
         {
             get { return data_3Dline_color; }
             set
             {
-
+              
                 data_3Dline_color = value;
 
-                Pan3DSteps = 21f; //.245 was 30 .242 was 23
+                Debug.WriteLine("3D color " + value);
+
+
+                Pan3DSteps = 59f; //.245 21f
 
                 try
                 {
                     if (!console.initializing) Pan3DSteps = (float)console.setupForm.number3DZ.Value + 5f;
+               
                 }
                 catch
                 {
-                    Pan3DSteps = 21f;
+                    Pan3DSteps = 59f; //was 21
                 }
 
                 Pan3DAlphaStep = (((float)data_3Dline_Alpha / (float)Pan3DSteps));
 
                 for (int ww = 0; ww < (int)Pan3DSteps; ww++)
                 {
-
                     Alpha3D[ww] = (int)(Pan3DAlphaStep * (Pan3DSteps - (float)ww - 1f));
-                    // Debug.WriteLine("3D pan: " + ww + " , " + Alpha3D[ww]);
-
                 }
 
-                data_3dline_pen40 = new Pen(Color.FromArgb(Alpha3D[39], data_3Dline_color), display_line_width); //.245
-                data_3dline_pen39 = new Pen(Color.FromArgb(Alpha3D[38], data_3Dline_color), display_line_width);
-                data_3dline_pen38 = new Pen(Color.FromArgb(Alpha3D[37], data_3Dline_color), display_line_width);
-                data_3dline_pen37 = new Pen(Color.FromArgb(Alpha3D[36], data_3Dline_color), display_line_width);
-                data_3dline_pen36 = new Pen(Color.FromArgb(Alpha3D[35], data_3Dline_color), display_line_width);
-                data_3dline_pen35 = new Pen(Color.FromArgb(Alpha3D[34], data_3Dline_color), display_line_width);
-                data_3dline_pen34 = new Pen(Color.FromArgb(Alpha3D[33], data_3Dline_color), display_line_width);
-                data_3dline_pen33 = new Pen(Color.FromArgb(Alpha3D[32], data_3Dline_color), display_line_width);
-                data_3dline_pen32 = new Pen(Color.FromArgb(Alpha3D[31], data_3Dline_color), display_line_width);
-                data_3dline_pen31 = new Pen(Color.FromArgb(Alpha3D[30], data_3Dline_color), display_line_width); //.245
+                for (int iii = (int)Pan3DSteps; iii > 0; iii--) //.9
+                {
+                    data_3dline_pen[iii+1] = new Pen(Color.FromArgb(Alpha3D[iii], data_3Dline_color), display_line_width);
+                }
 
-
-                data_3dline_pen30 = new Pen(Color.FromArgb(Alpha3D[29], data_3Dline_color), display_line_width);
-                data_3dline_pen29 = new Pen(Color.FromArgb(Alpha3D[28], data_3Dline_color), display_line_width);
-                data_3dline_pen28 = new Pen(Color.FromArgb(Alpha3D[27], data_3Dline_color), display_line_width);
-                data_3dline_pen27 = new Pen(Color.FromArgb(Alpha3D[26], data_3Dline_color), display_line_width);
-                data_3dline_pen26 = new Pen(Color.FromArgb(Alpha3D[25], data_3Dline_color), display_line_width);
-                data_3dline_pen25 = new Pen(Color.FromArgb(Alpha3D[24], data_3Dline_color), display_line_width);
-                data_3dline_pen24 = new Pen(Color.FromArgb(Alpha3D[23], data_3Dline_color), display_line_width);
-                data_3dline_pen23 = new Pen(Color.FromArgb(Alpha3D[22], data_3Dline_color), display_line_width);
-                data_3dline_pen22 = new Pen(Color.FromArgb(Alpha3D[21], data_3Dline_color), display_line_width);
-                data_3dline_pen21 = new Pen(Color.FromArgb(Alpha3D[20], data_3Dline_color), display_line_width);
-                data_3dline_pen20 = new Pen(Color.FromArgb(Alpha3D[19], data_3Dline_color), display_line_width);
-
-                data_3dline_pen19 = new Pen(Color.FromArgb(Alpha3D[18], data_3Dline_color), display_line_width);
-                data_3dline_pen18 = new Pen(Color.FromArgb(Alpha3D[17], data_3Dline_color), display_line_width);
-                data_3dline_pen17 = new Pen(Color.FromArgb(Alpha3D[16], data_3Dline_color), display_line_width);
-                data_3dline_pen16 = new Pen(Color.FromArgb(Alpha3D[15], data_3Dline_color), display_line_width);
-                data_3dline_pen15 = new Pen(Color.FromArgb(Alpha3D[14], data_3Dline_color), display_line_width);
-                data_3dline_pen14 = new Pen(Color.FromArgb(Alpha3D[13], data_3Dline_color), display_line_width);
-                data_3dline_pen13 = new Pen(Color.FromArgb(Alpha3D[12], data_3Dline_color), display_line_width);
-                data_3dline_pen12 = new Pen(Color.FromArgb(Alpha3D[11], data_3Dline_color), display_line_width);
-                data_3dline_pen11 = new Pen(Color.FromArgb(Alpha3D[10], data_3Dline_color), display_line_width);
-                data_3dline_pen10 = new Pen(Color.FromArgb(Alpha3D[9], data_3Dline_color), display_line_width);
-                data_3dline_pen9 = new Pen(Color.FromArgb(Alpha3D[8], data_3Dline_color), display_line_width);
-                data_3dline_pen8 = new Pen(Color.FromArgb(Alpha3D[7], data_3Dline_color), display_line_width);
-                data_3dline_pen7 = new Pen(Color.FromArgb(Alpha3D[6], data_3Dline_color), display_line_width);
-                data_3dline_pen6 = new Pen(Color.FromArgb(Alpha3D[5], data_3Dline_color), display_line_width);
-                data_3dline_pen5 = new Pen(Color.FromArgb(Alpha3D[4], data_3Dline_color), display_line_width);
-                data_3dline_pen4 = new Pen(Color.FromArgb(Alpha3D[3], data_3Dline_color), display_line_width);
-                data_3dline_pen3 = new Pen(Color.FromArgb(Alpha3D[2], data_3Dline_color), display_line_width);
-                data_3dline_pen2 = new Pen(Color.FromArgb(Alpha3D[1], data_3Dline_color), display_line_width);
+                data_3dline_pen[0] = new Pen(Color.FromArgb(Alpha3D[0], data_3Dline_color), display_line_width);
 
                 DrawBackground();
 
@@ -2930,7 +2853,7 @@ namespace PowerSDR
 
         private static void DrawPanadapterGrid(ref Graphics g, int W, int H, int rx, bool bottom)
         {
-
+         
 
             // ke9ns add for SWR plotting)
             if (console.ScanForm.checkBoxSWR.Checked)
@@ -3268,10 +3191,37 @@ namespace PowerSDR
                     if (filter_left_x == filter_right_x) filter_right_x = filter_left_x + 1;
 
 
-                    g.FillRectangle(new SolidBrush(display_filter_color),   // draw filter overlay
-                            filter_left_x, top, filter_right_x - filter_left_x, H - top);
+                 
+                    if ((console.setupForm != null && console.setupForm.check3DPan.Checked == true)) //.9
+                    {
+                        //  Z1 = (H - top) / 2 / Y1;  //.309 draw isometric lines to follow 3D pan
+                        //  X2 = (X1 * Z1);
+                        //  Y2 = (H - ((Y1 * Z1)));     //* (int)(2.0 + temp0))); //
 
-                    // }
+                      //  g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                        PointF p0 = new PointF(filter_left_x, H);
+                        PointF p3 = new PointF(filter_right_x, H);
+
+                        PointF p1 = new PointF(filter_left_x + (X1 * (Z1 * 2)), H - (Y1 * (Z1 * 2))); // Adjust signs based on your desired angle
+                        PointF p2 = new PointF(filter_right_x + (X1 * (Z1 * 2)), H - (Y1 * (Z1 * 2))); // Adjust signs based on your desired angle
+
+                        PointF[] points = { p0, p1, p2, p3 };
+
+                        using (SolidBrush brush = new SolidBrush(display_filter_color))
+                        {
+                            g.FillPolygon(brush, points);
+                        }
+
+                        
+                    }
+                    else
+                    {
+                        g.FillRectangle(new SolidBrush(display_filter_color), filter_left_x, top, filter_right_x - filter_left_x, H - top); // draw RX filter overlay for phone or digital
+
+                    }
+
+
                 } // main RX1 filter
                 else if ((local_mox) && (rx1_dsp_mode == DSPMode.CWL || rx1_dsp_mode == DSPMode.CWU) && (!split_enabled)) // RX1 draw CW rx box when you tx.
                 {
@@ -3370,10 +3320,23 @@ namespace PowerSDR
                         // ke9ns pgrid  LEFT and RIGHT TX WIDTH LINES for TRANSMITTER ONLY
                         if (tx_on_vfob == false) // .285
                         {
-                            g.DrawLine(tx_filter_pen, filter_left_x, top, filter_left_x, H);        // LEFT draw tx filter overlay
-                            g.DrawLine(tx_filter_pen, filter_right_x, top, filter_right_x, H);      // RIGHT draw tx filter ovelay
+  
+                            if ((console.setupForm != null && console.setupForm.check3DPan.Checked == true)) //.9
+                            {
+                                //  Z1 = (H - top) / 2 / Y1;  //.309 draw isometric lines to follow 3D pan
+                                //  X2 = (X1 * Z1);
+                                g.DrawLine(tx_filter_pen, filter_left_x + (X1 * (Z1 * 2)), H - (Y1 * (Z1 * 2)), filter_left_x, H  );        // LEFT draw tx filter overlay
+                                g.DrawLine(tx_filter_pen, filter_right_x + (X1 * (Z1 * 2)), H - (Y1 * (Z1 * 2)), filter_right_x, H );      // RIGHT draw tx filter ovelay
+                                
+                            }
+                            else
+                            {
+                                g.DrawLine(tx_filter_pen, filter_left_x, top, filter_left_x, H);        // LEFT draw tx filter overlay
+                                g.DrawLine(tx_filter_pen, filter_right_x, top, filter_right_x, H);      // RIGHT draw tx filter ovelay
 
-                            //  Debug.WriteLine("RX2D=================");
+                            }
+
+                           
                         }
 
                     }
@@ -13109,15 +13072,36 @@ namespace PowerSDR
 
             if (center_line_x >= 0 && center_line_x <= W)
             {
-                if (bottom)
+                if ((console.setupForm != null && console.setupForm.check3DPan.Checked == true)) //.9
                 {
-                    g.DrawLine(new Pen(grid_zero_color), center_line_x, H + top, center_line_x, H + H);
-                    g.DrawLine(new Pen(grid_zero_color), center_line_x + 1, H + top, center_line_x + 1, H + H);
+                    if (bottom)
+                    {
+                        g.DrawLine(new Pen(grid_zero_color), center_line_x, H + top, center_line_x, H + H);
+                        g.DrawLine(new Pen(grid_zero_color), center_line_x + 1, H + top, center_line_x + 1, H + H);
+                    }
+                    else
+                    {
+                      //  Z1 = (H - top) / 2 / Y1;  //.309 draw isometric lines to follow 3D pan
+                      //  X2 = (X1 * Z1);
+                      //  Y2 = (H - ((Y1 * Z1)));     //* (int)(2.0 + temp0))); //
+
+                        g.DrawLine(new Pen(grid_zero_color), center_line_x + (X1 * (Z1 * 2)), H - (Y1 * (Z1 * 2)), center_line_x, H );
+                      
+                    }
                 }
                 else
                 {
-                    g.DrawLine(new Pen(grid_zero_color), center_line_x, top, center_line_x, H);
-                    g.DrawLine(new Pen(grid_zero_color), center_line_x + 1, top, center_line_x + 1, H);
+                    if (bottom)
+                    {
+                        g.DrawLine(new Pen(grid_zero_color), center_line_x, H + top, center_line_x, H + H);
+                        g.DrawLine(new Pen(grid_zero_color), center_line_x + 1, H + top, center_line_x + 1, H + H);
+                    }
+                    else
+                    {
+                        g.DrawLine(new Pen(grid_zero_color), center_line_x, top, center_line_x, H);
+                        g.DrawLine(new Pen(grid_zero_color), center_line_x + 1, top, center_line_x + 1, H);
+                    }
+
                 }
             }
 
@@ -19119,13 +19103,10 @@ namespace PowerSDR
         }
 
         // ke9ns add for 3d effect
-        public static Point[] points, points0, points2, points3, points4, points5, points6, points7, points8, points9, points10, points11, points12, points13, points14, points15, points16;
+        public static Point[] points, points0; //points1 not currently used
+        public static Point[][] pointss = new Point[61][]; //.9 create an array of up to 60 traces to hold the visual representation of the 3d pan
 
-        // ke9ns when waterfall is turned off
-        public static Point[] points17, points18, points19, points20;
-        public static Point[] points21, points22, points23, points24, points25, points26, points27, points28, points29, points30; // ke9ns.242
-        public static Point[] points31, points32, points33, points34, points35, points36, points37, points38, points39, points40; //.245
-
+      
         public static bool PON = false; // ke9ns add  true = 3D pan is active
 
 
@@ -19563,8 +19544,6 @@ namespace PowerSDR
             Z1 = (int)console.setupForm.number3DZ.Value; // .309 how many 3d lines of history in the Panadapter view (16 in Panafall, or 40 with no waterfall)
 
 
-
-
             if (console.powerMate.Look(10) != 0) //.294 use instad of onRotateEvent handler because it caused a strange pan lag glitch as you scroll left/right
             {
                 Debug.WriteLine("296 ROTATE> " + console.powerMate.Look(10));
@@ -19669,16 +19648,27 @@ namespace PowerSDR
 
                         points0 = new Point[W + 2]; // for fill while in 3D mode
 
-                        points2 = new Point[W]; points3 = new Point[W]; points4 = new Point[W]; points5 = new Point[W]; points6 = new Point[W];
-                        points7 = new Point[W]; points8 = new Point[W]; points9 = new Point[W]; points10 = new Point[W]; points11 = new Point[W];
-                        points12 = new Point[W]; points13 = new Point[W]; points14 = new Point[W]; points15 = new Point[W]; points16 = new Point[W];
+                        for (int i = 2; i <= 60; i++)
+                        {
+                            pointss[i] = new Point[W]; // set the size of each trace (61 total)
+                        }
+              
+                         Pan3DAlphaStep = 255f/60f;
 
-                        // ke9ns: for when waterfall is OFF
-                        points17 = new Point[W]; points18 = new Point[W]; points19 = new Point[W]; points20 = new Point[W];
-                        points21 = new Point[W]; points22 = new Point[W]; points23 = new Point[W]; points24 = new Point[W]; points25 = new Point[W];
-                        points26 = new Point[W]; points27 = new Point[W]; points28 = new Point[W]; points29 = new Point[W]; points30 = new Point[W];  // ke9ns .242
-                        points31 = new Point[W]; points32 = new Point[W]; points33 = new Point[W]; points34 = new Point[W]; points35 = new Point[W];
-                        points36 = new Point[W]; points37 = new Point[W]; points38 = new Point[W]; points39 = new Point[W]; points40 = new Point[W];  // ke9ns .245
+                        for (int ww = 0; ww < 60; ww++)
+                        {
+                            Alpha3D[ww] = (int)(Pan3DAlphaStep * (60 - (float)ww - 1f)); 
+                        }
+
+                        if (console.setupForm != null) data_3Dline_color = console.setupForm.clrbtn3DDataLine.Color;
+
+                   //     for (int iii = 59; iii > 0; iii--) //.9
+                    //    {
+                     //       data_3dline_pen[iii + 1] = new Pen(Color.FromArgb(Alpha3D[iii], data_3Dline_color), display_line_width);
+                     //   }
+
+                        data_3dline_pen[0] = new Pen(Color.FromArgb(Alpha3D[0], data_3Dline_color), display_line_width);
+
 
 
                         for (int z = 0; z < W; z++) // copy the current panadapter signal (points) into history list (points2...points19) and shift the pan up and to the right by X1 and Y1 offsets (found in setup->Appearance)
@@ -19692,136 +19682,20 @@ namespace PowerSDR
                                 points0[z].Y = (points[z].Y);
                             }
 
-                            points2[z].X = (points[z].X) + X1;
-                            points2[z].Y = (points[z].Y) - Y1;
+                            pointss[2][z].X = (points[z].X) + X1; //.9
+                            pointss[2][z].Y = (points[z].Y) - Y1;
 
-                            points3[z].X = (points2[z].X) + X1;
-                            points3[z].Y = (points2[z].Y) - Y1;
-
-                            points4[z].X = (points3[z].X) + X1;
-                            points4[z].Y = (points3[z].Y) - Y1;
-
-                            points5[z].X = (points4[z].X) + X1;
-                            points5[z].Y = (points4[z].Y) - Y1;
-
-                            points6[z].X = (points5[z].X) + X1;
-                            points6[z].Y = (points5[z].Y) - Y1;
-
-                            points7[z].X = (points6[z].X) + X1;
-                            points7[z].Y = (points6[z].Y) - Y1;
-
-                            points8[z].X = (points7[z].X) + X1;
-                            points8[z].Y = (points7[z].Y) - Y1;
-
-                            points9[z].X = (points8[z].X) + X1;
-                            points9[z].Y = (points8[z].Y) - Y1;
-
-                            points10[z].X = (points9[z].X) + X1;
-                            points10[z].Y = (points9[z].Y) - Y1;
-
-                            points11[z].X = (points10[z].X) + X1;
-                            points11[z].Y = (points10[z].Y) - Y1;
-
-                            points12[z].X = (points11[z].X) + X1;
-                            points12[z].Y = (points11[z].Y) - Y1;
-
-                            points13[z].X = (points12[z].X) + X1;
-                            points13[z].Y = (points12[z].Y) - Y1;
-
-                            points14[z].X = (points13[z].X) + X1;
-                            points14[z].Y = (points13[z].Y) - Y1;
-
-                            points15[z].X = (points14[z].X) + X1;
-                            points15[z].Y = (points14[z].Y) - Y1;
-
-                            points16[z].X = (points15[z].X) + X1;
-                            points16[z].Y = (points15[z].Y) - Y1;
-
-                            if (CurrentDisplayMode == DisplayMode.PANADAPTER) // make 3d larger if only in Pan mode
+                            for (int zz = 2; zz < 60; zz++) //.9
                             {
-                                points17[z].X = (points16[z].X) + X1;
-                                points17[z].Y = (points16[z].Y) - Y1;
-
-                                points18[z].X = (points17[z].X) + X1;
-                                points18[z].Y = (points17[z].Y) - Y1;
-
-
-                                points19[z].X = (points18[z].X) + X1;
-                                points19[z].Y = (points18[z].Y) - Y1;
-
-                                points20[z].X = (points19[z].X) + X1;
-                                points20[z].Y = (points19[z].Y) - Y1;
-
-                                points21[z].X = (points20[z].X) + X1;
-                                points21[z].Y = (points20[z].Y) - Y1;
-
-
-                                points22[z].X = (points21[z].X) + X1;  // ke9ns: .242 selected using setupform.number3dz
-                                points22[z].Y = (points21[z].Y) - Y1;
-
-                                points23[z].X = (points22[z].X) + X1;
-                                points23[z].Y = (points22[z].Y) - Y1;
-
-                                points24[z].X = (points23[z].X) + X1;
-                                points24[z].Y = (points23[z].Y) - Y1;
-
-                                points25[z].X = (points24[z].X) + X1;
-                                points25[z].Y = (points24[z].Y) - Y1;
-
-                                points26[z].X = (points25[z].X) + X1;
-                                points26[z].Y = (points25[z].Y) - Y1;
-
-                                points27[z].X = (points26[z].X) + X1;
-                                points27[z].Y = (points26[z].Y) - Y1;
-
-                                points28[z].X = (points27[z].X) + X1;
-                                points28[z].Y = (points27[z].Y) - Y1;
-
-                                points29[z].X = (points28[z].X) + X1;
-                                points29[z].Y = (points28[z].Y) - Y1;
-
-                                points30[z].X = (points29[z].X) + X1;
-                                points30[z].Y = (points29[z].Y) - Y1; //.242
-
-                                points31[z].X = (points30[z].X) + X1; //.245
-                                points31[z].Y = (points30[z].Y) - Y1;
-
-                                points32[z].X = (points31[z].X) + X1;
-                                points32[z].Y = (points31[z].Y) - Y1;
-
-                                points33[z].X = (points32[z].X) + X1;
-                                points33[z].Y = (points32[z].Y) - Y1;
-
-                                points34[z].X = (points33[z].X) + X1;
-                                points34[z].Y = (points33[z].Y) - Y1;
-
-                                points35[z].X = (points34[z].X) + X1;
-                                points35[z].Y = (points34[z].Y) - Y1;
-
-                                points36[z].X = (points35[z].X) + X1;
-                                points36[z].Y = (points35[z].Y) - Y1;
-
-                                points37[z].X = (points36[z].X) + X1;
-                                points37[z].Y = (points36[z].Y) - Y1;
-
-                                points38[z].X = (points37[z].X) + X1;
-                                points38[z].Y = (points37[z].Y) - Y1;
-
-                                points39[z].X = (points38[z].X) + X1;
-                                points39[z].Y = (points38[z].Y) - Y1; //.245
-
-                                points40[z].X = (points39[z].X) + X1;
-                                points40[z].Y = (points39[z].Y) - Y1; //.245
-
-
-                            } //  if (CurrentDisplayMode == DisplayMode.PANADAPTER)
-
-                        } //for loop
-
+                                pointss[zz + 1][z].X = (pointss[zz][z].X) + X1;
+                                pointss[zz + 1][z].Y = (pointss[zz][z].Y) - Y1;
+                            }
+                                              
+                        } //for z loop
 
                         PON = true; // ke9ns ok to display 3dpan
 
-                    }
+                    } // pON = false
 
                 } // 3dpan
                 else
@@ -20519,190 +20393,21 @@ namespace PowerSDR
                 // ke9ns add: 3dpan move shift old data to make room for new
                 if (PON == true) //if (console.setupForm != null && console.setupForm.check3DPan.Checked == true)
                 {
-                    if (CurrentDisplayMode == DisplayMode.PANADAPTER) // make 3d larger if only in Pan mode
-                    {
-
-                        if (console.setupForm.number3DZ.Value > 38) //.245
+                
+                        for (int zz = (int)console.setupForm.number3DZ.Value; zz >= 2; zz--) //.9
                         {
-                            points40[i].X = points39[i].X + X1;
-                            points40[i].Y = points39[i].Y - Y1;
+                            pointss[zz + 1][i].X = (pointss[zz][i].X) + X1;
+                            pointss[zz + 1][i].Y = (pointss[zz][i].Y) - Y1;
                         }
 
-                        if (console.setupForm.number3DZ.Value > 37)
+                        pointss[2][i].X = points[i].X + X1;  //.9 data from last go-around 
+                        pointss[2][i].Y = points[i].Y - Y1;
+                                          
+                        if (pan_fill)
                         {
-                            points39[i].X = points38[i].X + X1;
-                            points39[i].Y = points38[i].Y - Y1;
+                            points0[i].X = points[i].X;  // data from last go-around 
+                            points0[i].Y = points[i].Y;
                         }
-                        if (console.setupForm.number3DZ.Value > 36)
-                        {
-                            points38[i].X = points37[i].X + X1;
-                            points38[i].Y = points37[i].Y - Y1;
-                        }
-
-                        if (console.setupForm.number3DZ.Value > 35)
-                        {
-                            points37[i].X = points36[i].X + X1;
-                            points37[i].Y = points36[i].Y - Y1;
-                        }
-                        if (console.setupForm.number3DZ.Value > 34)
-                        {
-                            points36[i].X = points35[i].X + X1;
-                            points36[i].Y = points35[i].Y - Y1;
-                        }
-
-                        if (console.setupForm.number3DZ.Value > 33)
-                        {
-                            points35[i].X = points34[i].X + X1;
-                            points35[i].Y = points34[i].Y - Y1;
-                        }
-
-                        if (console.setupForm.number3DZ.Value > 32)
-                        {
-                            points34[i].X = points33[i].X + X1;
-                            points34[i].Y = points33[i].Y - Y1;
-                        }
-
-                        if (console.setupForm.number3DZ.Value > 31)
-                        {
-                            points33[i].X = points32[i].X + X1;
-                            points33[i].Y = points32[i].Y - Y1;
-                        }
-
-                        if (console.setupForm.number3DZ.Value > 30)
-                        {
-                            points32[i].X = points31[i].X + X1;
-                            points32[i].Y = points31[i].Y - Y1;
-                        }
-
-
-                        if (console.setupForm.number3DZ.Value > 29)
-                        {
-                            points31[i].X = points30[i].X + X1;
-                            points31[i].Y = points30[i].Y - Y1;
-                        }
-
-
-                        if (console.setupForm.number3DZ.Value > 28) //.242
-                        {
-                            points30[i].X = points29[i].X + X1; // 
-                            points30[i].Y = points29[i].Y - Y1;
-                        }
-
-                        if (console.setupForm.number3DZ.Value > 27)
-                        {
-                            points29[i].X = points28[i].X + X1;
-                            points29[i].Y = points28[i].Y - Y1;
-                        }
-                        if (console.setupForm.number3DZ.Value > 26)
-                        {
-                            points28[i].X = points27[i].X + X1;
-                            points28[i].Y = points27[i].Y - Y1;
-                        }
-
-                        if (console.setupForm.number3DZ.Value > 25)
-                        {
-                            points27[i].X = points26[i].X + X1;
-                            points27[i].Y = points26[i].Y - Y1;
-                        }
-                        if (console.setupForm.number3DZ.Value > 24)
-                        {
-                            points26[i].X = points25[i].X + X1;
-                            points26[i].Y = points25[i].Y - Y1;
-                        }
-
-                        if (console.setupForm.number3DZ.Value > 23)
-                        {
-                            points25[i].X = points24[i].X + X1;
-                            points25[i].Y = points24[i].Y - Y1;
-                        }
-
-                        if (console.setupForm.number3DZ.Value > 22)
-                        {
-                            points24[i].X = points23[i].X + X1;
-                            points24[i].Y = points23[i].Y - Y1;
-                        }
-
-                        if (console.setupForm.number3DZ.Value > 21)
-                        {
-                            points23[i].X = points22[i].X + X1;
-                            points23[i].Y = points22[i].Y - Y1;
-                        }
-
-                        if (console.setupForm.number3DZ.Value > 20)
-                        {
-                            points22[i].X = points21[i].X + X1;
-                            points22[i].Y = points21[i].Y - Y1;
-                        }
-
-                        //------------------------------------------------
-
-                        points21[i].X = points20[i].X + X1;
-                        points21[i].Y = points20[i].Y - Y1;
-
-                        points20[i].X = points19[i].X + X1;
-                        points20[i].Y = points19[i].Y - Y1;
-
-                        points19[i].X = points18[i].X + X1;
-                        points19[i].Y = points18[i].Y - Y1;
-
-                        points18[i].X = points17[i].X + X1;
-                        points18[i].Y = points17[i].Y - Y1;
-
-                        points17[i].X = points16[i].X + X1;
-                        points17[i].Y = points16[i].Y - Y1;
-
-                    } //  if (CurrentDisplayMode == DisplayMode.PANADAPTER) 
-
-                    points16[i].X = points15[i].X + X1;
-                    points16[i].Y = points15[i].Y - Y1;
-
-                    points15[i].X = points14[i].X + X1;
-                    points15[i].Y = points14[i].Y - Y1;
-
-                    points14[i].X = points13[i].X + X1;
-                    points14[i].Y = points13[i].Y - Y1;
-
-                    points13[i].X = points12[i].X + X1;
-                    points13[i].Y = points12[i].Y - Y1;
-
-                    points12[i].X = points11[i].X + X1;
-                    points12[i].Y = points11[i].Y - Y1;
-
-                    points11[i].X = points10[i].X + X1;
-                    points11[i].Y = points10[i].Y - Y1;
-
-                    points10[i].X = points9[i].X + X1;
-                    points10[i].Y = points9[i].Y - Y1;
-
-                    points9[i].X = points8[i].X + X1;
-                    points9[i].Y = points8[i].Y - Y1;
-
-                    points8[i].X = points7[i].X + X1;
-                    points8[i].Y = points7[i].Y - Y1;
-
-                    points7[i].X = points6[i].X + X1;
-                    points7[i].Y = points6[i].Y - Y1;
-
-                    points6[i].X = points5[i].X + X1;
-                    points6[i].Y = points5[i].Y - Y1;
-
-                    points5[i].X = points4[i].X + X1;
-                    points5[i].Y = points4[i].Y - Y1;
-
-                    points4[i].X = points3[i].X + X1;
-                    points4[i].Y = points3[i].Y - Y1;
-
-                    points3[i].X = points2[i].X + X1;
-                    points3[i].Y = points2[i].Y - Y1;
-
-                    points2[i].X = points[i].X + X1;  // data from last go-around 
-                    points2[i].Y = points[i].Y - Y1;
-
-                    if (pan_fill)
-                    {
-                        points0[i].X = points[i].X;  // data from last go-around 
-                        points0[i].Y = points[i].Y;
-                    }
 
                 } // if (PON == true)
 
@@ -21185,63 +20890,11 @@ namespace PowerSDR
 
                 if (PON == true) // ke9ns 3D active
                 {
-
-                    if (CurrentDisplayMode == DisplayMode.PANADAPTER) // make 3d larger if only in Pan mode
+  
+                    for (int zzz = (int)console.setupForm.number3DZ.Value; zzz > 1;zzz--)    //.9
                     {
-                        //  Debug.WriteLine("3DZ: " + console.setupForm.number3DZ.Value);
-                        if (console.setupForm.number3DZ.Value == 16) console.setupForm.number3DZ.Value = 21;
-
-
-
-                        if (console.setupForm.number3DZ.Value > 38) if (!Direct2DDisplay.QueuePanadapterTrace(points39, W, data_3dline_pen39.Color, data_3dline_pen39.Width)) g.DrawLines(data_3dline_pen39, points39); // .245
-                        if (console.setupForm.number3DZ.Value > 37) if (!Direct2DDisplay.QueuePanadapterTrace(points38, W, data_3dline_pen38.Color, data_3dline_pen38.Width)) g.DrawLines(data_3dline_pen38, points38);
-                        if (console.setupForm.number3DZ.Value > 36) if (!Direct2DDisplay.QueuePanadapterTrace(points37, W, data_3dline_pen37.Color, data_3dline_pen37.Width)) g.DrawLines(data_3dline_pen37, points37);
-                        if (console.setupForm.number3DZ.Value > 35) if (!Direct2DDisplay.QueuePanadapterTrace(points36, W, data_3dline_pen36.Color, data_3dline_pen36.Width)) g.DrawLines(data_3dline_pen36, points36);
-                        if (console.setupForm.number3DZ.Value > 34) if (!Direct2DDisplay.QueuePanadapterTrace(points35, W, data_3dline_pen35.Color, data_3dline_pen35.Width)) g.DrawLines(data_3dline_pen35, points35);
-                        if (console.setupForm.number3DZ.Value > 33) if (!Direct2DDisplay.QueuePanadapterTrace(points34, W, data_3dline_pen34.Color, data_3dline_pen34.Width)) g.DrawLines(data_3dline_pen34, points34);
-                        if (console.setupForm.number3DZ.Value > 32) if (!Direct2DDisplay.QueuePanadapterTrace(points33, W, data_3dline_pen33.Color, data_3dline_pen33.Width)) g.DrawLines(data_3dline_pen33, points33);
-                        if (console.setupForm.number3DZ.Value > 30) if (!Direct2DDisplay.QueuePanadapterTrace(points32, W, data_3dline_pen32.Color, data_3dline_pen32.Width)) g.DrawLines(data_3dline_pen32, points32);
-                        if (console.setupForm.number3DZ.Value > 29) if (!Direct2DDisplay.QueuePanadapterTrace(points31, W, data_3dline_pen31.Color, data_3dline_pen31.Width)) g.DrawLines(data_3dline_pen31, points31); // .245
-
-
-                        if (console.setupForm.number3DZ.Value > 28) if (!Direct2DDisplay.QueuePanadapterTrace(points30, W, data_3dline_pen30.Color, data_3dline_pen30.Width)) g.DrawLines(data_3dline_pen30, points30); // .242
-                        if (console.setupForm.number3DZ.Value > 27) if (!Direct2DDisplay.QueuePanadapterTrace(points29, W, data_3dline_pen29.Color, data_3dline_pen29.Width)) g.DrawLines(data_3dline_pen29, points29);
-                        if (console.setupForm.number3DZ.Value > 26) if (!Direct2DDisplay.QueuePanadapterTrace(points28, W, data_3dline_pen28.Color, data_3dline_pen28.Width)) g.DrawLines(data_3dline_pen28, points28);
-                        if (console.setupForm.number3DZ.Value > 25) if (!Direct2DDisplay.QueuePanadapterTrace(points27, W, data_3dline_pen27.Color, data_3dline_pen27.Width)) g.DrawLines(data_3dline_pen27, points27);
-                        if (console.setupForm.number3DZ.Value > 24) if (!Direct2DDisplay.QueuePanadapterTrace(points26, W, data_3dline_pen26.Color, data_3dline_pen26.Width)) g.DrawLines(data_3dline_pen26, points26);
-                        if (console.setupForm.number3DZ.Value > 23) if (!Direct2DDisplay.QueuePanadapterTrace(points25, W, data_3dline_pen25.Color, data_3dline_pen25.Width)) g.DrawLines(data_3dline_pen25, points25);
-                        if (console.setupForm.number3DZ.Value > 22) if (!Direct2DDisplay.QueuePanadapterTrace(points24, W, data_3dline_pen24.Color, data_3dline_pen24.Width)) g.DrawLines(data_3dline_pen24, points24);
-                        if (console.setupForm.number3DZ.Value > 21) if (!Direct2DDisplay.QueuePanadapterTrace(points23, W, data_3dline_pen23.Color, data_3dline_pen23.Width)) g.DrawLines(data_3dline_pen23, points23);
-                        if (console.setupForm.number3DZ.Value > 20) if (!Direct2DDisplay.QueuePanadapterTrace(points22, W, data_3dline_pen22.Color, data_3dline_pen22.Width)) g.DrawLines(data_3dline_pen22, points22); //.242
-
-                        if (!Direct2DDisplay.QueuePanadapterTrace(points21, W, data_3dline_pen21.Color, data_3dline_pen21.Width)) g.DrawLines(data_3dline_pen21, points21);
-                        if (!Direct2DDisplay.QueuePanadapterTrace(points20, W, data_3dline_pen20.Color, data_3dline_pen20.Width)) g.DrawLines(data_3dline_pen20, points20);
-                        if (!Direct2DDisplay.QueuePanadapterTrace(points19, W, data_3dline_pen19.Color, data_3dline_pen19.Width)) g.DrawLines(data_3dline_pen19, points19);
-                        if (!Direct2DDisplay.QueuePanadapterTrace(points18, W, data_3dline_pen18.Color, data_3dline_pen18.Width)) g.DrawLines(data_3dline_pen18, points18);
-                        if (!Direct2DDisplay.QueuePanadapterTrace(points17, W, data_3dline_pen17.Color, data_3dline_pen17.Width)) g.DrawLines(data_3dline_pen17, points17);
-
-                    } //  if (CurrentDisplayMode == DisplayMode.PANADAPTER) //
-                    else
-                    {
-                        if (console.setupForm.number3DZ.Value > 16) console.setupForm.number3DZ.Value = 16;
+                        if (!Direct2DDisplay.QueuePanadapterTrace(pointss[zzz], W, data_3dline_pen[zzz].Color, data_3dline_pen[zzz].Width)) g.DrawLines(data_3dline_pen[zzz], pointss[zzz]);
                     }
-
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points16, W, data_3dline_pen16.Color, data_3dline_pen16.Width)) g.DrawLines(data_3dline_pen16, points16); // ke9ns: do it like this for speed purposes only
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points15, W, data_3dline_pen15.Color, data_3dline_pen15.Width)) g.DrawLines(data_3dline_pen15, points15);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points14, W, data_3dline_pen14.Color, data_3dline_pen14.Width)) g.DrawLines(data_3dline_pen14, points14);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points13, W, data_3dline_pen13.Color, data_3dline_pen13.Width)) g.DrawLines(data_3dline_pen13, points13);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points12, W, data_3dline_pen12.Color, data_3dline_pen12.Width)) g.DrawLines(data_3dline_pen12, points12);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points11, W, data_3dline_pen11.Color, data_3dline_pen11.Width)) g.DrawLines(data_3dline_pen11, points11);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points10, W, data_3dline_pen10.Color, data_3dline_pen10.Width)) g.DrawLines(data_3dline_pen10, points10);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points9, W, data_3dline_pen9.Color, data_3dline_pen9.Width)) g.DrawLines(data_3dline_pen9, points9);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points8, W, data_3dline_pen8.Color, data_3dline_pen8.Width)) g.DrawLines(data_3dline_pen8, points8);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points7, W, data_3dline_pen7.Color, data_3dline_pen7.Width)) g.DrawLines(data_3dline_pen7, points7);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points6, W, data_3dline_pen6.Color, data_3dline_pen6.Width)) g.DrawLines(data_3dline_pen6, points6);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points5, W, data_3dline_pen5.Color, data_3dline_pen5.Width)) g.DrawLines(data_3dline_pen5, points5);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points4, W, data_3dline_pen4.Color, data_3dline_pen4.Width)) g.DrawLines(data_3dline_pen4, points4);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points3, W, data_3dline_pen3.Color, data_3dline_pen3.Width)) g.DrawLines(data_3dline_pen3, points3);
-                    if (!Direct2DDisplay.QueuePanadapterTrace(points2, W, data_3dline_pen2.Color, data_3dline_pen2.Width)) g.DrawLines(data_3dline_pen2, points2);
-
 
                     if (pan_fill)                               // trace spectrum line and fill under it
                     {
@@ -21290,8 +20943,6 @@ namespace PowerSDR
                         //    data_line_pen.Color = data_line_color; // set pen color
 
                         //   g.DrawLines(data_line_pen, points);                             // trace spectrum line to screen (draw lines between datapoints)
-
-
 
                     } // pan_fill = true
 

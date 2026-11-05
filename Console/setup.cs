@@ -15729,12 +15729,16 @@ namespace PowerSDR
         private void clrbtn3DDataLine_Changed(object sender, EventArgs e)
         {
             Display.Data3DLineColor = clrbtn3DDataLine.Color;
+            Display.Data3DLineColor = clrbtn3DDataLine.Color;
+
         }
 
         private void tbPan3DAlpha_Scroll(object sender, EventArgs e)
         {
             Display.Data3DLineAlpha = tbPan3DAlpha.Value;
             Display.Data3DLineColor = clrbtn3DDataLine.Color;
+            Display.Data3DLineColor = clrbtn3DDataLine.Color;
+
 
         }
 
@@ -16481,6 +16485,8 @@ namespace PowerSDR
 
             Display.Data3DLineAlpha = tbPan3DAlpha.Value;
             Display.Data3DLineColor = clrbtn3DDataLine.Color;
+            Display.Data3DLineColor = clrbtn3DDataLine.Color;
+
 
         } // number3dz
 
@@ -17064,6 +17070,18 @@ namespace PowerSDR
 
         private void chkBoxConsoleRing_CheckedChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void number3DX_ValueChanged(object sender, EventArgs e)
+        {
+            Display.Data3DLineColor = clrbtn3DDataLine.Color;
+
+        }
+
+        private void number3DY_ValueChanged(object sender, EventArgs e)
+        {
+            Display.Data3DLineColor = clrbtn3DDataLine.Color;
 
         }
 
