@@ -3,6 +3,7 @@ namespace PowerSDR
 {
     public partial class Console
     {
+        //.10 CAT selection of NR1-6 on the UI thread.
         internal int CatNrSelection(bool secondReceiver, int? value)
         {
             if (value.HasValue && (value.Value < 0 || value.Value > 6))

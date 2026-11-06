@@ -1,6 +1,6 @@
 # Darrin: source review, build and MSI handoff
 
-Candidate 3.0.0.9, branch powersdr-v3.0.0.9, based on upstream 3.0.0.8 (d1149ae).
+Candidate 3.0.0.10, branch powersdr-v3.0.0.10, based on upstream 3.0.0.9 (a53c103).
 This is a review branch, not a request to publish an unreviewed MSI.
 No master change, forced push or automatic merge is intended.
 

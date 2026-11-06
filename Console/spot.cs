@@ -8288,17 +8288,8 @@ namespace PowerSDR
 
                 VOATHREAD1 = false;
 
-                Thread t = new Thread(new ThreadStart(TrackSun));  // turn on track map (sun, grayline, voacap, or beacon)
-
-                t.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-                t.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-
-                textBox1.Text = "Clicked to Turn ON GrayLine Sun Tracker\r\n";
-
-                t.Name = "Track Thread";
-                t.IsBackground = true;
-                t.Priority = ThreadPriority.Normal;
-                t.Start();
+                //.10 Register map worker and contain background exceptions.
+                StartMapWorker("TrackSun", RunTrackSun, ThreadPriority.Normal);
 
 
                 if (SP5_Active == 0) textBox1.Text += "ON but just turned OFF1";
@@ -11649,6 +11640,7 @@ namespace PowerSDR
             catch (Exception ex)
             {
                 Debug.WriteLine("noaa fault=== " + ex);
+                DisableVoacapAfterFailure("Space-weather data unavailable", ex);
                 textBox1.Text += "Failed to download Space Weather \r\n";
 
             }
@@ -11888,18 +11880,8 @@ namespace PowerSDR
                     UTCLAST2 = 0;
                     VOATHREAD1 = false;
 
-                    Thread t = new Thread(new ThreadStart(TrackSun)); // turn on track map (sun, grayline, voacap, or beacon)
-
-                    t.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-                    t.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-
-                    UTCLAST2 = 0;
-
-
-                    t.Name = "Track Thread";
-                    t.IsBackground = true;
-                    t.Priority = ThreadPriority.Normal;
-                    t.Start();
+                    //.10 Register map worker and contain background exceptions.
+                StartMapWorker("TrackSun", RunTrackSun, ThreadPriority.Normal);
 
 
 
@@ -14231,6 +14213,8 @@ namespace PowerSDR
 
         public void VOACAP_CHECK()
         {
+            //.10 Do not start a new calculation after a data/network failure.
+            if (voacapNetworkBlocked || !CheckVoacapNetwork()) return;
 
             Debug.WriteLine("VOA_CHECK: " + VOARUN);
 
@@ -14345,15 +14329,8 @@ namespace PowerSDR
 
                 if (VOATHREAD1 == false) // if true, then form must be closing
                 {
-                    Thread t = new Thread(new ThreadStart(VOACAP)); // generate the VOA data on the MAP
-
-                    t.CurrentCulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-                    t.CurrentUICulture = System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
-
-                    t.Name = "VOACAP Thread";
-                    t.IsBackground = true;
-                    t.Priority = ThreadPriority.Normal;
-                    t.Start();
+                    //.10 Always clear VOACAP state and contain worker exceptions.
+                    if (!StartMapWorker("VOACAP", RunVoacap, ThreadPriority.Normal)) VOARUN = false;
                 }
 
             }
@@ -14986,6 +14963,8 @@ namespace PowerSDR
             }
             else
             {
+                voacapNetworkBlocked = false; //.10 Explicit retry when the user enables VOACAP.
+                if (!CheckVoacapNetwork()) return;
                 chkVoacap.Checked = true;  // flag to store if voa is on/off at next startup
                 voaon = true;
 

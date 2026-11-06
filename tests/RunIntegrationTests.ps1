@@ -35,6 +35,7 @@ if ($Suite -in @('All','State')) {
 if ($Suite -in @('All','Audio')) { Run-Test 'AudioBridgeTests' $dspSources }
 if ($Suite -in @('All','CwTap')) { Run-Test 'CwAudioTapTests' ($dspSources + (Join-Path $repo 'tests\CwAudioTapTests.cs')) }
 if ($Suite -in @('All','Map')) {
+    Run-Test 'VoacapNetworkSafetyTests' @((Join-Path $repo 'tests\VoacapNetworkSafetyTests.cs'),(Join-Path $repo 'Console\MapWorkerLifetime.cs'),(Join-Path $repo 'Console\VoacapNetworkSafety.cs')) @('System.Drawing.dll','System.Windows.Forms.dll')
     Run-Test 'MapShutdownTests' @((Join-Path $repo 'tests\MapShutdownTests.cs'),(Join-Path $repo 'Console\MapWorkerLifetime.cs'),(Join-Path $repo 'Console\MapShutdown.cs')) @('System.Drawing.dll','System.Windows.Forms.dll') @($OutputPath)
     Run-Test 'DatabaseCheckpointTests' @((Join-Path $repo 'tests\DatabaseCheckpointTests.cs')) @('System.Data.dll') @((Join-Path $RuntimePath 'PowerSDR.exe'), $OutputPath)
     Run-Test 'RegionalBandStackTests' @((Join-Path $repo 'tests\RegionalBandStackTests.cs')) @('System.Data.dll') @((Join-Path $RuntimePath 'PowerSDR.exe'), $OutputPath)

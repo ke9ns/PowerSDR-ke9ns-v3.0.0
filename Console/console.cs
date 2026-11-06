@@ -68706,7 +68706,7 @@ namespace PowerSDR
         } //radModeSAM_CheckedChanged
 
         bool saveANF = false; // ke9ns add
-        int saveNR = -1; // NR suspended by DIGU/DIGL; -1 means no pending restoration.
+        int saveNR = -1; //.10 NR suspended by DIGU/DIGL; -1 means no pending restoration.
         bool saveNB = false; // ke9ns add
         bool saveNB2 = false; // ke9ns add
 
@@ -83388,7 +83388,7 @@ namespace PowerSDR
 
 
         public bool OpenWeather = false; //ke9ns add: true= outside USA
-        public void NOAA()
+        private void UpdateNoaaData()
         {
             Debug.WriteLine("NOAA THREAD HERE");
             if (SpotForm == null || SpotForm.IsDisposed)
@@ -84221,6 +84221,7 @@ namespace PowerSDR
             catch (Exception ex)
             {
                 Debug.WriteLine("1noaa fault=== " + ex);
+                ReportVoacapDataFailure(ex);
 
                 noaaON = 0; // failure to get data
             }

@@ -14,7 +14,7 @@ namespace PowerSDR
     internal sealed unsafe class WdspReceiver
     {
         private readonly int Rx1Channel;
-        private const int MinimumWdspVersion = 211;
+        private const int MinimumWdspVersion = 211; //.10 WDSP 2.11 with voice/CW NNR models.
         private readonly object channelLock = new object();
         private readonly bool requested = true;
         private readonly WdspImpulseBlankers blankers;
