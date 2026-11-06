@@ -83404,9 +83404,15 @@ namespace PowerSDR
 
             try
             {
+
+                System.Net.ServicePointManager.SecurityProtocol =
+            System.Net.SecurityProtocolType.Tls12 |
+            System.Net.SecurityProtocolType.Tls13 |
+            System.Net.SecurityProtocolType.Tls11;
+
                 using (WebClient client = new WebClient()) //.316
                 {
-                    client.DownloadFileAsync(new Uri("https://clouds.matteason.co.uk/images/1024x512/earth.jpg"), AppDataPath + "IREarth.jpg");
+                    client.DownloadFile(new Uri("https://clouds.matteason.co.uk/images/1024x512/earth.jpg"), AppDataPath + "IREarth.jpg");
                 }
 
 
@@ -83423,9 +83429,14 @@ namespace PowerSDR
 
             try
             {
+                System.Net.ServicePointManager.SecurityProtocol =
+            System.Net.SecurityProtocolType.Tls12 |
+            System.Net.SecurityProtocolType.Tls13 |
+            System.Net.SecurityProtocolType.Tls11;
+
                 using (WebClient client = new WebClient()) //.241
                 {
-                    client.DownloadFileAsync(new Uri("http://tropic.ssec.wisc.edu/real-time/mosaic/images/moseir.jpg"), AppDataPath + "IRCloudE.jpg");
+                    client.DownloadFile(new Uri("http://tropic.ssec.wisc.edu/real-time/mosaic/images/moseir.jpg"), AppDataPath + "IRCloudE.jpg");
                 }
 
 
@@ -83438,9 +83449,14 @@ namespace PowerSDR
 
             try
             {
+                System.Net.ServicePointManager.SecurityProtocol =
+            System.Net.SecurityProtocolType.Tls12 |
+            System.Net.SecurityProtocolType.Tls13 |
+            System.Net.SecurityProtocolType.Tls11;
+
                 using (WebClient client = new WebClient()) //.241
                 {
-                    client.DownloadFileAsync(new Uri("http://tropic.ssec.wisc.edu/real-time/mosaic/images/mossir.jpg"), AppDataPath + "IRCloudS.jpg");
+                    client.DownloadFile(new Uri("http://tropic.ssec.wisc.edu/real-time/mosaic/images/mossir.jpg"), AppDataPath + "IRCloudS.jpg");
                 }
 
 
@@ -83452,9 +83468,14 @@ namespace PowerSDR
             }
             try
             {
+                System.Net.ServicePointManager.SecurityProtocol =
+            System.Net.SecurityProtocolType.Tls12 |
+            System.Net.SecurityProtocolType.Tls13 |
+            System.Net.SecurityProtocolType.Tls11;
+
                 using (WebClient client = new WebClient()) //.241
                 {
-                    client.DownloadFileAsync(new Uri("http://tropic.ssec.wisc.edu/real-time/mosaic/images/moswir.jpg"), AppDataPath + "IRCloudW.jpg");
+                    client.DownloadFile(new Uri("http://tropic.ssec.wisc.edu/real-time/mosaic/images/moswir.jpg"), AppDataPath + "IRCloudW.jpg");
                 }
 
             }
@@ -83550,9 +83571,15 @@ namespace PowerSDR
 
             try
             {
+
+                System.Net.ServicePointManager.SecurityProtocol =
+            System.Net.SecurityProtocolType.Tls12 |
+            System.Net.SecurityProtocolType.Tls13 |
+            System.Net.SecurityProtocolType.Tls11;
+
                 using (WebClient client = new WebClient()) //.316
                 {
-                    client.DownloadFileAsync(new Uri("https://coolwx.com/buoydata/data/t-03/front1.png"), AppDataPath + "front1.png");
+                    client.DownloadFile(new Uri("https://coolwx.com/buoydata/data/t-03/front1.png"), AppDataPath + "front1.png");
                     Debug.WriteLine("+WatertempMap from coolwx+"); //.316
                 }
 
@@ -83570,8 +83597,7 @@ namespace PowerSDR
             {
                 using (WebClient client = new WebClient())
                 {
-                    client.DownloadFileAsync(new Uri("https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/imergert_composite.now.png"), AppDataPath + "imergert_composite.now.png");
-                    client.DownloadFileAsync(new Uri("https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/imergert_1080p.now.png"), AppDataPath + "imergert_1080p.now.png");
+                    client.DownloadFile(new Uri("https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/imergert_1080p.now.png"), AppDataPath + "imergert_1080p.now.png");
                     Debug.WriteLine("+Precipitation Map from NASA+"); //.340 3600 x 1800 
                 }
 
@@ -83589,10 +83615,15 @@ namespace PowerSDR
 
             try
             {
+                System.Net.ServicePointManager.SecurityProtocol =
+            System.Net.SecurityProtocolType.Tls12 |
+            System.Net.SecurityProtocolType.Tls13 |
+            System.Net.SecurityProtocolType.Tls11;
+
                 using (WebClient client = new WebClient()) //.234
                 {
                    
-                    client.DownloadFileAsync(new Uri("https://services.swpc.noaa.gov/images/d-rap/global.png"), AppDataPath + "DRAP.png"); // new .322
+                    client.DownloadFile(new Uri("https://services.swpc.noaa.gov/images/d-rap/global.png"), AppDataPath + "DRAP.png"); // new .322
 
                 }
 
@@ -83603,9 +83634,14 @@ namespace PowerSDR
 
                 try
                 {
+                    System.Net.ServicePointManager.SecurityProtocol =
+            System.Net.SecurityProtocolType.Tls12 |
+            System.Net.SecurityProtocolType.Tls13 |
+            System.Net.SecurityProtocolType.Tls11;
+
                     using (WebClient client = new WebClient()) //.234
                     {
-                        client.DownloadFileAsync(new Uri("https://services.swpc.noaa.gov/images/drap_global.png"), AppDataPath + "DRAP.png");
+                        client.DownloadFile(new Uri("https://services.swpc.noaa.gov/images/drap_global.png"), AppDataPath + "DRAP.png");
                       
                     }
 
@@ -83623,9 +83659,14 @@ namespace PowerSDR
             Debug.WriteLine("SWS F-Layer reflection image capture");
             try
             {
+                System.Net.ServicePointManager.SecurityProtocol =
+            System.Net.SecurityProtocolType.Tls12 |
+            System.Net.SecurityProtocolType.Tls13 |
+            System.Net.SecurityProtocolType.Tls11;
+
                 using (WebClient client = new WebClient()) //.234
                 {
-                    client.DownloadFileAsync(new Uri("https://www.sws.bom.gov.au/Images/HF%20Systems/Global%20HF/Ionospheric%20Map/WorldIMap0.gif"), AppDataPath + "FRAP.gif");
+                    client.DownloadFile(new Uri("https://www.sws.bom.gov.au/Images/HF%20Systems/Global%20HF/Ionospheric%20Map/WorldIMap0.gif"), AppDataPath + "FRAP.gif");
 
                 }
 
