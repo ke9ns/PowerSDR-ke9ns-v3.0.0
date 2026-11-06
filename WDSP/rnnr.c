@@ -168,6 +168,7 @@ void SetRXARNNRRun (int channel, int run)
 	{
 		RXAbp1Check (channel, rxa[channel].amd.p->run, rxa[channel].snba.p->run, 
 							 rxa[channel].emnr.p->run, getRun_nnr(rxa[channel].nnr.p),
+							 getRun_nnrbypass(rxa[channel].nnrbypass.p),
 							 rxa[channel].anf.p->run, rxa[channel].anr.p->run,
 							 run, rxa[channel].sbnr.p->run); // NR3 + NR4 support
 

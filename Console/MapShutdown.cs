@@ -34,10 +34,12 @@ namespace PowerSDR
             SP5_Active = 0;
         }
 
+        partial void MapWorkerFailed(string name, Exception error);
+
         private bool StartMapWorker(string name, ThreadStart action, ThreadPriority priority)
         {
             return mapWorkers.TryStart(name, action, priority,
-                delegate(Exception ex) { ShutdownTrace.Write(console.AppDataPath, name + " failed: " + ex); });
+                delegate(Exception ex) { ShutdownTrace.Write(console.AppDataPath, name + " failed: " + ex); MapWorkerFailed(name, ex); });
         }
 
         private void RunTrackSun()

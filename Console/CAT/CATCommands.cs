@@ -73,6 +73,7 @@ namespace PowerSDR
         {
             console = c;
             parser = p;
+            NrSelection = c.CatNrSelection;
             MakeBandList();
 
         }
@@ -4705,6 +4706,30 @@ namespace PowerSDR
         //			int nr = console.CATNR;
         //			return nr.ToString();
         //		}
+
+        // Shared with the console button path. A delegate also permits parser
+        // regression tests without opening a radio or constructing the console.
+        internal Func<bool, int?, int> NrSelection;
+
+        public string ZZNE(string s) { return SelectNr(s, false); }
+        public string ZZNF(string s) { return SelectNr(s, true); }
+
+        private string SelectNr(string s, bool secondReceiver)
+        {
+            int? value = null;
+            if (s.Length == 1 && s[0] >= '0' && s[0] <= '6') value = s[0] - '0';
+            else if (s.Length != 0) return parser.Error1;
+            try
+            {
+                int selected = NrSelection(secondReceiver, value);
+                return value.HasValue ? "" : selected.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("CAT NR selection failed: " + ex.Message);
+                return parser.Error1;
+            }
+        }
 
         public string ZZNR(string s)
         {

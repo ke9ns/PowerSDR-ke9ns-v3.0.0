@@ -14,7 +14,7 @@ namespace PowerSDR
     internal sealed unsafe class WdspReceiver
     {
         private readonly int Rx1Channel;
-        private const int MinimumWdspVersion = 210;
+        private const int MinimumWdspVersion = 211; //.10 WDSP 2.11 with voice/CW NNR models.
         private readonly object channelLock = new object();
         private readonly bool requested = true;
         private readonly WdspImpulseBlankers blankers;
@@ -434,6 +434,9 @@ namespace PowerSDR
             bool modeChanged = !settingsApplied || wantedMode != appliedMode;
             bool filterChanged = !settingsApplied || wantedLow != appliedLow || wantedHigh != appliedHigh;
             bool nrChanged = !settingsApplied || wantedNoiseReductionMode != appliedNoiseReductionMode;
+            bool cwModel = wantedMode == DSPMode.CWL || wantedMode == DSPMode.CWU;
+            bool wasCwModel = appliedMode == DSPMode.CWL || appliedMode == DSPMode.CWU;
+            if (wantedNoiseReductionMode >= 5 && cwModel != wasCwModel) nrChanged = true;
             bool anfChanged = !settingsApplied || wantedAnf != appliedAnf;
             int wantedNrConfigurationVersion = nrConfigurationVersion;
             bool nrParametersChanged = !settingsApplied ||
@@ -503,7 +506,7 @@ namespace PowerSDR
                     case 4: WdspNative.SetRXASBNRRun(Rx1Channel, 1); break;
                     case 5:
                     case 6:
-                        int model = wantedNoiseReductionMode - 5;
+                        int model = wantedNoiseReductionMode - 5 + (cwModel ? 2 : 0);
                         if (WdspNative.SetRXANNRModel(Rx1Channel, model) != model)
                             throw new InvalidOperationException("WDSP NNR model unavailable.");
                         WdspNative.SetRXANNRRun(Rx1Channel, 1);

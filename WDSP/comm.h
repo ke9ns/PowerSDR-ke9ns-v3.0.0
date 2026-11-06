@@ -80,6 +80,7 @@ warren@wpratt.com
 #include "meterlog10.h"
 #include "nbp.h"
 #include "nnr.h"
+#include "nnrbypass.h"
 #include "nob.h"
 #include "nobII.h"
 #include "nurbs.h"

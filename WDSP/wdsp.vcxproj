@@ -280,6 +280,9 @@
     <ClCompile Include="nnr.c" />
     <ClCompile Include="nnr_model_0.c" />
     <ClCompile Include="nnr_model_1.c" />
+    <ClCompile Include="nnr_model_2.c" />
+    <ClCompile Include="nnr_model_3.c" />
+    <ClCompile Include="nnrbypass.c" />
     <ClCompile Include="nurbs.c" />
     <ClCompile Include="nurbs_fit.c" />
     <ClCompile Include="nurbs_spline.c" />
