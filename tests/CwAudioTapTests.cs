@@ -4,6 +4,8 @@ namespace PowerSDR
 {
     internal static unsafe class CwAudioTapTests
     {
+        [System.Runtime.InteropServices.DllImport("wdsp.dll", CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern int GetRXANNRModel(int channel);
         static int Main()
         {
             try
@@ -11,6 +13,7 @@ namespace PowerSDR
                 var dsp = new DSP(); dsp.Main.Active = true;
                 dsp.Main.DSPMode = DSPMode.CWU; dsp.Main.RXOutputGain = 0;
                 DspBackend.Register(dsp);
+                DspBackend.SetRx1NoiseReductionMode(5);
                 const int n = 2048;
                 var l = new float[n]; var r = new float[n]; var ol = new float[n]; var oright = new float[n];
                 int calls = 0; double energy = 0;
@@ -27,11 +30,23 @@ namespace PowerSDR
                         DspBackend.ProcessStereo(lp, rp, op, oq, n, true); Thread.Sleep(43);
                     }
                     if (calls == 0 || energy <= 0) throw new Exception("No RX1 capture before muted AF gain");
+                    if (GetRXANNRModel(0) != 2) throw new Exception("NR5 CW model not selected");
                     int before = calls;
                     DspBackend.ProcessStereo(lp, rp, op, oq, n, false);
                     dsp.Main.DSPMode = DSPMode.USB;
                     DspBackend.ProcessStereo(lp, rp, op, oq, n, true);
                     if (calls != before) throw new Exception("Capture occurred in TX or USB");
+                    if (GetRXANNRModel(0) != 0) throw new Exception("NR5 voice model not restored");
+                    DspBackend.SetRx1NoiseReductionMode(6);
+                    DspBackend.ProcessStereo(lp, rp, op, oq, n, true);
+                    if (GetRXANNRModel(0) != 1) throw new Exception("NR6 voice model not selected");
+                    dsp.Main.DSPMode = DSPMode.CWL;
+                    energy = 0;
+                    for (int block = 0; block < 24; block++) {
+                        DspBackend.ProcessStereo(lp, rp, op, oq, n, true); Thread.Sleep(43);
+                    }
+                    if (GetRXANNRModel(0) != 3 || !(energy > 0) || double.IsInfinity(energy))
+                        throw new Exception("No finite post-NR6 CW signal delivered to decoder tap");
                     dsp.Main.DSPMode = DSPMode.CWU;
                     DspBackend.CwAudioSink = delegate { throw new Exception("Synthetic decoder failure"); };
                     DspBackend.ProcessStereo(lp, rp, op, oq, n, true);

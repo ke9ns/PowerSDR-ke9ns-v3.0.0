@@ -3,9 +3,9 @@
 This integration preserves the licenses of its components; it does not place
 third-party code under a new license. See LICENSE-AUDIT.md for unresolved items.
 
-- PowerSDR and WDSP: GPL source headers and LICENSE.txt. The WDSP 2.10 changes
+- PowerSDR and WDSP: GPL source headers and LICENSE.txt. The WDSP 2.11 changes
   and embedded NNR model arrays are included in WDSP/. Preserve their authorship
-  notices, including Warren Pratt NR0V. See WDSP-2.10-INTEGRATION.md for changes.
+  notices, including Warren Pratt NR0V. See WDSP-2.11-INTEGRATION.md for changes.
 - RNNoise: BSD 3-clause, see lib/NR_Algorithms_x86/src/rnnoise/COPYING for all
   copyright holders and terms. Source is in the adjacent directory.
 - SpecBleach: Luciano Dato and contributors, LGPL-2.1-or-later source headers;

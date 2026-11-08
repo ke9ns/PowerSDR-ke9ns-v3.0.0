@@ -1,12 +1,12 @@
 # Darrin: source review, build and MSI handoff
 
-Candidate 3.0.0.5, branch powersdr-v3.0.0.5-release, based on upstream 3.0.0.4.
+Candidate 3.0.0.10, branch powersdr-v3.0.0.10, based on upstream 3.0.0.9 (a53c103).
 This is a review branch, not a request to publish an unreviewed MSI.
 No master change, forced push or automatic merge is intended.
 
 ## What changed
 
-- WDSP 2.10, NR5/NR6 and embedded NNR models; separate DSP > NNR settings.
+- WDSP 2.11, NR5/NR6 and embedded NNR models; separate DSP > NNR settings.
 - NR5/NR6 disable BIN for the affected receiver to avoid one-sided audio.
 - Optional neural CW decoder integrated into CWX.
 - Existing upstream fixes retained. See the feature-specific documents.

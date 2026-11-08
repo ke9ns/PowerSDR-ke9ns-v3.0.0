@@ -68392,12 +68392,12 @@ namespace PowerSDR
 
                 // ke9ns add: to restore after DIGU/L
                 if (saveANF) chkANF.Checked = true;
-                if (saveNR) chkNR.Checked = true;
+                if (saveNR >= 0) ApplyExperimentalRX1NRMode(saveNR);
                 if (saveNB) chkNB.Checked = true;
                 if (saveNB2) chkDSPNB2.Checked = true;
 
                 saveANF = false;
-                saveNR = false;
+                saveNR = -1;
                 saveNB = false;
                 saveNB2 = false;
 
@@ -68417,12 +68417,12 @@ namespace PowerSDR
 
                 // ke9ns add: to restore after DIGU/L
                 if (saveANF) chkANF.Checked = true;
-                if (saveNR) chkNR.Checked = true;
+                if (saveNR >= 0) ApplyExperimentalRX1NRMode(saveNR);
                 if (saveNB) chkNB.Checked = true;
                 if (saveNB2) chkDSPNB2.Checked = true;
 
                 saveANF = false;
-                saveNR = false;
+                saveNR = -1;
                 saveNB = false;
                 saveNB2 = false;
 
@@ -68441,12 +68441,12 @@ namespace PowerSDR
 
                 // ke9ns add: to restore after DIGU/L
                 if (saveANF) chkANF.Checked = true;
-                if (saveNR) chkNR.Checked = true;
+                if (saveNR >= 0) ApplyExperimentalRX1NRMode(saveNR);
                 if (saveNB) chkNB.Checked = true;
                 if (saveNB2) chkDSPNB2.Checked = true;
 
                 saveANF = false;
-                saveNR = false;
+                saveNR = -1;
                 saveNB = false;
                 saveNB2 = false;
 
@@ -68470,11 +68470,11 @@ namespace PowerSDR
 
                 // ke9ns add: to restore after DIGU/L
 
-                if (saveNR) chkNR.Checked = true;
+                if (saveNR >= 0) ApplyExperimentalRX1NRMode(saveNR);
                 if (saveNB) chkNB.Checked = true;
                 if (saveNB2) chkDSPNB2.Checked = true;
 
-                saveNR = false;
+                saveNR = -1;
                 saveNB = false;
                 saveNB2 = false;
 
@@ -68503,11 +68503,11 @@ namespace PowerSDR
 
                 // ke9ns add: to restore after DIGU/L
 
-                if (saveNR) chkNR.Checked = true;
+                if (saveNR >= 0) ApplyExperimentalRX1NRMode(saveNR);
                 if (saveNB) chkNB.Checked = true;
                 if (saveNB2) chkDSPNB2.Checked = true;
 
-                saveNR = false;
+                saveNR = -1;
                 saveNB = false;
                 saveNB2 = false;
 
@@ -68532,12 +68532,12 @@ namespace PowerSDR
 
                 // ke9ns add: to restore after DIGU/L
                 if (saveANF) chkANF.Checked = true;
-                if (saveNR) chkNR.Checked = true;
+                if (saveNR >= 0) ApplyExperimentalRX1NRMode(saveNR);
                 if (saveNB) chkNB.Checked = true;
                 if (saveNB2) chkDSPNB2.Checked = true;
 
                 saveANF = false;
-                saveNR = false;
+                saveNR = -1;
                 saveNB = false;
                 saveNB2 = false;
 
@@ -68573,12 +68573,12 @@ namespace PowerSDR
 
                 // ke9ns add: to restore after DIGU/L
                 if (saveANF) chkANF.Checked = true;
-                if (saveNR) chkNR.Checked = true;
+                if (saveNR >= 0) ApplyExperimentalRX1NRMode(saveNR);
                 if (saveNB) chkNB.Checked = true;
                 if (saveNB2) chkDSPNB2.Checked = true;
 
                 saveANF = false;
-                saveNR = false;
+                saveNR = -1;
                 saveNB = false;
                 saveNB2 = false;
 
@@ -68685,12 +68685,12 @@ namespace PowerSDR
 
                 // ke9ns add: to restore after DIGU/L
                 if (saveANF) chkANF.Checked = true;
-                if (saveNR) chkNR.Checked = true;
+                if (saveNR >= 0) ApplyExperimentalRX1NRMode(saveNR);
                 if (saveNB) chkNB.Checked = true;
                 if (saveNB2) chkDSPNB2.Checked = true;
 
                 saveANF = false;
-                saveNR = false;
+                saveNR = -1;
                 saveNB = false;
                 saveNB2 = false;
 
@@ -68706,7 +68706,7 @@ namespace PowerSDR
         } //radModeSAM_CheckedChanged
 
         bool saveANF = false; // ke9ns add
-        bool saveNR = false; // ke9ns add
+        int saveNR = -1; //.10 NR suspended by DIGU/DIGL; -1 means no pending restoration.
         bool saveNB = false; // ke9ns add
         bool saveNB2 = false; // ke9ns add
 
@@ -68721,8 +68721,7 @@ namespace PowerSDR
 
                 if (chkANF.Checked) saveANF = true;
                 else saveANF = false;
-                if (chkNR.Checked) saveNR = true;
-                else saveNR = false;
+                if (saveNR < 0) saveNR = experimental_rx1_nr_mode;
                 if (chkNB.Checked) saveNB = true;
                 else saveNB = false;
                 if (chkDSPNB2.Checked) saveNB2 = true;
@@ -68752,12 +68751,12 @@ namespace PowerSDR
 
                 // ke9ns add: to restore after DIGU/L
                 if (saveANF) chkANF.Checked = true;
-                if (saveNR) chkNR.Checked = true;
+                if (saveNR >= 0) ApplyExperimentalRX1NRMode(saveNR);
                 if (saveNB) chkNB.Checked = true;
                 if (saveNB2) chkDSPNB2.Checked = true;
 
                 saveANF = false;
-                saveNR = false;
+                saveNR = -1;
                 saveNB = false;
                 saveNB2 = false;
             }
@@ -68775,8 +68774,7 @@ namespace PowerSDR
 
                 if (chkANF.Checked) saveANF = true;
                 else saveANF = false;
-                if (chkNR.Checked) saveNR = true;
-                else saveNR = false;
+                if (saveNR < 0) saveNR = experimental_rx1_nr_mode;
                 if (chkNB.Checked) saveNB = true;
                 else saveNB = false;
                 if (chkDSPNB2.Checked) saveNB2 = true;
@@ -68804,12 +68802,12 @@ namespace PowerSDR
 
                 // ke9ns add: to restore after DIGU/L
                 if (saveANF) chkANF.Checked = true;
-                if (saveNR) chkNR.Checked = true;
+                if (saveNR >= 0) ApplyExperimentalRX1NRMode(saveNR);
                 if (saveNB) chkNB.Checked = true;
                 if (saveNB2) chkDSPNB2.Checked = true;
 
                 saveANF = false;
-                saveNR = false;
+                saveNR = -1;
                 saveNB = false;
                 saveNB2 = false;
 
@@ -83390,7 +83388,7 @@ namespace PowerSDR
 
 
         public bool OpenWeather = false; //ke9ns add: true= outside USA
-        public void NOAA()
+        private void UpdateNoaaData()
         {
             Debug.WriteLine("NOAA THREAD HERE");
             if (SpotForm == null || SpotForm.IsDisposed)
@@ -84223,6 +84221,7 @@ namespace PowerSDR
             catch (Exception ex)
             {
                 Debug.WriteLine("1noaa fault=== " + ex);
+                ReportVoacapDataFailure(ex);
 
                 noaaON = 0; // failure to get data
             }
