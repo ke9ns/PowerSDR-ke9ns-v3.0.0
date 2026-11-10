@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('All', 'Audio', 'Rx2', 'Graphics', 'State', 'Speech', 'Squelch', 'IQ', 'Resume', 'Map', 'CwTap')]
+    [ValidateSet('All', 'Audio', 'Rx2', 'Graphics', 'State', 'Speech', 'Squelch', 'IQ', 'Resume', 'Map', 'CwTap', 'Nnr')]
     [string]$Suite = 'All',
     [string]$RuntimePath = '',
     [string]$OutputPath = ''
@@ -32,6 +32,7 @@ if ($Suite -in @('All','State')) {
     Run-Test 'NrModeStateTests' @((Join-Path $repo 'tests\NrModeStateTests.cs'),(Join-Path $repo 'Console\DSP\NrModeState.cs'))
     Run-Test 'DisplayStartupGateTests' @((Join-Path $repo 'tests\DisplayStartupGateTests.cs'),(Join-Path $repo 'Console\DisplayStartupGate.cs'))
 }
+if ($Suite -in @('All','Nnr')) { Run-Test 'NnrReceiverIsolationTests' ($dspSources + (Join-Path $repo 'tests\NnrReceiverIsolationTests.cs') + (Join-Path $repo 'Console\DSP\WdspNnrSetupPanel.cs')) @('System.Drawing.dll','System.Windows.Forms.dll') }
 if ($Suite -in @('All','Audio')) { Run-Test 'AudioBridgeTests' $dspSources }
 if ($Suite -in @('All','CwTap')) { Run-Test 'CwAudioTapTests' ($dspSources + (Join-Path $repo 'tests\CwAudioTapTests.cs')) }
 if ($Suite -in @('All','Map')) {

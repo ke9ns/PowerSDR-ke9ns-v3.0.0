@@ -59,7 +59,7 @@ namespace PowerSDR
                     Increment = i == 2 || i == 4 ? .05m : 1m };
                 nnrControls[receiver, i] = control;
                 toolTip1.SetToolTip(control, tips[i]);
-                control.ValueChanged += delegate { ApplyNnrSettings(); };
+                control.ValueChanged += delegate { ApplyNnrSettings(receiver); }; //.11 Apply only this receiver.
                 group.Controls.Add(control);
             }
             var gentle = new ButtonTS { Text = "Voice smooth", Location = new Point(12, 211), Size = new Size(120, 27) };
@@ -76,18 +76,22 @@ namespace PowerSDR
             nnrUpdating = true;
             try { for (int i = 0; i < 7; i++) nnrControls[receiver, i].Value = values[i]; }
             finally { nnrUpdating = false; }
-            ApplyNnrSettings();
+            ApplyNnrSettings(receiver); //.11 Keep presets isolated by receiver.
         }
 
         private void ApplyNnrSettings()
         {
-            if (initializing || nnrUpdating || nnrControls[1, 6] == null) return;
             for (int receiver = 0; receiver < 2; receiver++)
-            {
-                double[] values = new double[7];
-                for (int i = 0; i < 7; i++) values[i] = (double)nnrControls[receiver, i].Value;
-                DspBackend.SetNnrParameters(receiver, values);
-            }
+                ApplyNnrSettings(receiver);
+        }
+
+        private void ApplyNnrSettings(int receiver)
+        {
+            if (initializing || nnrUpdating || nnrControls[receiver, 6] == null) return;
+            //.11 Each panel owns its receiver; RX1 also controls RX-S through DspBackend.
+            double[] values = new double[7];
+            for (int i = 0; i < 7; i++) values[i] = (double)nnrControls[receiver, i].Value;
+            DspBackend.SetNnrParameters(receiver, values);
         }
 
         // Existing console shortcuts use the original tab indexes.

@@ -82,6 +82,12 @@ namespace PowerSDR
         internal void SetNnrParameters(double[] values)
         {
             if (values == null || values.Length != 7) throw new ArgumentException("NNR parameters");
+            double[] current = nnrParameters;
+            bool changed = false;
+            for (int i = 0; i < values.Length; i++)
+                if (current[i] != values[i]) { changed = true; break; }
+            //.11 Avoid rebuilding DSP/filter state when settings have not changed.
+            if (!changed) return;
             nnrParameters = (double[])values.Clone();
             Interlocked.Increment(ref nrConfigurationVersion);
         }
