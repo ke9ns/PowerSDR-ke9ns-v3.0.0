@@ -750,7 +750,8 @@ namespace PowerSDR
             this.tpAppearance = new System.Windows.Forms.TabPage();
             this.tcAppearance = new System.Windows.Forms.TabControl();
             this.tpAppearanceGeneral = new System.Windows.Forms.TabPage();
-            this.number3DThres = new System.Windows.Forms.TrackBarTS();
+            this.tb3DThres = new System.Windows.Forms.TrackBarTS();
+            this.labelTS50 = new System.Windows.Forms.LabelTS();
             this.num4d = new System.Windows.Forms.NumericUpDownTS();
             this.num3d = new System.Windows.Forms.NumericUpDownTS();
             this.ud3DZ = new System.Windows.Forms.NumericUpDownTS();
@@ -1564,7 +1565,7 @@ namespace PowerSDR
             this.tpAppearance.SuspendLayout();
             this.tcAppearance.SuspendLayout();
             this.tpAppearanceGeneral.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.number3DThres)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tb3DThres)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num4d)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num3d)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ud3DZ)).BeginInit();
@@ -12639,7 +12640,8 @@ namespace PowerSDR
             // tpAppearanceGeneral
             // 
             this.tpAppearanceGeneral.BackColor = System.Drawing.SystemColors.Control;
-            this.tpAppearanceGeneral.Controls.Add(this.number3DThres);
+            this.tpAppearanceGeneral.Controls.Add(this.tb3DThres);
+            this.tpAppearanceGeneral.Controls.Add(this.labelTS50);
             this.tpAppearanceGeneral.Controls.Add(this.num4d);
             this.tpAppearanceGeneral.Controls.Add(this.num3d);
             this.tpAppearanceGeneral.Controls.Add(this.ud3DZ);
@@ -12663,20 +12665,29 @@ namespace PowerSDR
             this.tpAppearanceGeneral.TabIndex = 0;
             this.tpAppearanceGeneral.Text = "General";
             // 
-            // number3DThres
+            // tb3DThres
             // 
-            this.number3DThres.AutoSize = false;
-            this.number3DThres.LargeChange = 1;
-            this.number3DThres.Location = new System.Drawing.Point(10, 292);
-            this.number3DThres.Maximum = 100;
-            this.number3DThres.Name = "number3DThres";
-            this.number3DThres.Size = new System.Drawing.Size(128, 18);
-            this.number3DThres.TabIndex = 94;
-            this.number3DThres.TickFrequency = 4;
-            this.toolTip1.SetToolTip(this.number3DThres, "Slider adjusts the noise floor threshold (masks noise and small signals from the " +
+            this.tb3DThres.AutoSize = false;
+            this.tb3DThres.LargeChange = 1;
+            this.tb3DThres.Location = new System.Drawing.Point(70, 292);
+            this.tb3DThres.Maximum = 100;
+            this.tb3DThres.Name = "tb3DThres";
+            this.tb3DThres.Size = new System.Drawing.Size(68, 18);
+            this.tb3DThres.TabIndex = 94;
+            this.tb3DThres.TickFrequency = 4;
+            this.toolTip1.SetToolTip(this.tb3DThres, "Slider adjusts the noise floor threshold (masks noise and small signals from the " +
         "display)\r\n");
-            this.number3DThres.Value = 20;
-            this.number3DThres.Scroll += new System.EventHandler(this.number3DThres_Scroll);
+            this.tb3DThres.Value = 20;
+            this.tb3DThres.Scroll += new System.EventHandler(this.number3DThres_Scroll);
+            // 
+            // labelTS50
+            // 
+            this.labelTS50.Image = null;
+            this.labelTS50.Location = new System.Drawing.Point(7, 289);
+            this.labelTS50.Name = "labelTS50";
+            this.labelTS50.Size = new System.Drawing.Size(64, 24);
+            this.labelTS50.TabIndex = 95;
+            this.labelTS50.Text = "threshold:";
             // 
             // num4d
             // 
@@ -12743,7 +12754,7 @@ namespace PowerSDR
             0});
             this.ud3DZ.Location = new System.Drawing.Point(77, 262);
             this.ud3DZ.Maximum = new decimal(new int[] {
-            58,
+            54,
             0,
             0,
             0});
@@ -19507,7 +19518,7 @@ namespace PowerSDR
             this.tpAppearance.ResumeLayout(false);
             this.tcAppearance.ResumeLayout(false);
             this.tpAppearanceGeneral.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.number3DThres)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tb3DThres)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num4d)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num3d)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ud3DZ)).EndInit();
@@ -20851,7 +20862,8 @@ namespace PowerSDR
         public System.Windows.Forms.CheckBoxTS chkVisualBandInd;
         public ColorButton clrbtnVFO1;
         public ColorButton clrbtnVFO2;
-        public System.Windows.Forms.TrackBarTS number3DThres;
+        public System.Windows.Forms.TrackBarTS tb3DThres;
+        private System.Windows.Forms.LabelTS labelTS50;
     } // class setup
 
 

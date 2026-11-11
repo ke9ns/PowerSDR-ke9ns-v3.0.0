@@ -16487,7 +16487,7 @@ namespace PowerSDR
             Display.Data3DLineColor = clrbtn3DDataLine.Color;
             Display.Data3DLineColor = clrbtn3DDataLine.Color;
 
-            Display.Data3DThreshold = number3DThres.Value; //.12
+            Display.Data3DThreshold = tb3DThres.Value; //.12
 
 
         } // number3dz
@@ -17078,20 +17078,20 @@ namespace PowerSDR
         private void number3DX_ValueChanged(object sender, EventArgs e)
         {
             Display.Data3DLineColor = clrbtn3DDataLine.Color;
-            Display.Data3DThreshold = number3DThres.Value; //.12
+            Display.Data3DThreshold = tb3DThres.Value; //.12
 
         }
 
         private void number3DY_ValueChanged(object sender, EventArgs e)
         {
             Display.Data3DLineColor = clrbtn3DDataLine.Color;
-            Display.Data3DThreshold = number3DThres.Value; //.12
+            Display.Data3DThreshold = tb3DThres.Value; //.12
 
         }
 
         private void number3DThres_Scroll(object sender, EventArgs e) //.12
         {
-            Display.Data3DThreshold = number3DThres.Value; //.12
+            Display.Data3DThreshold = tb3DThres.Value; //.12
         }
 
 
