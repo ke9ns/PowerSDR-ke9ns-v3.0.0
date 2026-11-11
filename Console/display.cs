@@ -1048,6 +1048,19 @@ namespace PowerSDR
             }
         } // Data3DLineAlpha
 
+        private static int data_3dline_Threshold = 0; //.12
+        private static int data_3dline_Threshold2 = 0; //.12
+        public static int Data3DThreshold
+        {
+            get { return data_3Dline_Alpha; }
+            set
+            {
+                data_3dline_Threshold = value;
+                
+
+            }
+        } // Data3DThreshold
+
         static int[] Alpha3D = new int[70];
 
         public static Color Data3DLineColor
@@ -1065,7 +1078,7 @@ namespace PowerSDR
 
                 try
                 {
-                    if (!console.initializing) Pan3DSteps = (float)console.setupForm.number3DZ.Value + 5f;
+                    if (!console.initializing) Pan3DSteps = (float)console.setupForm.ud3DZ.Value + 5f;
                
                 }
                 catch
@@ -19539,9 +19552,9 @@ namespace PowerSDR
         unsafe static private bool DrawPanadapter(Graphics g, int W, int H, int rx, bool bottom)
         {
 
-            X1 = (int)console.setupForm.number3DX.Value; // x step right(increase) for each point drawing horizontal
-            Y1 = (int)console.setupForm.number3DY.Value; // y step up (decrease) for each point darwing vertical
-            Z1 = (int)console.setupForm.number3DZ.Value; // .309 how many 3d lines of history in the Panadapter view (16 in Panafall, or 40 with no waterfall)
+            X1 = (int)console.setupForm.ud3DX.Value; // x step right(increase) for each point drawing horizontal
+            Y1 = (int)console.setupForm.ud3DY.Value; // y step up (decrease) for each point darwing vertical
+            Z1 = (int)console.setupForm.ud3DZ.Value; // .309 how many 3d lines of history in the Panadapter view (16 in Panafall, or 40 with no waterfall)
 
 
             if (console.powerMate.Look(10) != 0) //.294 use instad of onRotateEvent handler because it caused a strange pan lag glitch as you scroll left/right
@@ -19642,11 +19655,11 @@ namespace PowerSDR
                 if ((console.setupForm != null && console.setupForm.check3DPan.Checked == true))
                 {
 
-                    if (PON == false) // do 1 time
+                    if (PON == false) // Do 1 time
                     {
                         // ke9ns: cannot use an array due to the use of "drawlines" and "points"
 
-                        points0 = new Point[W + 2]; // for fill while in 3D mode
+                       points0 = new Point[W + 2];   // for fill while in 3D mode
 
                         for (int i = 2; i <= 60; i++)
                         {
@@ -19659,22 +19672,22 @@ namespace PowerSDR
                         {
                             Alpha3D[ww] = (int)(Pan3DAlphaStep * (60 - (float)ww - 1f)); 
                         }
+                        //.12
+                                               
 
                         if (console.setupForm != null) data_3Dline_color = console.setupForm.clrbtn3DDataLine.Color;
-
-                   //     for (int iii = 59; iii > 0; iii--) //.9
+                       
+                   //     for (int iii = (int)Pan3DSteps; iii > 0; iii--) //.9
                     //    {
                      //       data_3dline_pen[iii + 1] = new Pen(Color.FromArgb(Alpha3D[iii], data_3Dline_color), display_line_width);
                      //   }
-
-                        data_3dline_pen[0] = new Pen(Color.FromArgb(Alpha3D[0], data_3Dline_color), display_line_width);
-
+                     //   data_3dline_pen[0] = new Pen(Color.FromArgb(Alpha3D[0], data_3Dline_color), display_line_width);
 
 
                         for (int z = 0; z < W; z++) // copy the current panadapter signal (points) into history list (points2...points19) and shift the pan up and to the right by X1 and Y1 offsets (found in setup->Appearance)
                         {
 
-                            // ke9ns: do this 1 time when you start 3dPan to clear up the image
+                            // ke9ns: Do this 1 time when you start 3dPan to clear up the image
 
                             if (pan_fill)
                             {
@@ -20393,8 +20406,14 @@ namespace PowerSDR
                 // ke9ns add: 3dpan move shift old data to make room for new
                 if (PON == true) //if (console.setupForm != null && console.setupForm.check3DPan.Checked == true)
                 {
-                
-                        for (int zz = (int)console.setupForm.number3DZ.Value; zz >= 2; zz--) //.9
+                   
+                    if (points[i].Y > data_3dline_Threshold2) //.12 if the current signal panadapter data is below your set threshold, flatten it out to avoid noisy display
+                    {
+                        points[i].Y = data_3dline_Threshold2;
+                       
+                    }
+                        //ke9ns: copy last scans panadapter data line into a higher zz register (i.e. the higher zz is the older the data)
+                        for (int zz = (int)console.setupForm.ud3DZ.Value; zz >= 2; zz--) //.9
                         {
                             pointss[zz + 1][i].X = (pointss[zz][i].X) + X1;
                             pointss[zz + 1][i].Y = (pointss[zz][i].Y) - Y1;
@@ -20429,11 +20448,19 @@ namespace PowerSDR
 
                 else if ((bottom)) points[i].Y = points[i].Y + H; // this is the original only line
 
+                if (PON == true)  //.12
+                {
+
+                    data_3dline_Threshold2 = H - data_3dline_Threshold; //.12
+
+                    if (points[i].X == 500) Debug.WriteLine("3D1: " + points[i].Y + " , thres setting: " + data_3dline_Threshold + " , #2: " + data_3dline_Threshold2);
 
 
-                //=========================================================================
-                // ke9ns add
-                if ((!mox) && (rx == 1) && ((console.BeaconSigAvg == true) || ((console.ScanForm != null) && (console.ScanForm.chkBoxIdent.Checked == true)))) // ke9ns add for beacon scanning and sig ident
+                }
+
+                    //=========================================================================
+                    // ke9ns add
+                    if ((!mox) && (rx == 1) && ((console.BeaconSigAvg == true) || ((console.ScanForm != null) && (console.ScanForm.chkBoxIdent.Checked == true)))) // ke9ns add for beacon scanning and sig ident
                 {
                     max1 = max1 + max; // sum up entire panadapter line (left to right)
 
@@ -20888,10 +20915,10 @@ namespace PowerSDR
             else // false
             {
 
-                if (PON == true) // ke9ns 3D active
+                if (PON == true) // ke9ns: 3D active
                 {
   
-                    for (int zzz = (int)console.setupForm.number3DZ.Value; zzz > 1;zzz--)    //.9
+                    for (int zzz = (int)console.setupForm.ud3DZ.Value; zzz > 1;zzz--)    //.9
                     {
                         if (!Direct2DDisplay.QueuePanadapterTrace(pointss[zzz], W, data_3dline_pen[zzz].Color, data_3dline_pen[zzz].Width)) g.DrawLines(data_3dline_pen[zzz], pointss[zzz]);
                     }

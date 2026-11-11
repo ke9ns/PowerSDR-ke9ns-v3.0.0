@@ -641,7 +641,9 @@
     <Compile Include="DisplayStartupGate.cs" />
     <Compile Include="MapWorkerLifetime.cs" />
     <Compile Include="MapShutdown.cs" />
-    <Compile Include="VoacapNetworkSafety.cs" />
+    <Compile Include="VoacapNetworkSafety.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="NeuralCwDecoder.cs" />
     <Compile Include="CwxNeuralPanel.cs">
       <SubType>Form</SubType>
@@ -692,7 +694,9 @@
     </Compile>
     <Compile Include="dttsp.cs" />
     <Compile Include="DSP\DspBackend.cs" />
-    <Compile Include="CatNrSelection.cs" />
+    <Compile Include="CatNrSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DSP\WdspPreparationDialog.cs">
       <SubType>Form</SubType>
     </Compile>
