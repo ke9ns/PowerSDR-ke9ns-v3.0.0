@@ -17089,7 +17089,28 @@ namespace PowerSDR
 
         private void number3DThres_Scroll(object sender, EventArgs e) //.12
         {
+           
+          
+            Display.Data3DLineAlpha = tbPan3DAlpha.Value;
+            Display.Data3DLineColor = clrbtn3DDataLine.Color;
+           
             Display.Data3DThreshold = tb3DThres.Value; //.12
+            Display.Data3DThreshold = tb3DThres.Value; //.12
+
+
+            Debug.WriteLine("3D thres " + tb3DThres.Value);
+
+        }
+
+        private void tpAppearanceGeneral_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tb3DThres_ValueChanged(object sender, EventArgs e)
+        {
+            Display.Data3DThreshold = tb3DThres.Value; //.12
+            Debug.WriteLine("3D1 thres " + tb3DThres.Value);
         }
 
 

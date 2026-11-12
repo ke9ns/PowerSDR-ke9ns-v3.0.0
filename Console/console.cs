@@ -88548,6 +88548,7 @@ namespace PowerSDR
         bool fill = false; // ke9ns add
                            //  bool Map3D = false; // ke9ns add
         int FPS3D = 0; // ke9ns add temporary holder
+        bool grid3D = false; //.13
         private void label6_MouseDown(object sender, MouseEventArgs e)
         {
             MouseEventArgs me = (MouseEventArgs)e;
@@ -88579,7 +88580,7 @@ namespace PowerSDR
                 setupForm.tcAppearance.SelectedIndex = 1; // select  tab
 
             }
-            else
+            else // left click
             {
 
                 lblDisplayZoom1.Enabled = true; //.277
@@ -88597,6 +88598,9 @@ namespace PowerSDR
                         FPS3D = 0;
                     }
 
+                     setupForm.gridBoxTS.Checked = grid3D;  //.13 restore grid when 3D is off
+
+                   
                 }
                 else // if 3D was OFF,turn ON
                 {
@@ -88606,14 +88610,18 @@ namespace PowerSDR
 
                         this.pictureBox1.Image = global::PowerSDR.Properties.Resources.red1;
 
-                        Display.Data3DLineAlpha = setupForm.tbPan3DAlpha.Value;
-                        Display.Data3DLineColor = setupForm.clrbtn3DDataLine.Color;
+                        Display.Data3DLineAlpha = setupForm.tbPan3DAlpha.Value;         // 3d alpla slider not used now
+                        Display.Data3DLineColor = setupForm.clrbtn3DDataLine.Color; //3d color not used now
+                        Display.Data3DThreshold = setupForm.tb3DThres.Value; //.13
 
-                        setupForm.check3DPan.Checked = true;
+                        setupForm.check3DPan.Checked = true; // turn 3D ON
 
                         FPS3D = 0;
 
+                        grid3D = setupForm.gridBoxTS.Checked; //.13 record the state before turning on 3D
+                        setupForm.gridBoxTS.Checked = true; //.13 grid off
 
+                      
                         if (SpotForm == null || SpotForm.IsDisposed)
                         {
                             Debug.WriteLine("SpotControl instance created by Map button");
@@ -88627,13 +88635,12 @@ namespace PowerSDR
                             setupForm.udDisplayFPS.Value = 20;
 
                         }
-
-                    }
+                       
+                    } //zzoom
 
                 } // 3D was off, turn ON
 
-
-            }
+            } // left click
         } // button1_MouseDown
 
         // ke9ns add:

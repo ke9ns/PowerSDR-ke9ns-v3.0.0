@@ -1051,11 +1051,12 @@ namespace PowerSDR
         private static int data_3dline_Threshold2 = 0; //.12
         public static int Data3DThreshold
         {
-            get { return data_3Dline_Alpha; }
+            get { return data_3dline_Threshold; }
             set
             {
                 data_3dline_Threshold = value;
-                
+
+                Debug.WriteLine("3D Threshold " + data_3dline_Threshold);
 
             }
         } // Data3DThreshold
@@ -3859,22 +3860,7 @@ namespace PowerSDR
             int f_steps = (width / freq_step_size) + 1; // freq_step_size = 50
 
 
-            // ke9ns: this below is not used
-            //   double temp0 = (double)W / (double)(H - top); // .309 ratio of Y to X
-            //   double temp1 = (double)(H - top)  / (double)(Y1 * Z1);  // .309 Opposite height
-            //  double temp2 = (double)W / (double)(X1 * Z1); // .309 adjacent height 
-            //  double temp3 = Math.Atan(temp1 / temp2); //.309 TAN radians = Opp / ADJ  find angle of 3d history pan based on x,y,z,top and W values
-            //  int D3a = (int)(90.0 - temp3);
-            // Debug.WriteLine("D3Angle: " + temp3 + " ,Top: " + top + " ,H: " + H + " ,W: " + W + " ,D3: " + D3a + " ,Z: " + Z1 + " ,X: " + X1 + " , " + temp1 + " , " + temp2);
-            //  int temp4 = (int)console.setupForm.num3d.Value;             // .309
-            //   int temp5 = (int)console.setupForm.num4d.Value;              // .309
-
-            Z1 = (H - top) / 2 / Y1;  //.309 draw isometric lines to follow 3D pan
-            X2 = (X1 * Z1);
-            Y2 = (H - ((Y1 * Z1)));     //* (int)(2.0 + temp0))); //
-
-            //  Debug.WriteLine("Ang: " + X2 + " , " + Y2 );
-
+            //.309 removed
 
             switch (console.CurrentRegion)
             {
@@ -3998,16 +3984,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                        //.309 removed
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                     
 
                                     } // grid off
 
@@ -4065,19 +4045,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   //.309 removed
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                   
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -4092,16 +4063,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       //.309 removed
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -4235,19 +4200,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               //.309 removed
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                               
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -4485,16 +4441,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       //.309 removed
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
 
                                     } // grid off
 
@@ -4553,19 +4503,10 @@ namespace PowerSDR
 
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   //.309 removed
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -4579,16 +4520,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -4718,19 +4653,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -4924,16 +4850,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
 
                                     } // grid off
 
@@ -4991,19 +4911,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -5018,16 +4929,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -5156,19 +5061,10 @@ namespace PowerSDR
                             vgrid = Convert.ToInt32((double)-(fgrid - Low) / (Low - High) * W); //wa6ahl
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -5375,16 +5271,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
 
                                     } // grid off
 
@@ -5442,19 +5332,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -5468,16 +5349,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                      
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -5607,19 +5482,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -5822,16 +5688,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                        
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
 
                                     } // grid off
 
@@ -5889,19 +5749,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -5915,16 +5766,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -6054,19 +5899,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                                
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
 
@@ -6263,16 +6099,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
 
                                     } // grid off
 
@@ -6330,19 +6160,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -6356,16 +6177,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -6495,19 +6310,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -6707,16 +6513,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
 
                                     } // grid off
 
@@ -6774,19 +6574,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -6800,16 +6591,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -6939,19 +6724,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -7149,16 +6925,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
 
                                     } // grid off
 
@@ -7216,19 +6986,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -7242,16 +7003,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -7381,19 +7136,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                              
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                               
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -7593,16 +7339,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
 
                                     } // grid off
 
@@ -7660,19 +7400,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -7686,16 +7417,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -7825,19 +7550,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                                
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -8037,16 +7753,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
 
                                     } // grid off
 
@@ -8104,19 +7814,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                  
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                   
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -8130,16 +7831,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -8269,19 +7964,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                                
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -8480,16 +8166,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
 
                                     } // grid off
 
@@ -8547,19 +8227,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -8573,16 +8244,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -8712,19 +8377,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                                
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -8920,16 +8576,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                      
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
 
                                     } // grid off
 
@@ -8987,19 +8637,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                   
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -9013,16 +8654,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
                                     } // grid off
                                     //----------------------------------------------------------------
                                     // ke9ns add Check for SWR PLOT Display (ANT and BAND at top of this routine)
@@ -9151,19 +8786,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -9354,16 +8980,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
 
                                     } // grid off
 
@@ -9421,19 +9041,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                   
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -9447,16 +9058,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -9586,19 +9191,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
 
@@ -9789,16 +9385,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
 
                                     } // grid off
 
@@ -9856,19 +9446,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -9882,16 +9463,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -10021,19 +9596,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                               
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -10232,16 +9798,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
 
                                     } // grid off
 
@@ -10299,19 +9859,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                   
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -10325,16 +9876,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -10464,19 +10009,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -10673,16 +10209,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                      
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
 
                                     } // grid off
 
@@ -10740,19 +10270,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -10766,16 +10287,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -10905,19 +10420,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -11115,16 +10621,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
 
                                     } // grid off
 
@@ -11182,19 +10682,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                    
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -11208,16 +10699,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -11347,19 +10832,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -11558,16 +11034,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                      
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
 
                                     } // grid off
 
@@ -11625,19 +11095,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -11651,16 +11112,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -11790,19 +11245,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -12003,16 +11449,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                        
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
 
                                     } // grid off
 
@@ -12070,19 +11510,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                    
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -12096,16 +11527,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -12235,19 +11660,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                               
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -12487,16 +11903,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309A
-                                        {
-                                            //  g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3  , H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // ke9ns vertical lines
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                       
 
                                     } // grid off
 
@@ -12554,19 +11964,10 @@ namespace PowerSDR
                             {
                                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                                 {
-                                    if (console.setupForm.check3DPan.Checked) //.309B
-                                    {
+                                   
                                         if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
                                         else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                        //   g.DrawLine(grid_pen,vgrid + X2, top + Y2, vgrid, H);
-                                        g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                    }
-                                    else
-                                    {
-                                        if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                        else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                    }
+                                   
                                 } // grid off
 
                                 int fgrid_2 = ((i + 1) * freq_step_size) + (int)((Low / freq_step_size) * freq_step_size);
@@ -12580,16 +11981,10 @@ namespace PowerSDR
                                     {
                                         float x3 = (float)vgrid + (j * scale);
 
-                                        if (console.setupForm.check3DPan.Checked) //.309C
-                                        {
-                                            //   g.DrawLine(grid_pen_dark, x3 + X2, top + Y2, x3, H);
-                                            g.DrawLine(grid_pen_dark, x3 + X2, top + Y2 - Y3, x3, H - Y3);
-                                        }
-                                        else
-                                        {
+                                       
                                             if (bottom) g.DrawLine(grid_pen_dark, x3, H + top, x3, H + H); // vertical lines in between the labels
                                             else g.DrawLine(grid_pen_dark, x3, top, x3, H);
-                                        }
+                                        
                                     } // grid off
 
                                     //----------------------------------------------------------------
@@ -12719,19 +12114,10 @@ namespace PowerSDR
 
                             if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                             {
-                                if (console.setupForm.check3DPan.Checked) //.309D
-                                {
-                                    //     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H); // draw vertical lines below the freq labels
-                                    //    else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-
-                                    //   g.DrawLine(grid_pen, vgrid + X2, top + Y2, vgrid , H);
-                                    g.DrawLine(grid_pen, vgrid + X2, top + Y2 - Y3, vgrid, H - Y3);
-                                }
-                                else
-                                {
+                               
                                     if (bottom) g.DrawLine(grid_pen, vgrid, H + top, vgrid, H + H);
                                     else g.DrawLine(grid_pen, vgrid, top, vgrid, H);            //wa6ahl
-                                }
+                                
                             } //grid off
 
                             double new_fgrid = (vfoa_hz + fgrid) / 1000000;
@@ -12839,16 +12225,10 @@ namespace PowerSDR
 
                 if (grid_off == 0) // ke9ns add (dont draw grid lines if =1 
                 {
-                    if (console.setupForm.check3DPan.Checked) //.309E   same for every turf
-                    {
-                        if (bottom) g.DrawLine(grid_pen, 0, H + y, W, H + y);  // HORIZONTAL draw lines 
-                        else g.DrawLine(grid_pen, 0, y, W, y);
-                    }
-                    else
-                    {
+                   
                         if (bottom) g.DrawLine(grid_pen, 0, H + y, W, H + y);  // draw lines 
                         else g.DrawLine(grid_pen, 0, y, W, y);
-                    }
+                    
 
                 } // Grid_off
 
@@ -19459,21 +18839,7 @@ namespace PowerSDR
         public static double AGCT_Adj_Offset = 55.0000; // ke9ns adjustment for pos of green line vs agc-t value
         public static double AGCT_Adj_Ratio = 1.6155000;
 
-        //  const int X1 = 2; // offset for each sample
-        //  const int Y1 = 4;
-
-        static int X1 = 1; // offset for each sample
-        static int Y1 = 1;
-        static int Z1 = 1; //.309
-
-        static int X2 = 0;              //.309
-        static int Y2 = 0;              // .309
-        static int Y3 = 60; //.309
-        static int Z2 = 0;  //.309
-
-        static int D3angle = 0; //.309 based on value of X1 and Y1 and W and top - H
-        static int L3angle = 0; //.309
-
+       //.309 removed
 
         public static int TTT = 0;
 
@@ -19493,7 +18859,7 @@ namespace PowerSDR
    
             X11 = (int)console.setupForm.ud3DX.Value; // x step right(increase) for each point drawing horizontal
             Y11 = (int)console.setupForm.ud3DY.Value; // y step up (decrease) for each point darwing vertical
-            Z11 = (int)console.setupForm.ud3DZ.Value; // .309 how many 3d lines of history in the Panadapter view (16 in Panafall, or 40 with no waterfall)
+            Z11 = (int)console.setupForm.ud3DZ.Value; // z how many 3d lines of history in the Panadapter view (16 in Panafall, or 40 with no waterfall)
 
 
             if (console.powerMate.Look(10) != 0) //.294 use instad of onRotateEvent handler because it caused a strange pan lag glitch as you scroll left/right
@@ -20330,7 +19696,10 @@ namespace PowerSDR
                 // ke9ns add: 3dpan move shift old data to make room for new
                 if (PON == true) //if (console.setupForm != null && console.setupForm.check3DPan.Checked == true)
                 {
-                   
+                    data_3dline_Threshold2 = H - data_3dline_Threshold; //.12
+
+                  //  if (i == 500) Debug.WriteLine("3D THRES GO " + data_3dline_Threshold + " , 2 " + data_3dline_Threshold2 + " , i " + points[i].Y);
+
                     if (points[i].Y > data_3dline_Threshold2) //.12 if the current signal panadapter data is below your set threshold, flatten it out to avoid noisy display
                     {
                         points[i].Y = data_3dline_Threshold2;
@@ -20364,11 +19733,11 @@ namespace PowerSDR
 
                 else if ((bottom)) points[i].Y = points[i].Y + H; // this is the original only line
 
-                if (PON == true)  //.12
-                {
-                    data_3dline_Threshold2 = H - data_3dline_Threshold; //.12
+              //  if (PON == true)  //.12
+             //   {
+              //      data_3dline_Threshold2 = H - data_3dline_Threshold; //.12
                 
-                }
+              //  }
 
                     //=========================================================================
                     // ke9ns add

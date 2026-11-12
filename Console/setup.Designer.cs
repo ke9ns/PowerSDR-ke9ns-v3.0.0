@@ -12664,6 +12664,7 @@ namespace PowerSDR
             this.tpAppearanceGeneral.Size = new System.Drawing.Size(592, 318);
             this.tpAppearanceGeneral.TabIndex = 0;
             this.tpAppearanceGeneral.Text = "General";
+            this.tpAppearanceGeneral.Click += new System.EventHandler(this.tpAppearanceGeneral_Click);
             // 
             // tb3DThres
             // 
@@ -12679,6 +12680,7 @@ namespace PowerSDR
         "display)\r\n");
             this.tb3DThres.Value = 20;
             this.tb3DThres.Scroll += new System.EventHandler(this.number3DThres_Scroll);
+            this.tb3DThres.ValueChanged += new System.EventHandler(this.tb3DThres_ValueChanged);
             // 
             // labelTS50
             // 
