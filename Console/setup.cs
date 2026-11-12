@@ -16479,9 +16479,7 @@ namespace PowerSDR
 
         private void number3DZ_ValueChanged(object sender, EventArgs e) //.245
         {
-            // if (number3DZ.Value < 16) return;
-            //   if (console.initializing) return;
-            //  Debug.WriteLine("3DPAN " + number3DZ.Value);
+              Debug.WriteLine("3DPAN " + ud3DZ.Value);
 
             Display.Data3DLineAlpha = tbPan3DAlpha.Value;
             Display.Data3DLineColor = clrbtn3DDataLine.Color;

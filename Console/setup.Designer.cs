@@ -12754,7 +12754,7 @@ namespace PowerSDR
             0});
             this.ud3DZ.Location = new System.Drawing.Point(77, 262);
             this.ud3DZ.Maximum = new decimal(new int[] {
-            54,
+            90,
             0,
             0,
             0});
@@ -12769,7 +12769,7 @@ namespace PowerSDR
             this.toolTip1.SetToolTip(this.ud3DZ, "3D z offset depth (how many lines of data to display or how much history to displ" +
         "ay)\r\n\r\n");
             this.ud3DZ.Value = new decimal(new int[] {
-            25,
+            80,
             0,
             0,
             0});
@@ -12825,7 +12825,7 @@ namespace PowerSDR
             this.ud3DY.TabIndex = 88;
             this.toolTip1.SetToolTip(this.ud3DY, "3D Y offset (how many pixels to jump up per line of data)");
             this.ud3DY.Value = new decimal(new int[] {
-            4,
+            3,
             0,
             0,
             0});
@@ -12854,7 +12854,7 @@ namespace PowerSDR
             this.ud3DX.TabIndex = 87;
             this.toolTip1.SetToolTip(this.ud3DX, "3D X offset (how many pixels to move the display to the right per line of data)");
             this.ud3DX.Value = new decimal(new int[] {
-            2,
+            1,
             0,
             0,
             0});

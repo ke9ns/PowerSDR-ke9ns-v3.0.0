@@ -1018,12 +1018,11 @@ namespace PowerSDR
         private static Pen data_line_pen = new Pen(new SolidBrush(Color.White), display_line_width);
 
         private static Color temp = Color.Aquamarine;
-        public static float Pan3DSteps = 60f; // .245 was 39f
+      //  public static float Pan3DSteps = 99f; // .245 was 39f
                                              
-        public static float Pan3DAlphaStep = ((255f / (float)Pan3DSteps)); //+ .5f);
+    //    public static float Pan3DAlphaStep = ((255f / (float)Pan3DSteps)); //+ .5f);
         // designed to fade into the background, so alpha gets lower as you go backwards
 
-        private static Pen[] data_3dline_pen = new Pen[61]; //.9
    
 
         private static Pen IDENT_pen = new Pen(new SolidBrush(Color.PaleGreen), 1); // ke9ns add
@@ -1061,9 +1060,9 @@ namespace PowerSDR
             }
         } // Data3DThreshold
 
-        static int[] Alpha3D = new int[70];
+        static int[] Alpha3D = new int[200]; //.13 color and depth
 
-        public static Color Data3DLineColor
+        public static Color Data3DLineColor //
         {
             get { return data_3Dline_color; }
             set
@@ -1073,32 +1072,19 @@ namespace PowerSDR
 
                 Debug.WriteLine("3D color " + value);
 
+                _maxLines = 100;
 
-                Pan3DSteps = 59f; //.245 21f
-
-                try
+                if (_3DBuffer == null || _cachedWidth != W) //.13
                 {
-                    if (!console.initializing) Pan3DSteps = (float)console.setupForm.ud3DZ.Value + 5f;
-               
+                    _cachedWidth = W;
+                    _3DBuffer = new int[_maxLines][];
+                    for (int i = 0; i < _maxLines; i++)
+                    {
+                        _3DBuffer[i] = new int[W];
+                    }
+                    _renderPointsBuffer = new Point[W];
+                    _headIndex = 0;
                 }
-                catch
-                {
-                    Pan3DSteps = 59f; //was 21
-                }
-
-                Pan3DAlphaStep = (((float)data_3Dline_Alpha / (float)Pan3DSteps));
-
-                for (int ww = 0; ww < (int)Pan3DSteps; ww++)
-                {
-                    Alpha3D[ww] = (int)(Pan3DAlphaStep * (Pan3DSteps - (float)ww - 1f));
-                }
-
-                for (int iii = (int)Pan3DSteps; iii > 0; iii--) //.9
-                {
-                    data_3dline_pen[iii+1] = new Pen(Color.FromArgb(Alpha3D[iii], data_3Dline_color), display_line_width);
-                }
-
-                data_3dline_pen[0] = new Pen(Color.FromArgb(Alpha3D[0], data_3Dline_color), display_line_width);
 
                 DrawBackground();
 
@@ -3203,37 +3189,9 @@ namespace PowerSDR
                     // make the filter display at least one pixel wide.
                     if (filter_left_x == filter_right_x) filter_right_x = filter_left_x + 1;
 
-
-                 
-                    if ((console.setupForm != null && console.setupForm.check3DPan.Checked == true)) //.9
-                    {
-                        //  Z1 = (H - top) / 2 / Y1;  //.309 draw isometric lines to follow 3D pan
-                        //  X2 = (X1 * Z1);
-                        //  Y2 = (H - ((Y1 * Z1)));     //* (int)(2.0 + temp0))); //
-
-                      //  g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
-                        PointF p0 = new PointF(filter_left_x, H);
-                        PointF p3 = new PointF(filter_right_x, H);
-
-                        PointF p1 = new PointF(filter_left_x + (X1 * (Z1 * 2)), H - (Y1 * (Z1 * 2))); // Adjust signs based on your desired angle
-                        PointF p2 = new PointF(filter_right_x + (X1 * (Z1 * 2)), H - (Y1 * (Z1 * 2))); // Adjust signs based on your desired angle
-
-                        PointF[] points = { p0, p1, p2, p3 };
-
-                        using (SolidBrush brush = new SolidBrush(display_filter_color))
-                        {
-                            g.FillPolygon(brush, points);
-                        }
-
-                        
-                    }
-                    else
-                    {
-                        g.FillRectangle(new SolidBrush(display_filter_color), filter_left_x, top, filter_right_x - filter_left_x, H - top); // draw RX filter overlay for phone or digital
-
-                    }
-
+                    //.9 
+                    g.FillRectangle(new SolidBrush(display_filter_color), filter_left_x, top, filter_right_x - filter_left_x, H - top); // draw RX filter overlay for phone or digital
+  
 
                 } // main RX1 filter
                 else if ((local_mox) && (rx1_dsp_mode == DSPMode.CWL || rx1_dsp_mode == DSPMode.CWU) && (!split_enabled)) // RX1 draw CW rx box when you tx.
@@ -3333,22 +3291,10 @@ namespace PowerSDR
                         // ke9ns pgrid  LEFT and RIGHT TX WIDTH LINES for TRANSMITTER ONLY
                         if (tx_on_vfob == false) // .285
                         {
-  
-                            if ((console.setupForm != null && console.setupForm.check3DPan.Checked == true)) //.9
-                            {
-                                //  Z1 = (H - top) / 2 / Y1;  //.309 draw isometric lines to follow 3D pan
-                                //  X2 = (X1 * Z1);
-                                g.DrawLine(tx_filter_pen, filter_left_x + (X1 * (Z1 * 2)), H - (Y1 * (Z1 * 2)), filter_left_x, H  );        // LEFT draw tx filter overlay
-                                g.DrawLine(tx_filter_pen, filter_right_x + (X1 * (Z1 * 2)), H - (Y1 * (Z1 * 2)), filter_right_x, H );      // RIGHT draw tx filter ovelay
-                                
-                            }
-                            else
-                            {
+                         
+                            //.9
                                 g.DrawLine(tx_filter_pen, filter_left_x, top, filter_left_x, H);        // LEFT draw tx filter overlay
                                 g.DrawLine(tx_filter_pen, filter_right_x, top, filter_right_x, H);      // RIGHT draw tx filter ovelay
-
-                            }
-
                            
                         }
 
@@ -13085,25 +13031,7 @@ namespace PowerSDR
 
             if (center_line_x >= 0 && center_line_x <= W)
             {
-                if ((console.setupForm != null && console.setupForm.check3DPan.Checked == true)) //.9
-                {
-                    if (bottom)
-                    {
-                        g.DrawLine(new Pen(grid_zero_color), center_line_x, H + top, center_line_x, H + H);
-                        g.DrawLine(new Pen(grid_zero_color), center_line_x + 1, H + top, center_line_x + 1, H + H);
-                    }
-                    else
-                    {
-                      //  Z1 = (H - top) / 2 / Y1;  //.309 draw isometric lines to follow 3D pan
-                      //  X2 = (X1 * Z1);
-                      //  Y2 = (H - ((Y1 * Z1)));     //* (int)(2.0 + temp0))); //
-
-                        g.DrawLine(new Pen(grid_zero_color), center_line_x + (X1 * (Z1 * 2)), H - (Y1 * (Z1 * 2)), center_line_x, H );
-                      
-                    }
-                }
-                else
-                {
+                    //.9
                     if (bottom)
                     {
                         g.DrawLine(new Pen(grid_zero_color), center_line_x, H + top, center_line_x, H + H);
@@ -13115,7 +13043,7 @@ namespace PowerSDR
                         g.DrawLine(new Pen(grid_zero_color), center_line_x + 1, top, center_line_x + 1, H);
                     }
 
-                }
+             
             }
 
             if (show_freq_offset)
@@ -19117,8 +19045,7 @@ namespace PowerSDR
 
         // ke9ns add for 3d effect
         public static Point[] points, points0; //points1 not currently used
-        public static Point[][] pointss = new Point[61][]; //.9 create an array of up to 60 traces to hold the visual representation of the 3d pan
-
+      
       
         public static bool PON = false; // ke9ns add  true = 3D pan is active
 
@@ -19549,12 +19476,24 @@ namespace PowerSDR
 
 
         public static int TTT = 0;
+
+        //.13
+        private static int[][] _3DBuffer; 
+        private static Point[] _renderPointsBuffer; // point array
+        private static int _headIndex = 0;
+        private static int _cachedWidth = 0; // if you adjust the size of the display
+        private static int _maxLines = 100;
+        static int X11 = 1; // offset for each sample
+        static int Y11 = 1;
+        static int Z11 = 1; 
+
         unsafe static private bool DrawPanadapter(Graphics g, int W, int H, int rx, bool bottom)
         {
 
-            X1 = (int)console.setupForm.ud3DX.Value; // x step right(increase) for each point drawing horizontal
-            Y1 = (int)console.setupForm.ud3DY.Value; // y step up (decrease) for each point darwing vertical
-            Z1 = (int)console.setupForm.ud3DZ.Value; // .309 how many 3d lines of history in the Panadapter view (16 in Panafall, or 40 with no waterfall)
+   
+            X11 = (int)console.setupForm.ud3DX.Value; // x step right(increase) for each point drawing horizontal
+            Y11 = (int)console.setupForm.ud3DY.Value; // y step up (decrease) for each point darwing vertical
+            Z11 = (int)console.setupForm.ud3DZ.Value; // .309 how many 3d lines of history in the Panadapter view (16 in Panafall, or 40 with no waterfall)
 
 
             if (console.powerMate.Look(10) != 0) //.294 use instad of onRotateEvent handler because it caused a strange pan lag glitch as you scroll left/right
@@ -19657,54 +19596,39 @@ namespace PowerSDR
 
                     if (PON == false) // Do 1 time
                     {
-                        // ke9ns: cannot use an array due to the use of "drawlines" and "points"
+                        Debug.WriteLine("3D ON");
 
-                       points0 = new Point[W + 2];   // for fill while in 3D mode
+                        _maxLines = 100; // make sure to max out buffer at the start
 
-                        for (int i = 2; i <= 60; i++)
+                        if (_3DBuffer == null || _cachedWidth != W) //.13
                         {
-                            pointss[i] = new Point[W]; // set the size of each trace (61 total)
+                            _cachedWidth = W;
+                            _3DBuffer = new int[_maxLines][];
+                            for (int i = 0; i < _maxLines; i++)
+                            {
+                                _3DBuffer[i] = new int[W];
+                            }
+                            _renderPointsBuffer = new Point[W];
+                            _headIndex = 0;
                         }
-              
-                         Pan3DAlphaStep = 255f/60f;
+                        
+                        points0 = new Point[W + 2];   // for fill while in 3D mode
 
-                        for (int ww = 0; ww < 60; ww++)
-                        {
-                            Alpha3D[ww] = (int)(Pan3DAlphaStep * (60 - (float)ww - 1f)); 
-                        }
-                        //.12
-                                               
-
-                        if (console.setupForm != null) data_3Dline_color = console.setupForm.clrbtn3DDataLine.Color;
-                       
-                   //     for (int iii = (int)Pan3DSteps; iii > 0; iii--) //.9
-                    //    {
-                     //       data_3dline_pen[iii + 1] = new Pen(Color.FromArgb(Alpha3D[iii], data_3Dline_color), display_line_width);
-                     //   }
-                     //   data_3dline_pen[0] = new Pen(Color.FromArgb(Alpha3D[0], data_3Dline_color), display_line_width);
-
-
+                            
                         for (int z = 0; z < W; z++) // copy the current panadapter signal (points) into history list (points2...points19) and shift the pan up and to the right by X1 and Y1 offsets (found in setup->Appearance)
                         {
-
                             // ke9ns: Do this 1 time when you start 3dPan to clear up the image
 
                             if (pan_fill)
                             {
-                                points0[z].X = (points[z].X);
-                                points0[z].Y = (points[z].Y);
+                                points0[z].X = points[z].X;
+                                points0[z].Y = points[z].Y;
                             }
-
-                            pointss[2][z].X = (points[z].X) + X1; //.9
-                            pointss[2][z].Y = (points[z].Y) - Y1;
-
-                            for (int zz = 2; zz < 60; zz++) //.9
-                            {
-                                pointss[zz + 1][z].X = (pointss[zz][z].X) + X1;
-                                pointss[zz + 1][z].Y = (pointss[zz][z].Y) - Y1;
-                            }
-                                              
+                            
                         } //for z loop
+
+                        Debug.WriteLine("3D ON1");
+
 
                         PON = true; // ke9ns ok to display 3dpan
 
@@ -20410,24 +20334,16 @@ namespace PowerSDR
                     if (points[i].Y > data_3dline_Threshold2) //.12 if the current signal panadapter data is below your set threshold, flatten it out to avoid noisy display
                     {
                         points[i].Y = data_3dline_Threshold2;
-                       
                     }
-                        //ke9ns: copy last scans panadapter data line into a higher zz register (i.e. the higher zz is the older the data)
-                        for (int zz = (int)console.setupForm.ud3DZ.Value; zz >= 2; zz--) //.9
-                        {
-                            pointss[zz + 1][i].X = (pointss[zz][i].X) + X1;
-                            pointss[zz + 1][i].Y = (pointss[zz][i].Y) - Y1;
-                        }
-
-                        pointss[2][i].X = points[i].X + X1;  //.9 data from last go-around 
-                        pointss[2][i].Y = points[i].Y - Y1;
-                                          
-                        if (pan_fill)
-                        {
-                            points0[i].X = points[i].X;  // data from last go-around 
-                            points0[i].Y = points[i].Y;
-                        }
-
+   
+                    int[] currentLine = _3DBuffer[_headIndex];  // _headIndex = (_headIndex - 1 + Z1) % Z1; updated at bottom of for i loop
+                    currentLine[i] = points[i].Y;               //.13 update the 3Dbuffer
+ 
+                    if (pan_fill)
+                    {
+                        points0[i].X = points[i].X;  // data from last go-around 
+                        points0[i].Y = points[i].Y;
+                    }
                 } // if (PON == true)
 
 
@@ -20450,17 +20366,13 @@ namespace PowerSDR
 
                 if (PON == true)  //.12
                 {
-
                     data_3dline_Threshold2 = H - data_3dline_Threshold; //.12
-
-                    if (points[i].X == 500) Debug.WriteLine("3D1: " + points[i].Y + " , thres setting: " + data_3dline_Threshold + " , #2: " + data_3dline_Threshold2);
-
-
+                
                 }
 
                     //=========================================================================
                     // ke9ns add
-                    if ((!mox) && (rx == 1) && ((console.BeaconSigAvg == true) || ((console.ScanForm != null) && (console.ScanForm.chkBoxIdent.Checked == true)))) // ke9ns add for beacon scanning and sig ident
+                if ((!mox) && (rx == 1) && ((console.BeaconSigAvg == true) || ((console.ScanForm != null) && (console.ScanForm.chkBoxIdent.Checked == true)))) // ke9ns add for beacon scanning and sig ident
                 {
                     max1 = max1 + max; // sum up entire panadapter line (left to right)
 
@@ -20711,6 +20623,11 @@ namespace PowerSDR
 
             }  //  FOR LOOP (int i = 0; i < W; i++) (generate a new set of points[])
 
+            if (PON == true)
+            {
+                _headIndex = (_headIndex - 1 + Z11) % Z11;      //.13 Update the Circular Buffer in O(1) time 
+             
+            }
 
 
             if (console.BeaconSigAvg == true) // ke9ns for beacon scanner floor
@@ -20917,11 +20834,87 @@ namespace PowerSDR
 
                 if (PON == true) // ke9ns: 3D active
                 {
-  
-                    for (int zzz = (int)console.setupForm.ud3DZ.Value; zzz > 1;zzz--)    //.9
+
+                    float centerX = W / 2.0f; //.13  Anchor scaling around the center frequency of the panadapter
+
+                    for (int z = 1; z < Z11; z++) //.13
                     {
-                        if (!Direct2DDisplay.QueuePanadapterTrace(pointss[zzz], W, data_3dline_pen[zzz].Color, data_3dline_pen[zzz].Width)) g.DrawLines(data_3dline_pen[zzz], pointss[zzz]);
-                    }
+                        int bufferIndex = (_headIndex + z) % Z11;    // maps to correct position inside buffer
+                        int[] linePoints = _3DBuffer[bufferIndex];
+ 
+                        int offsetX = X11 * z;     // 3D shift for this line of past data
+                        int offsetY = -Y11 * z;    // - because y=0 is top of screen y=H is bottom
+
+                                                             // Calculate the local vertical bounds for THIS specific line using its offset
+                        int lineBaselineY = H + offsetY; // Where the weak noise floor sits for this line
+                        int lineTopY = offsetY;          // Where the top peaks reach for this line
+
+
+                        float perspectiveScale = Math.Max(0.1f, 1.0f - (z * 0.008f));   //.13 Perspective scale: z=0 is full size (1.0), older lines shrink down.
+                                                                                        // Adjust '0.008f' to make the perspective steeper or more gradual
+
+                        for (int w = 0; w < W; w++) // convert 3Dbuffer data to Drawing.Point[]
+                        {
+                          
+                            float scaledX = centerX + ((w - centerX) * perspectiveScale) + offsetX; // Perspective X: Scale distance from center, then apply isometric offset
+    
+                            float signalHeight = H - linePoints[w];  
+                            float scaledHeight = signalHeight * perspectiveScale;
+                            float scaledY = H - scaledHeight + offsetY; // Perspective Y: Calculate signal height from the baseline (H), scale it, then reposition
+
+                            _renderPointsBuffer[w] = new Point((int)scaledX, (int)scaledY);
+                          
+                        } // for w
+
+                      
+                        //.13
+
+                        //  pan_Brush = new LinearGradientBrush(new Point(W10, H10), new Point(W10, 10), Color.Black, Color.Black); // standard RX
+                        // Start at the bottom (weak signal / noise floor)
+                        // End at the top (strong signal peaks)
+                       
+                        using (LinearGradientBrush gradBrush = new LinearGradientBrush(new Point(0, lineBaselineY), new Point(0, lineTopY), Color.Black, Color.Black) ) 
+                        {
+                            int alpha = Math.Max(20, 255 - (z * (235 / Math.Max(1, Z11)))); //  fade the signal as it gets older
+
+                            ColorBlend colorBlend = new ColorBlend(); // // Define the multi-stop spectrum: Blue -> Green -> Yellow -> Red
+
+                            //ke9ns use same as the gradient option for the standard Pan i created a while back
+                            //GD = 1f
+                            colorBlend.Positions = new[] { 0, 0.05f * GD, 0.1f * GD, 0.15f * GD, 0.2f * GD, 0.25f * GD, 0.3f * GD, 0.35f * GD, 0.45f * GD, 0.55f * GD, 0.65f * GD, 0.8f * GD, 1 }; // Black (MIN spectrum value or Lower), Blue, Green, Yellow, Red, Violet = -73 (S9 or better)
+
+                            colorBlend.Colors = new[] { Color.FromArgb(alpha, Color.Black), //1
+                            Color.FromArgb(alpha, Color.Blue), //2
+                            Color.FromArgb(alpha, 0,127,255), // 3 blue cyan
+                            Color.FromArgb(alpha, Color.Cyan), //4 
+                            Color.FromArgb(alpha, 0,255,127), // 5 green cyan
+                           // Color.FromArgb(panfillalpha, Color.Green), //6
+                            Color.FromArgb(alpha, 127,255,0), //7 green yellow
+                            Color.FromArgb(alpha, Color.Yellow), //8
+                            Color.FromArgb(alpha, Color.Orange), //9
+                            Color.FromArgb(alpha, Color.Red), //10
+                            Color.FromArgb(alpha,255,0,127), //11 Red Magenta
+                            Color.FromArgb(alpha, Color.Magenta), //12
+                            Color.FromArgb(alpha, 127,0,255), //13 blue magenta
+                            Color.FromArgb(alpha, 127,0,255),
+                             }; // 13 colors
+
+                            gradBrush.InterpolationColors = colorBlend;  // Apply the custom color blend to the brush
+
+                            using (Pen gradPen = new Pen(gradBrush, 1f))
+                            {
+                                // ID2D1LinearGradientBrush for direct2d????
+                                // if (!Direct2DDisplay.QueuePanadapterTrace(_renderPointsBuffer, W, gradPen.Color, gradPen.Width)) //.13
+                                // {
+                              
+                                g.DrawLines(gradPen, _renderPointsBuffer); // GDI+ render
+
+                                // }
+                            }
+                        }
+
+                        } //z 
+
 
                     if (pan_fill)                               // trace spectrum line and fill under it
                     {
@@ -23860,9 +23853,6 @@ namespace PowerSDR
         {
             rx2_peak_buffer[0] = CLEAR_FLAG; // set reset flag
         }
-
-
-
 
 
         //  sealed private class int16
