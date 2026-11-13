@@ -88577,7 +88577,7 @@ namespace PowerSDR
                 setupForm.WindowState = FormWindowState.Normal; // ke9ns add
 
                 setupForm.SelectLegacySetupTab(6); // select appearance tab;
-                setupForm.tcAppearance.SelectedIndex = 1; // select  tab
+                setupForm.tcAppearance.SelectedIndex = 0; // select  tab
 
             }
             else // left click
