@@ -17110,16 +17110,56 @@ namespace PowerSDR
         private void tb3DThres_ValueChanged(object sender, EventArgs e)
         {
             Display.Data3DThreshold = tb3DThres.Value; //.12
-            Debug.WriteLine("3D1 thres " + tb3DThres.Value);
+            Display.Data3DScale = tb3DScale.Value; //.13a
+                                                   
         }
 
+        private void trackBarTS1_Scroll(object sender, EventArgs e)
+        {
+            Display.Data3DScale = tb3DScale.Value; //.13a
+        }
 
+        private void tbGridOffset_ValueChanged(object sender, EventArgs e)
+        {
+            Display.GRIDOFFSET = tbGridOffset.Value;
 
+            if (Display.continuum == 0)
+            {
+                console.waterpanClick = true;
+                console.waterpanClick2 = true;
+                console.waterpanClick3 = true;
 
+                Display.AutoBright = 2; // adjust RX  panadapter level
+            }
+        }
 
+        private void tbWaterOffset_ValueChanged(object sender, EventArgs e)
+        {
+            Display.WATEROFFSET = tbWaterOffset.Value;
 
+            //   Debug.WriteLine("WATER " + tbWaterOffset.Value);
 
+            if (Display.continuum == 0)
+            {
+                console.waterpanClick = true;
+                console.waterpanClick2 = true;
+                console.waterpanClick3 = true;
 
+                Display.AutoBright = 1; // adjust RX or TX
+            }
+        }
+
+        private void tbAGCTadj_ValueChanged(object sender, EventArgs e)
+        {
+            Display.AGCT_Adj_Ratio = (double)tbAGCTadj.Value / (double)1000.00;  // default is 1.6155000
+            console.AGCTUPDATE = true; // force green line AGCT update
+
+        }
+
+        private void tb3DScale_ValueChanged(object sender, EventArgs e)
+        {
+            Display.Data3DScale = tb3DScale.Value; //.13a
+        }
 
         //setupForm.gridBoxTS.CheckedChanged -= setupForm.gridBoxTS_CheckedChanged;  // ke9ns turn off checkchanged temporarily   
         // 

@@ -1061,9 +1061,22 @@ namespace PowerSDR
             }
         } // Data3DThreshold
 
-        static int[] Alpha3D = new int[200]; //.13 color and depth
 
-        public static Color Data3DLineColor //
+        private static float data_3dline_Scale = .005f; //.13a
+        public static float Data3DScale
+        {
+            get { return data_3dline_Scale; }
+            set
+            {
+                data_3dline_Scale = value * .001f;
+
+              
+
+            }
+        } // Data3DScale
+
+
+        public static Color Data3DLineColor //not needed at this time //.13
         {
             get { return data_3Dline_color; }
             set
@@ -1073,7 +1086,7 @@ namespace PowerSDR
 
                 Debug.WriteLine("3D color " + value);
 
-                _maxLines = 100;
+                _maxLines = 120;
 
                 if (_3DBuffer == null || _cachedWidth != W) //.13
                 {
@@ -18848,16 +18861,15 @@ namespace PowerSDR
         private static Point[] _renderPointsBuffer; // point array
         private static int _headIndex = 0;
         private static int _cachedWidth = 0; // if you adjust the size of the display
-        private static int _maxLines = 100;
-        static int X11 = 1; // offset for each sample
+        private static int _maxLines = 120;
+        static int X11 = 0; // offset for each sample
         static int Y11 = 1;
-        static int Z11 = 1; 
+        static int Z11 = 40; 
 
         unsafe static private bool DrawPanadapter(Graphics g, int W, int H, int rx, bool bottom)
         {
 
-   
-            X11 = (int)console.setupForm.ud3DX.Value; // x step right(increase) for each point drawing horizontal
+            X11 = 0; // (int)console.setupForm.ud3DX.Value; // x step right(increase) for each point drawing horizontal
             Y11 = (int)console.setupForm.ud3DY.Value; // y step up (decrease) for each point darwing vertical
             Z11 = (int)console.setupForm.ud3DZ.Value; // z how many 3d lines of history in the Panadapter view (16 in Panafall, or 40 with no waterfall)
 
@@ -18964,7 +18976,7 @@ namespace PowerSDR
                     {
                         Debug.WriteLine("3D ON");
 
-                        _maxLines = 100; // make sure to max out buffer at the start
+                        _maxLines = 120; // make sure to max out buffer at the start
 
                         if (_3DBuffer == null || _cachedWidth != W) //.13
                         {
@@ -19577,7 +19589,10 @@ namespace PowerSDR
             } //  if (console.N1MM_ON == true)
 
 
-
+            if (PON == true)
+            {
+                _headIndex = (_headIndex - 1 + Z11) % Z11;      //.13 Update the Circular Buffer in O(1) time 
+            }
 
             System.Drawing.Font fontID = new System.Drawing.Font("Swis721 BT", 9, FontStyle.Italic); // Arial size and style of freq text for waterfall
             SolidBrush grid_text_brushID = new SolidBrush(grid_text_color); //.321
@@ -19696,9 +19711,7 @@ namespace PowerSDR
                 // ke9ns add: 3dpan move shift old data to make room for new
                 if (PON == true) //if (console.setupForm != null && console.setupForm.check3DPan.Checked == true)
                 {
-                    data_3dline_Threshold2 = H - data_3dline_Threshold; //.12
-
-                  //  if (i == 500) Debug.WriteLine("3D THRES GO " + data_3dline_Threshold + " , 2 " + data_3dline_Threshold2 + " , i " + points[i].Y);
+                    data_3dline_Threshold2 = H - data_3dline_Threshold; //.12 threshold detection for 3d floor
 
                     if (points[i].Y > data_3dline_Threshold2) //.12 if the current signal panadapter data is below your set threshold, flatten it out to avoid noisy display
                     {
@@ -19733,14 +19746,9 @@ namespace PowerSDR
 
                 else if ((bottom)) points[i].Y = points[i].Y + H; // this is the original only line
 
-              //  if (PON == true)  //.12
-             //   {
-              //      data_3dline_Threshold2 = H - data_3dline_Threshold; //.12
-                
-              //  }
-
-                    //=========================================================================
-                    // ke9ns add
+            
+                //=========================================================================
+                // ke9ns add
                 if ((!mox) && (rx == 1) && ((console.BeaconSigAvg == true) || ((console.ScanForm != null) && (console.ScanForm.chkBoxIdent.Checked == true)))) // ke9ns add for beacon scanning and sig ident
                 {
                     max1 = max1 + max; // sum up entire panadapter line (left to right)
@@ -19992,11 +20000,14 @@ namespace PowerSDR
 
             }  //  FOR LOOP (int i = 0; i < W; i++) (generate a new set of points[])
 
-            if (PON == true)
-            {
-                _headIndex = (_headIndex - 1 + Z11) % Z11;      //.13 Update the Circular Buffer in O(1) time 
-             
-            }
+        //   if (PON == true)
+        //    {
+         //       g.CompositingMode = CompositingMode.SourceOver; //.13
+          //      g.CompositingQuality = CompositingQuality.HighSpeed; // Avoid HighQuality
+          //      g.InterpolationMode = InterpolationMode.NearestNeighbor; // Or Low
+          //      g.PixelOffsetMode = PixelOffsetMode.Half; // Helps align sharp pixel lines crisply
+           //     g.SmoothingMode = SmoothingMode.None; // Keep anti-aliasing off
+          //  }
 
 
             if (console.BeaconSigAvg == true) // ke9ns for beacon scanner floor
@@ -20204,9 +20215,9 @@ namespace PowerSDR
                 if (PON == true) // ke9ns: 3D active
                 {
 
-                    float centerX = W / 2.0f; //.13  Anchor scaling around the center frequency of the panadapter
+                    float centerX = W / 2.0f;       //.13  Anchor scaling around the center frequency of the panadapter
 
-                    for (int z = 1; z < Z11; z++) //.13
+                    for (int z = 1; z < Z11; z++)   //.13
                     {
                         int bufferIndex = (_headIndex + z) % Z11;    // maps to correct position inside buffer
                         int[] linePoints = _3DBuffer[bufferIndex];
@@ -20219,8 +20230,8 @@ namespace PowerSDR
                         int lineTopY = offsetY;          // Where the top peaks reach for this line
 
 
-                        float perspectiveScale = Math.Max(0.1f, 1.0f - (z * 0.008f));   //.13 Perspective scale: z=0 is full size (1.0), older lines shrink down.
-                                                                                        // Adjust '0.008f' to make the perspective steeper or more gradual
+                        //  float perspectiveScale = Math.Max(0.1f, 1.0f - (z * 0.005f));   //.13 Perspective scale: z=0 is full size (1.0), older lines shrink down.
+                        float perspectiveScale = Math.Max(0.1f, 1.0f - (z * data_3dline_Scale));        // Adjust '0.008f' to make the perspective steeper or more gradual
 
                         for (int w = 0; w < W; w++) // convert 3Dbuffer data to Drawing.Point[]
                         {
@@ -20252,7 +20263,8 @@ namespace PowerSDR
                             //GD = 1f
                             colorBlend.Positions = new[] { 0, 0.05f * GD, 0.1f * GD, 0.15f * GD, 0.2f * GD, 0.25f * GD, 0.3f * GD, 0.35f * GD, 0.45f * GD, 0.55f * GD, 0.65f * GD, 0.8f * GD, 1 }; // Black (MIN spectrum value or Lower), Blue, Green, Yellow, Red, Violet = -73 (S9 or better)
 
-                            colorBlend.Colors = new[] { Color.FromArgb(alpha, Color.Black), //1
+                            colorBlend.Colors = new[] {
+                            Color.FromArgb(alpha, Color.Black), //1
                             Color.FromArgb(alpha, Color.Blue), //2
                             Color.FromArgb(alpha, 0,127,255), // 3 blue cyan
                             Color.FromArgb(alpha, Color.Cyan), //4 
@@ -20275,14 +20287,15 @@ namespace PowerSDR
                                 // ID2D1LinearGradientBrush for direct2d????
                                 // if (!Direct2DDisplay.QueuePanadapterTrace(_renderPointsBuffer, W, gradPen.Color, gradPen.Width)) //.13
                                 // {
-                              
+                              //  g.SmoothingMode = SmoothingMode.None;
+
                                 g.DrawLines(gradPen, _renderPointsBuffer); // GDI+ render
 
                                 // }
-                            }
-                        }
+                            } // using pen
+                        } // using brush
 
-                        } //z 
+                    } //z 
 
 
                     if (pan_fill)                               // trace spectrum line and fill under it

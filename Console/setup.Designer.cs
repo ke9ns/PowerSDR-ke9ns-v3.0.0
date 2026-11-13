@@ -750,6 +750,8 @@ namespace PowerSDR
             this.tpAppearance = new System.Windows.Forms.TabPage();
             this.tcAppearance = new System.Windows.Forms.TabControl();
             this.tpAppearanceGeneral = new System.Windows.Forms.TabPage();
+            this.tb3DScale = new System.Windows.Forms.TrackBarTS();
+            this.labelTS45 = new System.Windows.Forms.LabelTS();
             this.tb3DThres = new System.Windows.Forms.TrackBarTS();
             this.labelTS50 = new System.Windows.Forms.LabelTS();
             this.num4d = new System.Windows.Forms.NumericUpDownTS();
@@ -757,7 +759,6 @@ namespace PowerSDR
             this.ud3DZ = new System.Windows.Forms.NumericUpDownTS();
             this.labelTS64 = new System.Windows.Forms.LabelTS();
             this.labelTS46 = new System.Windows.Forms.LabelTS();
-            this.labelTS45 = new System.Windows.Forms.LabelTS();
             this.ud3DY = new System.Windows.Forms.NumericUpDownTS();
             this.ud3DX = new System.Windows.Forms.NumericUpDownTS();
             this.groupBoxTS3 = new System.Windows.Forms.GroupBoxTS();
@@ -1303,6 +1304,7 @@ namespace PowerSDR
             this.textBoxSAVE = new System.Windows.Forms.TextBoxTS();
             this.btnResetDB = new System.Windows.Forms.ButtonTS();
             this.chkAlwaysOnTop1 = new System.Windows.Forms.CheckBoxTS();
+            this.labelTS79 = new System.Windows.Forms.LabelTS();
             this.tcSetup.SuspendLayout();
             this.tpGeneral.SuspendLayout();
             this.tcGeneral.SuspendLayout();
@@ -1565,6 +1567,7 @@ namespace PowerSDR
             this.tpAppearance.SuspendLayout();
             this.tcAppearance.SuspendLayout();
             this.tpAppearanceGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tb3DScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tb3DThres)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num4d)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num3d)).BeginInit();
@@ -6550,6 +6553,7 @@ namespace PowerSDR
         "vs the AGC-T gain value.\r\n");
             this.tbAGCTadj.Value = 1615;
             this.tbAGCTadj.Scroll += new System.EventHandler(this.tbAGCTadj_Scroll);
+            this.tbAGCTadj.ValueChanged += new System.EventHandler(this.tbAGCTadj_ValueChanged);
             // 
             // labelTS38
             // 
@@ -6668,6 +6672,7 @@ namespace PowerSDR
             this.toolTip1.SetToolTip(this.tbWaterOffset, resources.GetString("tbWaterOffset.ToolTip"));
             this.tbWaterOffset.Value = 20;
             this.tbWaterOffset.Scroll += new System.EventHandler(this.tbWaterOffset_Scroll);
+            this.tbWaterOffset.ValueChanged += new System.EventHandler(this.tbWaterOffset_ValueChanged);
             // 
             // labelTS13
             // 
@@ -6692,6 +6697,7 @@ namespace PowerSDR
             this.toolTip1.SetToolTip(this.tbGridOffset, resources.GetString("tbGridOffset.ToolTip"));
             this.tbGridOffset.Value = 20;
             this.tbGridOffset.Scroll += new System.EventHandler(this.tbGridOffset_Scroll);
+            this.tbGridOffset.ValueChanged += new System.EventHandler(this.tbGridOffset_ValueChanged);
             // 
             // grpDisplayMultimeter
             // 
@@ -12640,6 +12646,10 @@ namespace PowerSDR
             // tpAppearanceGeneral
             // 
             this.tpAppearanceGeneral.BackColor = System.Drawing.SystemColors.Control;
+            this.tpAppearanceGeneral.Controls.Add(this.ud3DY);
+            this.tpAppearanceGeneral.Controls.Add(this.labelTS79);
+            this.tpAppearanceGeneral.Controls.Add(this.tb3DScale);
+            this.tpAppearanceGeneral.Controls.Add(this.labelTS45);
             this.tpAppearanceGeneral.Controls.Add(this.tb3DThres);
             this.tpAppearanceGeneral.Controls.Add(this.labelTS50);
             this.tpAppearanceGeneral.Controls.Add(this.num4d);
@@ -12647,8 +12657,6 @@ namespace PowerSDR
             this.tpAppearanceGeneral.Controls.Add(this.ud3DZ);
             this.tpAppearanceGeneral.Controls.Add(this.labelTS64);
             this.tpAppearanceGeneral.Controls.Add(this.labelTS46);
-            this.tpAppearanceGeneral.Controls.Add(this.labelTS45);
-            this.tpAppearanceGeneral.Controls.Add(this.ud3DY);
             this.tpAppearanceGeneral.Controls.Add(this.ud3DX);
             this.tpAppearanceGeneral.Controls.Add(this.groupBoxTS3);
             this.tpAppearanceGeneral.Controls.Add(this.btnSkinExport);
@@ -12665,6 +12673,29 @@ namespace PowerSDR
             this.tpAppearanceGeneral.TabIndex = 0;
             this.tpAppearanceGeneral.Text = "General";
             this.tpAppearanceGeneral.Click += new System.EventHandler(this.tpAppearanceGeneral_Click);
+            // 
+            // tb3DScale
+            // 
+            this.tb3DScale.AutoSize = false;
+            this.tb3DScale.LargeChange = 1;
+            this.tb3DScale.Location = new System.Drawing.Point(70, 263);
+            this.tb3DScale.Name = "tb3DScale";
+            this.tb3DScale.Size = new System.Drawing.Size(68, 18);
+            this.tb3DScale.TabIndex = 96;
+            this.tb3DScale.TabStop = false;
+            this.toolTip1.SetToolTip(this.tb3DScale, "scale the forced perspective steeper or gradual\r\n");
+            this.tb3DScale.Value = 4;
+            this.tb3DScale.Scroll += new System.EventHandler(this.trackBarTS1_Scroll);
+            this.tb3DScale.ValueChanged += new System.EventHandler(this.tb3DScale_ValueChanged);
+            // 
+            // labelTS45
+            // 
+            this.labelTS45.Image = null;
+            this.labelTS45.Location = new System.Drawing.Point(7, 263);
+            this.labelTS45.Name = "labelTS45";
+            this.labelTS45.Size = new System.Drawing.Size(64, 24);
+            this.labelTS45.TabIndex = 97;
+            this.labelTS45.Text = "3Dscale:";
             // 
             // tb3DThres
             // 
@@ -12689,7 +12720,7 @@ namespace PowerSDR
             this.labelTS50.Name = "labelTS50";
             this.labelTS50.Size = new System.Drawing.Size(64, 24);
             this.labelTS50.TabIndex = 95;
-            this.labelTS50.Text = "threshold:";
+            this.labelTS50.Text = "3DThshd:";
             // 
             // num4d
             // 
@@ -12726,7 +12757,7 @@ namespace PowerSDR
             0,
             0,
             0});
-            this.num3d.Location = new System.Drawing.Point(55, 186);
+            this.num3d.Location = new System.Drawing.Point(76, 165);
             this.num3d.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -12754,9 +12785,9 @@ namespace PowerSDR
             0,
             0,
             0});
-            this.ud3DZ.Location = new System.Drawing.Point(77, 262);
+            this.ud3DZ.Location = new System.Drawing.Point(77, 236);
             this.ud3DZ.Maximum = new decimal(new int[] {
-            90,
+            120,
             0,
             0,
             0});
@@ -12780,7 +12811,7 @@ namespace PowerSDR
             // labelTS64
             // 
             this.labelTS64.Image = null;
-            this.labelTS64.Location = new System.Drawing.Point(7, 265);
+            this.labelTS64.Location = new System.Drawing.Point(7, 239);
             this.labelTS64.Name = "labelTS64";
             this.labelTS64.Size = new System.Drawing.Size(64, 24);
             this.labelTS64.TabIndex = 90;
@@ -12789,20 +12820,11 @@ namespace PowerSDR
             // labelTS46
             // 
             this.labelTS46.Image = null;
-            this.labelTS46.Location = new System.Drawing.Point(7, 240);
+            this.labelTS46.Location = new System.Drawing.Point(7, 214);
             this.labelTS46.Name = "labelTS46";
             this.labelTS46.Size = new System.Drawing.Size(64, 24);
             this.labelTS46.TabIndex = 89;
             this.labelTS46.Text = "3D y offset:";
-            // 
-            // labelTS45
-            // 
-            this.labelTS45.Image = null;
-            this.labelTS45.Location = new System.Drawing.Point(7, 216);
-            this.labelTS45.Name = "labelTS45";
-            this.labelTS45.Size = new System.Drawing.Size(64, 24);
-            this.labelTS45.TabIndex = 80;
-            this.labelTS45.Text = "3D x offset:";
             // 
             // ud3DY
             // 
@@ -12811,7 +12833,7 @@ namespace PowerSDR
             0,
             0,
             0});
-            this.ud3DY.Location = new System.Drawing.Point(77, 237);
+            this.ud3DY.Location = new System.Drawing.Point(77, 211);
             this.ud3DY.Maximum = new decimal(new int[] {
             10,
             0,
@@ -12827,7 +12849,7 @@ namespace PowerSDR
             this.ud3DY.TabIndex = 88;
             this.toolTip1.SetToolTip(this.ud3DY, "3D Y offset (how many pixels to jump up per line of data)");
             this.ud3DY.Value = new decimal(new int[] {
-            3,
+            1,
             0,
             0,
             0});
@@ -12840,7 +12862,7 @@ namespace PowerSDR
             0,
             0,
             0});
-            this.ud3DX.Location = new System.Drawing.Point(77, 212);
+            this.ud3DX.Location = new System.Drawing.Point(10, 165);
             this.ud3DX.Maximum = new decimal(new int[] {
             10,
             0,
@@ -12856,10 +12878,11 @@ namespace PowerSDR
             this.ud3DX.TabIndex = 87;
             this.toolTip1.SetToolTip(this.ud3DX, "3D X offset (how many pixels to move the display to the right per line of data)");
             this.ud3DX.Value = new decimal(new int[] {
-            1,
+            0,
             0,
             0,
             0});
+            this.ud3DX.Visible = false;
             this.ud3DX.ValueChanged += new System.EventHandler(this.number3DX_ValueChanged);
             // 
             // groupBoxTS3
@@ -13556,6 +13579,7 @@ namespace PowerSDR
             this.tbPan3DAlpha.TickFrequency = 64;
             this.toolTip1.SetToolTip(this.tbPan3DAlpha, "Transparency of 3D Panadapter\r\n");
             this.tbPan3DAlpha.Value = 150;
+            this.tbPan3DAlpha.Visible = false;
             this.tbPan3DAlpha.Scroll += new System.EventHandler(this.tbPan3DAlpha_Scroll);
             // 
             // udCursorSize
@@ -13613,6 +13637,7 @@ namespace PowerSDR
             this.labelTS41.Size = new System.Drawing.Size(64, 18);
             this.labelTS41.TabIndex = 101;
             this.labelTS41.Text = "3DAlpha:";
+            this.labelTS41.Visible = false;
             // 
             // udBandEdgeLineThick
             // 
@@ -13653,6 +13678,7 @@ namespace PowerSDR
             this.labelTS40.Size = new System.Drawing.Size(72, 24);
             this.labelTS40.TabIndex = 98;
             this.labelTS40.Text = "3DPan Line:";
+            this.labelTS40.Visible = false;
             // 
             // lblBandLine
             // 
@@ -13674,6 +13700,7 @@ namespace PowerSDR
             this.clrbtn3DDataLine.Size = new System.Drawing.Size(40, 23);
             this.clrbtn3DDataLine.TabIndex = 97;
             this.toolTip1.SetToolTip(this.clrbtn3DDataLine, "3D Pan Data line Color");
+            this.clrbtn3DDataLine.Visible = false;
             this.clrbtn3DDataLine.Changed += new System.EventHandler(this.clrbtn3DDataLine_Changed);
             // 
             // labelTS9
@@ -19220,6 +19247,15 @@ namespace PowerSDR
             this.chkAlwaysOnTop1.Text = "Always On Top";
             this.chkAlwaysOnTop1.CheckedChanged += new System.EventHandler(this.ChkAlwaysOnTop1_CheckedChanged);
             // 
+            // labelTS79
+            // 
+            this.labelTS79.Image = null;
+            this.labelTS79.Location = new System.Drawing.Point(26, 190);
+            this.labelTS79.Name = "labelTS79";
+            this.labelTS79.Size = new System.Drawing.Size(102, 24);
+            this.labelTS79.TabIndex = 98;
+            this.labelTS79.Text = "3D Panadapter";
+            // 
             // Setup
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -19520,6 +19556,7 @@ namespace PowerSDR
             this.tpAppearance.ResumeLayout(false);
             this.tcAppearance.ResumeLayout(false);
             this.tpAppearanceGeneral.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tb3DScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tb3DThres)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num4d)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num3d)).EndInit();
@@ -20730,7 +20767,6 @@ namespace PowerSDR
         public System.Windows.Forms.NumericUpDownTS ud3DY;
         public System.Windows.Forms.NumericUpDownTS ud3DX;
         private System.Windows.Forms.LabelTS labelTS46;
-        private System.Windows.Forms.LabelTS labelTS45;
         public System.Windows.Forms.CheckBoxTS chkDock;
         public System.Windows.Forms.CheckBoxTS chkVACReset;
         public System.Windows.Forms.CheckBoxTS chkOptCWFilterPitch;
@@ -20866,6 +20902,9 @@ namespace PowerSDR
         public ColorButton clrbtnVFO2;
         public System.Windows.Forms.TrackBarTS tb3DThres;
         private System.Windows.Forms.LabelTS labelTS50;
+        private System.Windows.Forms.LabelTS labelTS45;
+        public System.Windows.Forms.TrackBarTS tb3DScale;
+        private System.Windows.Forms.LabelTS labelTS79;
     } // class setup
 
 
