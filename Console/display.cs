@@ -1956,8 +1956,6 @@ namespace PowerSDR
 
         #region GDI+
 
-        private static Bitmap _panBuffer; //.16
-        private static int _bufW, _bufH;
         unsafe public static void RenderGDIPlus(ref PaintEventArgs e)
         {
 
@@ -20013,7 +20011,7 @@ namespace PowerSDR
                                                            // Favor speed over visual smoothing where acceptable
 
              
-                g.SmoothingMode = SmoothingMode.HighSpeed;  //  g.SmoothingMode = SmoothingMode.None;
+                g.SmoothingMode = SmoothingMode.HighSpeed;  //.16  
                 g.InterpolationMode = InterpolationMode.Low;
                 g.CompositingQuality = CompositingQuality.HighSpeed;
                 g.CompositingMode = CompositingMode.SourceOver;
