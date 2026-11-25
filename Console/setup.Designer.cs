@@ -224,7 +224,6 @@ namespace PowerSDR
             this.chkYouTubeFull = new System.Windows.Forms.CheckBoxTS();
             this.txtYouTubeKey = new System.Windows.Forms.TextBoxTS();
             this.labelTS85 = new System.Windows.Forms.LabelTS();
-            this.chkBoxHERO = new System.Windows.Forms.CheckBoxTS();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxRX2 = new System.Windows.Forms.CheckBoxTS();
             this.labelTS39 = new System.Windows.Forms.LabelTS();
@@ -250,6 +249,7 @@ namespace PowerSDR
             this.label1 = new System.Windows.Forms.Label();
             this.btnConfigure = new System.Windows.Forms.Button();
             this.cbConsoleSelect = new System.Windows.Forms.ComboBox();
+            this.chkBoxHERO = new System.Windows.Forms.CheckBoxTS();
             this.groupBoxTS1 = new System.Windows.Forms.GroupBoxTS();
             this.udSpeedPM = new System.Windows.Forms.NumericUpDownTS();
             this.txtWheelTune9 = new System.Windows.Forms.TextBoxTS();
@@ -759,18 +759,17 @@ namespace PowerSDR
             this.tpAppearance = new System.Windows.Forms.TabPage();
             this.tcAppearance = new System.Windows.Forms.TabControl();
             this.tpAppearanceGeneral = new System.Windows.Forms.TabPage();
-            this.ud3DY = new System.Windows.Forms.NumericUpDownTS();
+            this.groupBoxTS7 = new System.Windows.Forms.GroupBoxTS();
+            this.chk3DWidth = new System.Windows.Forms.CheckBoxTS();
             this.labelTS79 = new System.Windows.Forms.LabelTS();
+            this.tb3DZ = new System.Windows.Forms.TrackBarTS();
+            this.tb3DY = new System.Windows.Forms.TrackBarTS();
             this.tb3DScale = new System.Windows.Forms.TrackBarTS();
+            this.labelTS46 = new System.Windows.Forms.LabelTS();
             this.labelTS45 = new System.Windows.Forms.LabelTS();
+            this.labelTS64 = new System.Windows.Forms.LabelTS();
             this.tb3DThres = new System.Windows.Forms.TrackBarTS();
             this.labelTS50 = new System.Windows.Forms.LabelTS();
-            this.num4d = new System.Windows.Forms.NumericUpDownTS();
-            this.num3d = new System.Windows.Forms.NumericUpDownTS();
-            this.ud3DZ = new System.Windows.Forms.NumericUpDownTS();
-            this.labelTS64 = new System.Windows.Forms.LabelTS();
-            this.labelTS46 = new System.Windows.Forms.LabelTS();
-            this.ud3DX = new System.Windows.Forms.NumericUpDownTS();
             this.groupBoxTS3 = new System.Windows.Forms.GroupBoxTS();
             this.chkBoxConsoleRing = new System.Windows.Forms.CheckBoxTS();
             this.chkBoxTitle = new System.Windows.Forms.CheckBoxTS();
@@ -1577,13 +1576,11 @@ namespace PowerSDR
             this.tpAppearance.SuspendLayout();
             this.tcAppearance.SuspendLayout();
             this.tpAppearanceGeneral.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ud3DY)).BeginInit();
+            this.groupBoxTS7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tb3DZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tb3DY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tb3DScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tb3DThres)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.num4d)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.num3d)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud3DZ)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud3DX)).BeginInit();
             this.groupBoxTS3.SuspendLayout();
             this.grpAppSkins.SuspendLayout();
             this.grpAppearanceBand.SuspendLayout();
@@ -4128,9 +4125,9 @@ namespace PowerSDR
             // 
             this.tpUserInterface.BackColor = System.Drawing.Color.Gray;
             this.tpUserInterface.Controls.Add(this.groupBox3);
-            this.tpUserInterface.Controls.Add(this.chkBoxHERO);
             this.tpUserInterface.Controls.Add(this.groupBox2);
             this.tpUserInterface.Controls.Add(this.groupBox1);
+            this.tpUserInterface.Controls.Add(this.chkBoxHERO);
             this.tpUserInterface.Controls.Add(this.groupBoxTS1);
             this.tpUserInterface.Location = new System.Drawing.Point(4, 22);
             this.tpUserInterface.Name = "tpUserInterface";
@@ -4242,16 +4239,6 @@ namespace PowerSDR
             this.labelTS85.Size = new System.Drawing.Size(43, 16);
             this.labelTS85.TabIndex = 8;
             this.labelTS85.Text = "Key:";
-            // 
-            // chkBoxHERO
-            // 
-            this.chkBoxHERO.Image = null;
-            this.chkBoxHERO.Location = new System.Drawing.Point(378, 198);
-            this.chkBoxHERO.Name = "chkBoxHERO";
-            this.chkBoxHERO.Size = new System.Drawing.Size(176, 22);
-            this.chkBoxHERO.TabIndex = 86;
-            this.chkBoxHERO.Text = "I2C Band output (see tooltip)";
-            this.toolTip1.SetToolTip(this.chkBoxHERO, resources.GetString("chkBoxHERO.ToolTip"));
             // 
             // groupBox2
             // 
@@ -4621,6 +4608,16 @@ namespace PowerSDR
             this.cbConsoleSelect.Size = new System.Drawing.Size(215, 21);
             this.cbConsoleSelect.TabIndex = 4;
             this.toolTip1.SetToolTip(this.cbConsoleSelect, "Supports Hercules MP3e2, MK2, MP3LE");
+            // 
+            // chkBoxHERO
+            // 
+            this.chkBoxHERO.Image = null;
+            this.chkBoxHERO.Location = new System.Drawing.Point(378, 198);
+            this.chkBoxHERO.Name = "chkBoxHERO";
+            this.chkBoxHERO.Size = new System.Drawing.Size(176, 22);
+            this.chkBoxHERO.TabIndex = 86;
+            this.chkBoxHERO.Text = "I2C Band output (see tooltip)";
+            this.toolTip1.SetToolTip(this.chkBoxHERO, resources.GetString("chkBoxHERO.ToolTip"));
             // 
             // groupBoxTS1
             // 
@@ -12762,18 +12759,7 @@ namespace PowerSDR
             // tpAppearanceGeneral
             // 
             this.tpAppearanceGeneral.BackColor = System.Drawing.SystemColors.Control;
-            this.tpAppearanceGeneral.Controls.Add(this.ud3DY);
-            this.tpAppearanceGeneral.Controls.Add(this.labelTS79);
-            this.tpAppearanceGeneral.Controls.Add(this.tb3DScale);
-            this.tpAppearanceGeneral.Controls.Add(this.labelTS45);
-            this.tpAppearanceGeneral.Controls.Add(this.tb3DThres);
-            this.tpAppearanceGeneral.Controls.Add(this.labelTS50);
-            this.tpAppearanceGeneral.Controls.Add(this.num4d);
-            this.tpAppearanceGeneral.Controls.Add(this.num3d);
-            this.tpAppearanceGeneral.Controls.Add(this.ud3DZ);
-            this.tpAppearanceGeneral.Controls.Add(this.labelTS64);
-            this.tpAppearanceGeneral.Controls.Add(this.labelTS46);
-            this.tpAppearanceGeneral.Controls.Add(this.ud3DX);
+            this.tpAppearanceGeneral.Controls.Add(this.groupBoxTS7);
             this.tpAppearanceGeneral.Controls.Add(this.groupBoxTS3);
             this.tpAppearanceGeneral.Controls.Add(this.btnSkinExport);
             this.tpAppearanceGeneral.Controls.Add(this.grpAppSkins);
@@ -12790,49 +12776,90 @@ namespace PowerSDR
             this.tpAppearanceGeneral.Text = "General";
             this.tpAppearanceGeneral.Click += new System.EventHandler(this.tpAppearanceGeneral_Click);
             // 
-            // ud3DY
+            // groupBoxTS7
             // 
-            this.ud3DY.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ud3DY.Location = new System.Drawing.Point(77, 211);
-            this.ud3DY.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.ud3DY.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ud3DY.Name = "ud3DY";
-            this.ud3DY.Size = new System.Drawing.Size(40, 20);
-            this.ud3DY.TabIndex = 88;
-            this.toolTip1.SetToolTip(this.ud3DY, "3D Y offset (how many pixels to jump up per line of data)");
-            this.ud3DY.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ud3DY.ValueChanged += new System.EventHandler(this.number3DY_ValueChanged);
+            this.groupBoxTS7.Controls.Add(this.chk3DWidth);
+            this.groupBoxTS7.Controls.Add(this.labelTS79);
+            this.groupBoxTS7.Controls.Add(this.tb3DZ);
+            this.groupBoxTS7.Controls.Add(this.tb3DY);
+            this.groupBoxTS7.Controls.Add(this.tb3DScale);
+            this.groupBoxTS7.Controls.Add(this.labelTS46);
+            this.groupBoxTS7.Controls.Add(this.labelTS45);
+            this.groupBoxTS7.Controls.Add(this.labelTS64);
+            this.groupBoxTS7.Controls.Add(this.tb3DThres);
+            this.groupBoxTS7.Controls.Add(this.labelTS50);
+            this.groupBoxTS7.Location = new System.Drawing.Point(7, 167);
+            this.groupBoxTS7.Name = "groupBoxTS7";
+            this.groupBoxTS7.Size = new System.Drawing.Size(131, 144);
+            this.groupBoxTS7.TabIndex = 76;
+            this.groupBoxTS7.TabStop = false;
+            this.groupBoxTS7.Text = "3D Panadapter";
+            // 
+            // chk3DWidth
+            // 
+            this.chk3DWidth.Image = null;
+            this.chk3DWidth.Location = new System.Drawing.Point(60, 17);
+            this.chk3DWidth.Name = "chk3DWidth";
+            this.chk3DWidth.Size = new System.Drawing.Size(61, 24);
+            this.chk3DWidth.TabIndex = 81;
+            this.chk3DWidth.Text = "2 pixel";
+            this.toolTip1.SetToolTip(this.chk3DWidth, "Normally 1 pixel wide lines");
+            this.chk3DWidth.CheckedChanged += new System.EventHandler(this.chk3DWidth_CheckedChanged);
             // 
             // labelTS79
             // 
             this.labelTS79.Image = null;
-            this.labelTS79.Location = new System.Drawing.Point(26, 190);
+            this.labelTS79.Location = new System.Drawing.Point(6, 22);
             this.labelTS79.Name = "labelTS79";
-            this.labelTS79.Size = new System.Drawing.Size(102, 24);
-            this.labelTS79.TabIndex = 98;
-            this.labelTS79.Text = "3D Panadapter";
+            this.labelTS79.Size = new System.Drawing.Size(48, 24);
+            this.labelTS79.TabIndex = 100;
+            this.labelTS79.Text = "Width:";
+            this.toolTip1.SetToolTip(this.labelTS79, "Y-axis angle (up/down)");
+            // 
+            // tb3DZ
+            // 
+            this.tb3DZ.AutoSize = false;
+            this.tb3DZ.LargeChange = 1;
+            this.tb3DZ.Location = new System.Drawing.Point(60, 46);
+            this.tb3DZ.Maximum = 120;
+            this.tb3DZ.Minimum = 30;
+            this.tb3DZ.Name = "tb3DZ";
+            this.tb3DZ.Size = new System.Drawing.Size(68, 18);
+            this.tb3DZ.TabIndex = 99;
+            this.tb3DZ.TickFrequency = 4;
+            this.toolTip1.SetToolTip(this.tb3DZ, "3D z offset depth (how many lines of data to display or how much history to displ" +
+        "ay)\r\n");
+            this.tb3DZ.Value = 80;
+            this.tb3DZ.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tb3DZ_MouseHover);
+            this.tb3DZ.MouseEnter += new System.EventHandler(this.tb3DZ_MouseHover);
+            this.tb3DZ.MouseHover += new System.EventHandler(this.tb3DZ_MouseHover);
+            this.tb3DZ.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tb3DZ_MouseHover);
+            this.tb3DZ.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tb3DZ_MouseHover);
+            // 
+            // tb3DY
+            // 
+            this.tb3DY.AutoSize = false;
+            this.tb3DY.LargeChange = 1;
+            this.tb3DY.Location = new System.Drawing.Point(60, 70);
+            this.tb3DY.Maximum = 30;
+            this.tb3DY.Name = "tb3DY";
+            this.tb3DY.Size = new System.Drawing.Size(68, 18);
+            this.tb3DY.TabIndex = 98;
+            this.tb3DY.TabStop = false;
+            this.toolTip1.SetToolTip(this.tb3DY, "Adjust the perspective angle");
+            this.tb3DY.Value = 10;
+            this.tb3DY.ValueChanged += new System.EventHandler(this.number3DY_ValueChanged);
+            this.tb3DY.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tb3DY_MouseHover);
+            this.tb3DY.MouseEnter += new System.EventHandler(this.tb3DY_MouseHover);
+            this.tb3DY.MouseHover += new System.EventHandler(this.tb3DY_MouseHover);
+            this.tb3DY.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tb3DY_MouseHover);
+            this.tb3DY.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tb3DY_MouseHover);
             // 
             // tb3DScale
             // 
             this.tb3DScale.AutoSize = false;
             this.tb3DScale.LargeChange = 1;
-            this.tb3DScale.Location = new System.Drawing.Point(70, 263);
+            this.tb3DScale.Location = new System.Drawing.Point(60, 97);
             this.tb3DScale.Name = "tb3DScale";
             this.tb3DScale.Size = new System.Drawing.Size(68, 18);
             this.tb3DScale.TabIndex = 96;
@@ -12841,21 +12868,48 @@ namespace PowerSDR
             this.tb3DScale.Value = 4;
             this.tb3DScale.Scroll += new System.EventHandler(this.trackBarTS1_Scroll);
             this.tb3DScale.ValueChanged += new System.EventHandler(this.tb3DScale_ValueChanged);
+            this.tb3DScale.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tb3DScale_MouseHover);
+            this.tb3DScale.MouseEnter += new System.EventHandler(this.tb3DScale_MouseHover);
+            this.tb3DScale.MouseHover += new System.EventHandler(this.tb3DScale_MouseHover);
+            this.tb3DScale.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tb3DScale_MouseHover);
+            this.tb3DScale.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tb3DScale_MouseHover);
+            // 
+            // labelTS46
+            // 
+            this.labelTS46.Image = null;
+            this.labelTS46.Location = new System.Drawing.Point(6, 70);
+            this.labelTS46.Name = "labelTS46";
+            this.labelTS46.Size = new System.Drawing.Size(48, 24);
+            this.labelTS46.TabIndex = 89;
+            this.labelTS46.Text = "Angle:";
+            this.toolTip1.SetToolTip(this.labelTS46, "Y-axis angle (up/down)");
             // 
             // labelTS45
             // 
             this.labelTS45.Image = null;
-            this.labelTS45.Location = new System.Drawing.Point(7, 263);
+            this.labelTS45.Location = new System.Drawing.Point(6, 97);
             this.labelTS45.Name = "labelTS45";
             this.labelTS45.Size = new System.Drawing.Size(64, 24);
             this.labelTS45.TabIndex = 97;
-            this.labelTS45.Text = "3Dscale:";
+            this.labelTS45.Text = "Perspec:";
+            this.toolTip1.SetToolTip(this.labelTS45, "X-axis forced perspective angle.\r\nThe higher the number the smaller the display g" +
+        "ets as it draws into the background\r\nand also draws faster.");
+            // 
+            // labelTS64
+            // 
+            this.labelTS64.Image = null;
+            this.labelTS64.Location = new System.Drawing.Point(6, 46);
+            this.labelTS64.Name = "labelTS64";
+            this.labelTS64.Size = new System.Drawing.Size(64, 24);
+            this.labelTS64.TabIndex = 90;
+            this.labelTS64.Text = "Z Depth:";
+            this.toolTip1.SetToolTip(this.labelTS64, "Z-axis depth of the panadapter history");
             // 
             // tb3DThres
             // 
             this.tb3DThres.AutoSize = false;
             this.tb3DThres.LargeChange = 1;
-            this.tb3DThres.Location = new System.Drawing.Point(70, 292);
+            this.tb3DThres.Location = new System.Drawing.Point(60, 122);
             this.tb3DThres.Maximum = 100;
             this.tb3DThres.Name = "tb3DThres";
             this.tb3DThres.Size = new System.Drawing.Size(68, 18);
@@ -12866,149 +12920,22 @@ namespace PowerSDR
             this.tb3DThres.Value = 20;
             this.tb3DThres.Scroll += new System.EventHandler(this.number3DThres_Scroll);
             this.tb3DThres.ValueChanged += new System.EventHandler(this.tb3DThres_ValueChanged);
+            this.tb3DThres.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tb3DThres_MouseHover);
+            this.tb3DThres.MouseEnter += new System.EventHandler(this.tb3DThres_MouseHover);
+            this.tb3DThres.MouseHover += new System.EventHandler(this.tb3DThres_MouseHover);
+            this.tb3DThres.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tb3DThres_MouseHover);
+            this.tb3DThres.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tb3DThres_MouseHover);
             // 
             // labelTS50
             // 
             this.labelTS50.Image = null;
-            this.labelTS50.Location = new System.Drawing.Point(7, 289);
+            this.labelTS50.Location = new System.Drawing.Point(6, 122);
             this.labelTS50.Name = "labelTS50";
             this.labelTS50.Size = new System.Drawing.Size(64, 24);
             this.labelTS50.TabIndex = 95;
-            this.labelTS50.Text = "3DThshd:";
-            // 
-            // num4d
-            // 
-            this.num4d.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.num4d.Location = new System.Drawing.Point(55, 165);
-            this.num4d.Maximum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.num4d.Minimum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            -2147483648});
-            this.num4d.Name = "num4d";
-            this.num4d.Size = new System.Drawing.Size(62, 20);
-            this.num4d.TabIndex = 93;
-            this.num4d.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.num4d.Visible = false;
-            // 
-            // num3d
-            // 
-            this.num3d.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.num3d.Location = new System.Drawing.Point(76, 165);
-            this.num3d.Maximum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.num3d.Minimum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            -2147483648});
-            this.num3d.Name = "num3d";
-            this.num3d.Size = new System.Drawing.Size(62, 20);
-            this.num3d.TabIndex = 92;
-            this.num3d.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.num3d.Visible = false;
-            // 
-            // ud3DZ
-            // 
-            this.ud3DZ.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ud3DZ.Location = new System.Drawing.Point(77, 236);
-            this.ud3DZ.Maximum = new decimal(new int[] {
-            120,
-            0,
-            0,
-            0});
-            this.ud3DZ.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.ud3DZ.Name = "ud3DZ";
-            this.ud3DZ.Size = new System.Drawing.Size(40, 20);
-            this.ud3DZ.TabIndex = 91;
-            this.toolTip1.SetToolTip(this.ud3DZ, "3D z offset depth (how many lines of data to display or how much history to displ" +
-        "ay)\r\n\r\n");
-            this.ud3DZ.Value = new decimal(new int[] {
-            80,
-            0,
-            0,
-            0});
-            this.ud3DZ.ValueChanged += new System.EventHandler(this.number3DZ_ValueChanged);
-            // 
-            // labelTS64
-            // 
-            this.labelTS64.Image = null;
-            this.labelTS64.Location = new System.Drawing.Point(7, 239);
-            this.labelTS64.Name = "labelTS64";
-            this.labelTS64.Size = new System.Drawing.Size(64, 24);
-            this.labelTS64.TabIndex = 90;
-            this.labelTS64.Text = "3D z offset:";
-            // 
-            // labelTS46
-            // 
-            this.labelTS46.Image = null;
-            this.labelTS46.Location = new System.Drawing.Point(7, 214);
-            this.labelTS46.Name = "labelTS46";
-            this.labelTS46.Size = new System.Drawing.Size(64, 24);
-            this.labelTS46.TabIndex = 89;
-            this.labelTS46.Text = "3D y offset:";
-            // 
-            // ud3DX
-            // 
-            this.ud3DX.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ud3DX.Location = new System.Drawing.Point(10, 165);
-            this.ud3DX.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.ud3DX.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.ud3DX.Name = "ud3DX";
-            this.ud3DX.Size = new System.Drawing.Size(40, 20);
-            this.ud3DX.TabIndex = 87;
-            this.toolTip1.SetToolTip(this.ud3DX, "3D X offset (how many pixels to move the display to the right per line of data)");
-            this.ud3DX.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.ud3DX.Visible = false;
-            this.ud3DX.ValueChanged += new System.EventHandler(this.number3DX_ValueChanged);
+            this.labelTS50.Text = "Floor:";
+            this.toolTip1.SetToolTip(this.labelTS50, "Set to where the 3D draws just above the noise floor. \r\nIf you set below the nois" +
+        "e floor the 3D pan becomes a mess and slows down rendering.");
             // 
             // groupBoxTS3
             // 
@@ -13097,7 +13024,7 @@ namespace PowerSDR
             // lblGenBackground
             // 
             this.lblGenBackground.Image = null;
-            this.lblGenBackground.Location = new System.Drawing.Point(16, 136);
+            this.lblGenBackground.Location = new System.Drawing.Point(16, 123);
             this.lblGenBackground.Name = "lblGenBackground";
             this.lblGenBackground.Size = new System.Drawing.Size(72, 32);
             this.lblGenBackground.TabIndex = 84;
@@ -13110,7 +13037,7 @@ namespace PowerSDR
             this.clrbtnGenBackground.Automatic = "Automatic";
             this.clrbtnGenBackground.Color = System.Drawing.SystemColors.ControlDark;
             this.clrbtnGenBackground.Image = null;
-            this.clrbtnGenBackground.Location = new System.Drawing.Point(88, 136);
+            this.clrbtnGenBackground.Location = new System.Drawing.Point(88, 130);
             this.clrbtnGenBackground.MoreColors = "More Colors...";
             this.clrbtnGenBackground.Name = "clrbtnGenBackground";
             this.clrbtnGenBackground.Size = new System.Drawing.Size(40, 23);
@@ -13411,7 +13338,7 @@ namespace PowerSDR
             // lblAppearanceGenBtnSel
             // 
             this.lblAppearanceGenBtnSel.Image = null;
-            this.lblAppearanceGenBtnSel.Location = new System.Drawing.Point(16, 101);
+            this.lblAppearanceGenBtnSel.Location = new System.Drawing.Point(16, 96);
             this.lblAppearanceGenBtnSel.Name = "lblAppearanceGenBtnSel";
             this.lblAppearanceGenBtnSel.Size = new System.Drawing.Size(64, 32);
             this.lblAppearanceGenBtnSel.TabIndex = 55;
@@ -19674,13 +19601,11 @@ namespace PowerSDR
             this.tpAppearance.ResumeLayout(false);
             this.tcAppearance.ResumeLayout(false);
             this.tpAppearanceGeneral.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ud3DY)).EndInit();
+            this.groupBoxTS7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tb3DZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tb3DY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tb3DScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tb3DThres)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.num4d)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.num3d)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud3DZ)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud3DX)).EndInit();
             this.groupBoxTS3.ResumeLayout(false);
             this.grpAppSkins.ResumeLayout(false);
             this.grpAppearanceBand.ResumeLayout(false);
@@ -20882,8 +20807,6 @@ namespace PowerSDR
         public System.Windows.Forms.CheckBoxTS chkBoxMax;
         private System.Windows.Forms.GroupBoxTS groupBoxTS3;
         private System.Windows.Forms.LabelTS labelTS9;
-        public System.Windows.Forms.NumericUpDownTS ud3DY;
-        public System.Windows.Forms.NumericUpDownTS ud3DX;
         private System.Windows.Forms.LabelTS labelTS46;
         public System.Windows.Forms.CheckBoxTS chkDock;
         public System.Windows.Forms.CheckBoxTS chkVACReset;
@@ -20950,7 +20873,6 @@ namespace PowerSDR
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.ComponentModel.IContainer components;
-        public System.Windows.Forms.NumericUpDownTS ud3DZ;
         private System.Windows.Forms.LabelTS labelTS64;
         private System.Windows.Forms.NumericUpDownTS udAudioLatencyB;
         private System.Windows.Forms.NumericUpDownTS udAudioLatencyA;
@@ -20993,8 +20915,6 @@ namespace PowerSDR
         private System.Windows.Forms.LabelTS labelTS78;
         private System.Windows.Forms.LabelTS labelTS77;
         public System.Windows.Forms.NumericUpDownTS udPFNDelay;
-        public System.Windows.Forms.NumericUpDownTS num3d;
-        public System.Windows.Forms.NumericUpDownTS num4d;
         private System.Windows.Forms.ComboBoxTS comboCATPort8;
         private System.Windows.Forms.LabelTS labelTS48;
         private System.Windows.Forms.CheckBoxTS chkCATEnable8;
@@ -21022,7 +20942,6 @@ namespace PowerSDR
         private System.Windows.Forms.LabelTS labelTS50;
         private System.Windows.Forms.LabelTS labelTS45;
         public System.Windows.Forms.TrackBarTS tb3DScale;
-        private System.Windows.Forms.LabelTS labelTS79;
         public System.Windows.Forms.GroupBox groupBox3;
         public System.Windows.Forms.CheckBoxTS chkYouTubeFull;
         public System.Windows.Forms.TextBoxTS txtYouTubeKey;
@@ -21032,6 +20951,11 @@ namespace PowerSDR
         public System.Windows.Forms.ComboBoxTS comboAudioYouTube;
         public System.Windows.Forms.CheckBoxTS chkYouTubePublic;
         public System.Windows.Forms.RadioButton OAuth;
+        private System.Windows.Forms.GroupBoxTS groupBoxTS7;
+        public System.Windows.Forms.TrackBarTS tb3DY;
+        public System.Windows.Forms.TrackBarTS tb3DZ;
+        private System.Windows.Forms.LabelTS labelTS79;
+        public System.Windows.Forms.CheckBoxTS chk3DWidth;
     } // class setup
 
 

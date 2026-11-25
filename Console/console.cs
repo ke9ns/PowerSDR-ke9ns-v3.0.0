@@ -40918,7 +40918,7 @@ namespace PowerSDR
             }
         }
 
-        private void PaintDisplayFrame(object sender, PaintEventArgs e) 
+        private void PaintDisplayFrame(object sender, PaintEventArgs e)
         {
             PD = e;
 

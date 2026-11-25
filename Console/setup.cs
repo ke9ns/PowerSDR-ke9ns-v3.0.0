@@ -16490,12 +16490,11 @@ namespace PowerSDR
 
         private void number3DZ_ValueChanged(object sender, EventArgs e) //.245
         {
-              Debug.WriteLine("3DPAN " + ud3DZ.Value);
+              Debug.WriteLine("3DPAN " + tb3DZ.Value);
 
             Display.Data3DLineAlpha = tbPan3DAlpha.Value;
             Display.Data3DLineColor = clrbtn3DDataLine.Color;
-            Display.Data3DLineColor = clrbtn3DDataLine.Color;
-
+           
             Display.Data3DThreshold = tb3DThres.Value; //.12
 
 
@@ -17100,14 +17099,12 @@ namespace PowerSDR
 
         private void number3DThres_Scroll(object sender, EventArgs e) //.12
         {
-           
-          
+                      
             Display.Data3DLineAlpha = tbPan3DAlpha.Value;
             Display.Data3DLineColor = clrbtn3DDataLine.Color;
            
             Display.Data3DThreshold = tb3DThres.Value; //.12
-            Display.Data3DThreshold = tb3DThres.Value; //.12
-
+           
 
             Debug.WriteLine("3D thres " + tb3DThres.Value);
 
@@ -17225,10 +17222,39 @@ namespace PowerSDR
             IsOAuthEnabled();   //.15 check for client_secrets.json file and set OAuthEnabled true or false
         }
 
+        private void tb3DScale_MouseHover(object sender, EventArgs e) //.15
+        {
+        
+            this.toolTip1.SetToolTip(tb3DScale, "X-axis Forced perspective Angle: " + tb3DScale.Value);
+
+        }
+
+        private void tb3DThres_MouseHover(object sender, EventArgs e)
+        {
+            this.toolTip1.SetToolTip(tb3DThres, "Noise Floor Threshold: " + tb3DThres.Value);
+
+        }
+
+        private void tb3DZ_MouseHover(object sender, EventArgs e)
+        {
+            this.toolTip1.SetToolTip(tb3DZ, "Z-axis Depth is Signals: " + tb3DZ.Value);
+        }
+        private void tb3DY_MouseHover(object sender, EventArgs e)
+        {
+            this.toolTip1.SetToolTip(tb3DY, "Y-axis angle: " + tb3DY.Value);
+        }
+
+     
+        private void chk3DWidth_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
+
         //setupForm.gridBoxTS.CheckedChanged -= setupForm.gridBoxTS_CheckedChanged;  // ke9ns turn off checkchanged temporarily   
         // 
         // setupForm.gridBoxTS.CheckedChanged += setupForm.gridBoxTS_CheckedChanged;
-
 
 
 

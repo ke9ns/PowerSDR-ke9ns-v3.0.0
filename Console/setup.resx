@@ -431,6 +431,16 @@ See the revision history for explanation on how to obtain a OAuth 2.0 Client ID 
 
 </value>
   </data>
+  <data name="chkBoxHTTP.ToolTip" xml:space="preserve">
+    <value>Setup your Router “Port Forward” to pass the Port# you select. 8081 is default
+get an No-IP.com account which is a permanent URL linked back to your home IP address
+set your router to update your No-Ip.com account (usually under apps and gaming)
+Now if you type in your no-ip.com URL:port#  from a web browser you will see your Panadapter
+
+You can place code into a web page to allow visitors to view your Panadapter.
+ &lt;iframe id="frame" src="https://your_no-ip_URL:8081"&gt;&lt;/iframe&gt;
+</value>
+  </data>
   <data name="chkBoxHERO.ToolTip" xml:space="preserve">
     <value>I2C output when you change into each Ham band
 
@@ -457,16 +467,6 @@ AND
 8bit address 0x46, register 0x13 &lt;DATAB&gt;
 
 NOTE example: 8bit address 0x46 = 0,1,0,0, A2,A1,A0, 0 = (01000110)</value>
-  </data>
-  <data name="chkBoxHTTP.ToolTip" xml:space="preserve">
-    <value>Setup your Router “Port Forward” to pass the Port# you select. 8081 is default
-get an No-IP.com account which is a permanent URL linked back to your home IP address
-set your router to update your No-Ip.com account (usually under apps and gaming)
-Now if you type in your no-ip.com URL:port#  from a web browser you will see your Panadapter
-
-You can place code into a web page to allow visitors to view your Panadapter.
- &lt;iframe id="frame" src="https://your_no-ip_URL:8081"&gt;&lt;/iframe&gt;
-</value>
   </data>
   <data name="comboAudioBuffer1.ToolTip" xml:space="preserve">
     <value>Samples per audio buffer.  Smaller settings give less latency, more CPU load.
