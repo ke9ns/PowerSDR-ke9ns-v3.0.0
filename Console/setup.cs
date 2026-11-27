@@ -16909,7 +16909,7 @@ namespace PowerSDR
         {
             if (udPFNDelay.Value == 0)
             {
-                //  CrashProtection = false;
+             //  CrashProtection = false; 
             }
             else
             {

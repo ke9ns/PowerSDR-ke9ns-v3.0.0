@@ -18866,13 +18866,16 @@ namespace PowerSDR
         static int Y11 = 1;
         static int Z11 = 40; 
         static float pix = 1f; //.16
-
+        static float centerX = W / 2f; //.16a
+        static int[] alpha = new int[20]; //.16a
+        static bool VisibleFloor = false; //.16b
         unsafe static private bool DrawPanadapter(Graphics g, int W, int H, int rx, bool bottom)
         {
 
             X11 = 0; // (int)console.setupForm.ud3DX.Value; // x step right(increase) for each point drawing horizontal
             Y11 = (int)console.setupForm.tb3DY.Value; // y step up (decrease) for each point darwing vertical
             Z11 = (int)console.setupForm.tb3DZ.Value; // z how many 3d lines of history in the Panadapter view (16 in Panafall, or 40 with no waterfall)
+            VisibleFloor = console.setupForm.chk3DFloor.Checked; //.16b
 
             if (console.setupForm.chk3DWidth.Checked == true) // ke9ns add: 3d width
             {
@@ -19602,10 +19605,15 @@ namespace PowerSDR
             System.Drawing.Font fontID = new System.Drawing.Font("Swis721 BT", 9, FontStyle.Italic); // Arial size and style of freq text for waterfall
             SolidBrush grid_text_brushID = new SolidBrush(grid_text_color); //.321
 
-            //=================================================================
-            // draw line that makes up spectrum (width of window)  ke9nsdraw
-            // generate a new set of points[i].X = pos, and points[i].Y = data from spectrum
-            //=================================================================
+            if (PON == true) //if (console.setupForm != null && console.setupForm.check3DPan.Checked == true //.16 move here to speed up
+            {
+                data_3dline_Threshold2 = H - data_3dline_Threshold; //.12 threshold detection for 3d floor
+
+            }
+                //=================================================================
+                // draw line that makes up spectrum (width of window)  ke9nsdraw
+                // generate a new set of points[i].X = pos, and points[i].Y = data from spectrum
+                //=================================================================
             for (int i = 0; i < W; i++)
             {
                 float max = float.MinValue;                             // max = y point determined by RX data of spectrum as you go from 0 to W
@@ -19716,11 +19724,11 @@ namespace PowerSDR
                 // ke9ns add: 3dpan move shift old data to make room for new
                 if (PON == true) //if (console.setupForm != null && console.setupForm.check3DPan.Checked == true)
                 {
-                    data_3dline_Threshold2 = H - data_3dline_Threshold; //.12 threshold detection for 3d floor
-
+                   
                     if (points[i].Y > data_3dline_Threshold2) //.12 if the current signal panadapter data is below your set threshold, flatten it out to avoid noisy display
                     {
-                        points[i].Y = data_3dline_Threshold2;
+                          points[i].Y = data_3dline_Threshold2; //.16a
+                      
                     }
    
                     int[] currentLine = _3DBuffer[_headIndex];  // _headIndex = (_headIndex - 1 + Z1) % Z1; updated at bottom of for i loop
@@ -20010,7 +20018,8 @@ namespace PowerSDR
                 _headIndex = (_headIndex - 1 + Z11) % Z11; // ke9ns: move the head index back 1 to make room for new data
                                                            // Favor speed over visual smoothing where acceptable
 
-             
+                centerX = W / 2.0f;       //.13  Anchor scaling around the center frequency of the panadapter
+
                 g.SmoothingMode = SmoothingMode.HighSpeed;  //.16  
                 g.InterpolationMode = InterpolationMode.Low;
                 g.CompositingQuality = CompositingQuality.HighSpeed;
@@ -20227,15 +20236,15 @@ namespace PowerSDR
                     //KE9NS: draw past lines of panadapter data in 3D mode (older data is smaller and more transparent)
                     // signals are on a gradient from blue to red (weak to strong) and fade out as they get older
 
-                    float centerX = W / 2.0f;       //.13  Anchor scaling around the center frequency of the panadapter
-
-
+                
                     //.16 move here to speed things up
                     int maxZ = (235 / Math.Max(1, Z11)); //  fade the signal as it gets older
                     ColorBlend colorBlend = new ColorBlend(); // // Define the multi-stop spectrum: Blue -> Green -> Yellow -> Red
                     colorBlend.Positions = new[] { 0, 0.05f * GD, 0.1f * GD, 0.15f * GD, 0.2f * GD, 0.25f * GD, 0.3f * GD, 0.35f * GD, 0.45f * GD, 0.55f * GD, 0.65f * GD, 0.8f * GD, 1 }; // Black (MIN spectrum value or Lower), Blue, Green, Yellow, Red, Violet = -73 (S9 or better)
+                    
+                    float tClamped = Math.Min(100f, Math.Max(20f, data_3dline_Threshold)); //.16b
+                    float u = 0f;
 
-              
                     for (int z = Z11; z > 0; z--)   //.16 this eliminates overwriting newer pan data (was originally incrementing)
                     {
                         int bufferIndex = (_headIndex + z) % Z11;                                       // maps to correct position inside buffer
@@ -20252,6 +20261,7 @@ namespace PowerSDR
                                                                                                      //.13 Perspective scale: z=0 is full size (1.0), older lines shrink down.
                         float perspectiveScale = Math.Max(0.1f, 1.0f - (z * data_3dline_Scale));    // Adjust data_3dline_Scale to make the perspective steeper or more gradual
 
+                                          
                         for (int w = 0; w < W; w++)                                                  // convert 3Dbuffer data to Drawing.Point[]
                         {
 
@@ -20267,31 +20277,64 @@ namespace PowerSDR
                           
                         } // for w
 
-                      
+
                         //.13
                         //  pan_Brush = new LinearGradientBrush(new Point(W10, H10), new Point(W10, 10), Color.Black, Color.Black); // standard RX
                         // Start at the bottom (weak signal / noise floor)
                         // End at the top (strong signal peaks)
-                       
-                        using (LinearGradientBrush gradBrush = new LinearGradientBrush(new Point(0, lineBaselineY), new Point(0, lineTopY), Color.Black, Color.Black) ) 
-                        {
-                            int alpha = Math.Max(20, 255 - (z * maxZ ) ); //  fade the signal as it gets older
 
-                            colorBlend.Colors = new[] {
-                            Color.FromArgb(alpha, Color.Black), //1
-                            Color.FromArgb(alpha, Color.Blue), //2
-                            Color.FromArgb(alpha, 0,127,255), // 3 blue cyan
-                            Color.FromArgb(alpha, Color.Cyan), //4 
-                            Color.FromArgb(alpha, 0,255,127), // 5 green cyan
-                           // Color.FromArgb(panfillalpha, Color.Green), //6
-                            Color.FromArgb(alpha, 127,255,0), //7 green yellow
-                            Color.FromArgb(alpha, Color.Yellow), //8
-                            Color.FromArgb(alpha, Color.Orange), //9
-                            Color.FromArgb(alpha, Color.Red), //10
-                            Color.FromArgb(alpha,255,0,127), //11 Red Magenta
-                            Color.FromArgb(alpha, Color.Magenta), //12
-                            Color.FromArgb(alpha, 127,0,255), //13 blue magenta
-                            Color.FromArgb(alpha, 127,0,255),   
+                        // data_3dline_Threshold = user value from 0 to 100 to create a noise floor threshold
+                        // data_3dline_Threshold2 = pixel threshold for floor of panadapter data (anything below this is flattened to avoid noisy display) this is a static value until user changes
+                        // lineBaselineY = pixel location of the baseline for this specific line of data (older lines are lower value i.e. higher on the screen), one value per z line
+                        // lineTopY = pixel location of the top for this specific line of data (older lines are lower value i.e. higher on the screen), on value per z line
+
+                        // Blue gradient =  5% of the total gradient (GD) from the bottom of the line to the top of the line, alpha[1]
+                        // Blue Cyan gradient = 10% of the total gradient (GD) from the bottom of the line to the top of the line, alpha[2]
+                        // Cyan gradient = 15% of the total gradient (GD) from the bottom of the line to the top of the line, alpha[3]
+                        // Green cyan gradient = 20% of the total gradient (GD) from the bottom of the line to the top of the line, alpha[4]
+                        // these are the 4 colors where the threshold for the floor might fall into 
+
+                        using (LinearGradientBrush gradBrush = new LinearGradientBrush(new Point(0, lineBaselineY), new Point(0, lineTopY), Color.Black, Color.Black))
+                        {
+                            alpha[0] = Math.Max(20, 255 - (z * maxZ ) ); //  fade the signal as it gets older
+
+                            if (VisibleFloor) //.16b used to reduce the brightness of the noise floor (so you can see things like the world map behind the 3dpan)
+                            {
+                                u = Math.Min(.7f, Math.Max(0f, (tClamped - 20f) / (40f - 20f)));       // 42.5 30
+                                alpha[1] = (int)(alpha[0] * (1f - u));                       // blue  // alpha[1] = (int)Math.Round(alpha[0] * (1f - u));   
+
+                                u = Math.Min(.7f, Math.Max(0f, (tClamped - 40f) / (53f - 40f)));       // 55 42.5
+                                alpha[2] = (int)(alpha[0] * (1f - u));                       // blue cyan
+
+                                u = Math.Min(.7f, Math.Max(0f, (tClamped - 53f) / (65f - 53f)));      // 67.5 55.0
+                                alpha[3] = (int)(alpha[0] * (1f - u));                       // cyan
+
+                                u = Math.Min(.7f, Math.Max(0f, (tClamped - 65f) / (75f - 65f)));    // 80 67.5
+                                alpha[4] = (int)(alpha[0] * (1f - u));                       // green cyan
+                            }
+                            else
+                            {
+                                alpha[1] = alpha[2] = alpha[3] = alpha[4] = alpha[0];
+                            }
+
+                           // if (z == 1)
+                           //     Debug.WriteLine("z: " + z + " a0: " + alpha[0] + " tclp: " + tClamped + " a1-4: " + alpha[1] + "," + alpha[2] + "," + alpha[3] + "," + alpha[4]);
+
+                            colorBlend.Colors = new[] { //.16
+                            Color.FromArgb(0, Color.Black), //1                     0.0
+                            Color.FromArgb(alpha[0], Color.Blue), //2               0.05 out of 1 (this is always in the noise floor)
+                            Color.FromArgb(alpha[1], 0,127,255), // 3 blue cyan     0.1
+                            Color.FromArgb(alpha[2], Color.Cyan), //4               0.15
+                            Color.FromArgb(alpha[3], 0,255,127), // 5 green cyan    0.2
+                           // Color.FromArgb(panfillalpha, Color.Green), //6        
+                            Color.FromArgb(alpha[4], 127,255,0), //7 green yellow   0.25
+                            Color.FromArgb(alpha[0], Color.Yellow), //8
+                            Color.FromArgb(alpha[0], Color.Orange), //9
+                            Color.FromArgb(alpha[0], Color.Red), //10
+                            Color.FromArgb(alpha[0],255,0,127), //11 Red Magenta
+                            Color.FromArgb(alpha[0], Color.Magenta), //12
+                            Color.FromArgb(alpha[0], 127,0,255), //13 blue magenta
+                            Color.FromArgb(alpha[0], 127,0,255),
                              }; // 13 colors
                            
                             gradBrush.InterpolationColors = colorBlend;  // Apply the custom color blend to the brush

@@ -1313,6 +1313,7 @@ namespace PowerSDR
             this.textBoxSAVE = new System.Windows.Forms.TextBoxTS();
             this.btnResetDB = new System.Windows.Forms.ButtonTS();
             this.chkAlwaysOnTop1 = new System.Windows.Forms.CheckBoxTS();
+            this.chk3DFloor = new System.Windows.Forms.CheckBoxTS();
             this.tcSetup.SuspendLayout();
             this.tpGeneral.SuspendLayout();
             this.tcGeneral.SuspendLayout();
@@ -12778,6 +12779,7 @@ namespace PowerSDR
             // 
             // groupBoxTS7
             // 
+            this.groupBoxTS7.Controls.Add(this.chk3DFloor);
             this.groupBoxTS7.Controls.Add(this.chk3DWidth);
             this.groupBoxTS7.Controls.Add(this.labelTS79);
             this.groupBoxTS7.Controls.Add(this.tb3DZ);
@@ -19299,6 +19301,15 @@ namespace PowerSDR
             this.chkAlwaysOnTop1.Text = "Always On Top";
             this.chkAlwaysOnTop1.CheckedChanged += new System.EventHandler(this.ChkAlwaysOnTop1_CheckedChanged);
             // 
+            // chk3DFloor
+            // 
+            this.chk3DFloor.Image = null;
+            this.chk3DFloor.Location = new System.Drawing.Point(45, 117);
+            this.chk3DFloor.Name = "chk3DFloor";
+            this.chk3DFloor.Size = new System.Drawing.Size(25, 24);
+            this.chk3DFloor.TabIndex = 101;
+            this.toolTip1.SetToolTip(this.chk3DFloor, "Check to reduce brightness of Noise Floor\r\n");
+            // 
             // Setup
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -20956,6 +20967,7 @@ namespace PowerSDR
         public System.Windows.Forms.TrackBarTS tb3DZ;
         private System.Windows.Forms.LabelTS labelTS79;
         public System.Windows.Forms.CheckBoxTS chk3DWidth;
+        public System.Windows.Forms.CheckBoxTS chk3DFloor;
     } // class setup
 
 
